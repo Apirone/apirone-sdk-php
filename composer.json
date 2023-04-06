@@ -1,0 +1,21 @@
+{
+    "name": "apirone/apirone-invoice-php",
+    "description": "Apirone Invoice SDK",
+    "type": "library",
+    "require": {
+        "apirone/apirone-api-php": "^1.0@RC"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Apirone\\ApironeInvoicePhp\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "alex",
+            "email": "alex.zaytseff@gmail.com"
+        }
+    ],
+    "minimum-stability": "RC"
+}
