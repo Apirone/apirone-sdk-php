@@ -1,9 +1,22 @@
 version: '3.8'
 services:
   apirone-invoice-php:
-    image: php:7.4-apache
+    build:
+      context: ./config
+      args:
+        VERSION: 7.4
     volumes:
       - ./src:/var/www/html/
       - ./vendor:/var/www/vendor/
     ports:
       - 80:80
+  # Maria DB container
+  db:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - ./data/init.sh:/docker-entrypoint-initdb.d/init.sh:ro
+    ports:
+      - '3306:3306'

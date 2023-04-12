@@ -34,7 +34,7 @@ class SettingsQuery
             `key` varchar(128) NOT NULL,
             `value` text NULL,
             PRIMARY KEY (`id`),
-            UNIQUE KEY `option_name` (`option_name`)
+            UNIQUE KEY `key` (`key`)
         ) ENGINE=InnoDB $charset_collate;";
 
         return $query;

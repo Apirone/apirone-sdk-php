@@ -56,6 +56,13 @@ class InvoiceDetails extends AbstractModel
     {
     }
 
+    public static function init() 
+    {
+        $class = new static();
+
+        return $class;
+    }
+
     public static function fromJson($json)
     {
         $class = new static();
@@ -63,7 +70,7 @@ class InvoiceDetails extends AbstractModel
         return $class->classLoader($json);
     }
 
-    public function loadJson($json)
+    protected function loadJson($json)
     {
         return $this->classLoader($json);
     }
@@ -72,16 +79,17 @@ class InvoiceDetails extends AbstractModel
     {
         $json = Account::init($this->account)->invoiceInfo($this->invoice);
         
-        return $this->loadJson($json);
+        return $this->classLoader($json);
     }
-    public function parseUserData($data)
+
+    protected function parseUserData($data)
     {
         $userData = UserData::fromJson($data);
 
         return $userData;
     }
 
-    public function parseHistory($data)
+    protected function parseHistory($data)
     {
         $history = [];
         foreach ($data as $item) {
@@ -90,5 +98,14 @@ class InvoiceDetails extends AbstractModel
 
         return $history;
     }
+    public function info($private = false)
+    {
+        $info = $this->toJson();
+        if (!$private) {
+            unset($info->{'callback-url'}, $info->account);
+        }
+        unset($info->{'create-params'});
 
+        return $info;
+    }
 }

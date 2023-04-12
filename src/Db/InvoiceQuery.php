@@ -2,6 +2,8 @@
 
 namespace Apirone\Invoice\Db;
 
+use Apirone\Invoice\Invoice;
+
 class InvoiceQuery
 {
     const TABLE_INVOICE = 'apirone_invoice';
@@ -32,15 +34,14 @@ class InvoiceQuery
         $query = "CREATE TABLE IF NOT EXISTS `$table` (
             `id` int NOT NULL AUTO_INCREMENT,
             `time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            `order_id` int NOT NULL DEFAULT '0',
-            `account` varchar(64) NOT NULL,
+            `order` int NOT NULL DEFAULT '0',
             `invoice` varchar(64) NOT NULL,
             `status` varchar(10) NOT NULL,
             `details` text NULL,
             `meta` text NULL,
             PRIMARY KEY (`id`),
             UNIQUE KEY `invoice` (`invoice`),
-            KEY `order_id` (`order_id`)
+            KEY `order` (`order`)
         ) ENGINE=InnoDB $charset_collate;";
 
         return $query;
@@ -65,5 +66,46 @@ class InvoiceQuery
         $table = $prefix . self::TABLE_INVOICE;
 
         return "SELECT * FROM `$table` WHERE `invoice` = \"$invoice\"";
+    }
+
+    public static function selectOrder (string $order, string $prefix = '')
+    {
+        $table = $prefix . self::TABLE_INVOICE;
+
+        return "SELECT * FROM `$table` WHERE `order` = \"$order\" order by time DESC";
+    }
+
+    public static function createInvoice(Invoice $invoice, string $prefix = '')
+    {
+        $table = $prefix . self::TABLE_INVOICE;
+
+        $invoice = $invoice->toJson();
+
+        $query = "INSERT INTO `" . $table . "` " . 
+            "SET " . 
+            "`order` = " . (int) $invoice->order . "," .
+            "`invoice` = '" . $invoice->invoice . "', " .
+            "`status` = '" . $invoice->status . "', " .
+            "`details` = '" . json_encode($invoice->details) . "', " .
+            "`meta` = '" . json_encode($invoice->meta) . "';";
+
+        return $query;
+    }
+
+    public static function updateInvoice(Invoice $invoice, string $prefix = '')
+    {
+        $table = $prefix . self::TABLE_INVOICE;
+
+        $invoice = $invoice->toJson();
+
+        $query = "UPDATE `" . $table . "` " . 
+            "SET " .
+            "`status` = '" . $invoice->status . "', " .
+            "`details` = '" . json_encode($invoice->details) . "', " .
+            "`meta` = '" . json_encode($invoice->meta) . "' " .
+            "WHERE `invoice` = '" . $invoice->invoice . "';";
+
+        return $query;
+
     }
 }

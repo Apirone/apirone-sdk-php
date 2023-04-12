@@ -1,4 +1,7 @@
 .vscode
 vendor
+data
 composer.lock
-src/index.php
+src/*.php
+!src/Invoice.php
+!src/Utils.php

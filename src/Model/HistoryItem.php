@@ -29,4 +29,15 @@ class HistoryItem extends AbstractModel
         return $class->classLoader($json);
     }
 
+    public function toArray(): array
+    {
+        $item = parent::toArray();
+
+        if ($item['status'] == 'created' || $item['status'] == 'expired') {
+            unset($item['txid'], $item['amount']);
+        }
+
+        return $item;
+    }
+
 }

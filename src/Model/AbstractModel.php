@@ -40,14 +40,11 @@ abstract class AbstractModel
         return null;
     }
 
-    // protected function classLoader($json, $instance)
     protected function classLoader($json)
     {
         $json = gettype($json) == 'string' ? json_decode($json) : $json;
 
         $class = new \ReflectionClass(static::class);
-
-        // $this->toArray();
 
         foreach ($json as $key => $value) {
             $name = static::convertToCamelCase($key);
@@ -77,12 +74,32 @@ abstract class AbstractModel
      */
     public function toArray(): array
     {
-        $settings = [];    
+        $settings = [];
         $class = new \ReflectionClass(static::class);
 
         foreach ($class->getProperties() as $property) {
             $prop = $property->getName();
-            $settings[self::convertToSnakeCase($prop)] = $this->{$prop};
+            $type = gettype($this->{$prop});
+
+            if ($type !== 'object' || $type !== 'array') {
+                $settings[self::convertToSnakeCase($prop)] = $this->{$prop};
+            }
+
+            if ($type == 'object') {
+                $settings[self::convertToSnakeCase($prop)] = $this->{$prop}->toArray();
+            }
+            if ($type == 'array') {
+                $items = [];
+                foreach($this->{$prop} as $key => $item) {
+                    if(gettype($item) == 'object') {
+                        $items[] = $item->toArray();
+                    }
+                    else{
+                        $items[$key] = $item;
+                    }
+                }
+                $settings[self::convertToSnakeCase($prop)] = $items;
+            }
         }
 
         return $settings;
@@ -91,19 +108,6 @@ abstract class AbstractModel
     public function toJson(): \stdClass
     {
         return json_decode(json_encode($this->toArray()));
-    }
-
-    /**
-     * @param string $date DateTime string
-     *
-     * @return string
-     */
-    protected static function convertToIso8601(string $date): string
-    {
-        $date = new \DateTime($date);
-        $date->setTimezone(new \DateTimeZone(\date_default_timezone_get()));
-
-        return $date->format(\DateTime::ATOM);
     }
 
     /**

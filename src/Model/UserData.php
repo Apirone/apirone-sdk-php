@@ -21,6 +21,14 @@ class UserData extends AbstractModel
 
     private function __construct()
     {
+
+    }
+
+    public static function init() 
+    {
+        $class = new static();
+
+        return $class;
     }
 
     public static function fromJson($json)

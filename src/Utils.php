@@ -84,7 +84,7 @@ class Utils
      * @param string $to 
      * @return mixed 
      */
-    static public function fiat2crypto($value, $from='usd', $to = 'btc') {
+    public static function fiat2crypto($value, $from='usd', $to = 'btc') {
         if ($from == 'btc') {
             return $value;
         }
@@ -110,7 +110,7 @@ class Utils
      * @param mixed $fiat string
      * @return bool 
      */
-    static public function isFiatSupported($fiat) {
+    public static function isFiatSupported($fiat) {
         $supported_currencies = self::ticker();
         if (!$supported_currencies) {
             return false;
@@ -120,5 +120,18 @@ class Utils
         }
         return false;
 
+    }
+
+        /**
+     * @param string $date DateTime string
+     *
+     * @return string
+     */
+    public static function convertToIso8601(string $date): string
+    {
+        $date = new \DateTime($date);
+        $date->setTimezone(new \DateTimeZone(\date_default_timezone_get()));
+
+        return $date->format(\DateTime::ATOM);
     }
 }
