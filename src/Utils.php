@@ -2,8 +2,19 @@
 
 namespace Apirone\Invoice;
 
+use Apirone\API\Endpoints\Service;
+
 class Utils
 {
+    public static function currency(string $currency) {
+        $info = Service::account();
+        foreach($info->currencies as $item) {
+            if ($item->abbr == $currency) {
+                return $item;
+            }
+        }
+        return null;
+    }
     /**
      * Returnt transaction link to blockchair.com
      * 

@@ -9,6 +9,9 @@ use Apirone\Invoice\Model\InvoiceDetails;
 use Apirone\Invoice\Model\InvoiceMeta;
 use Apirone\API\Endpoints\Service;
 use Apirone\API\Endpoints\Account;
+use Apirone\Invoice\Model\UserData;
+use Apirone\Invoice\Utils;
+use stdClass;
 
 class Invoice extends AbstractModel{
 
@@ -44,14 +47,15 @@ class Invoice extends AbstractModel{
         return $class;
     }
 
-    public static function fromFiatAmount(float $value, string $from, string $to )
+    public static function fromFiatAmount(float $value, string $from, string $to, float $factor = 1)
     {
         $class = new static();
-        $class->createParams['currency'] = $to;
-        $class->createParams['amount'] = Service::fiat2crypto($value, $from, $to);
-        
-        $class->price($value, $from);
+        $class->currency($to);
+        $cryptoAmount = Service::fiat2crypto($value * $factor, $from, $to);
+        $unitFactor = $class->createParams['currency']->{'units-factor'};
 
+        $class->createParams['amount'] = Utils::cur2min($cryptoAmount, $unitFactor);
+        
         return $class;
     }
 
@@ -117,46 +121,18 @@ class Invoice extends AbstractModel{
         return $this;
     }
 
-    public function currency(?string $currency = null)
+    public function currency(string $currency)
     {
+        $currency = Utils::currency($currency);
         $this->createParams['currency'] = $currency;
 
         return $this;
     }
 
-    public function amount(?string $amount = null)
+    public function amount(?int $amount = null)
     {
         $this->createParams['amount'] = $amount;
 
-        return $this;
-    }
-
-    public function merchant(?string $merchant = null)
-    {
-        $this->createParams['user-data']['merchant'] = $merchant;
-
-        return $this;
-    }
-
-    public function url(?string $url = null)
-    {
-        $this->createParams['user-data']['url'] = $url;
-
-        return $this;
-    }
-
-    public function price(?float $amount = null, ?string $currency = null)
-    {
-        if ($currency == null || $amount == null) {
-            unset($this->createParams['user-data']['price']);
-        }
-        else {
-            $price = new \stdClass;
-            $price->currency = $currency;
-            $price->amount   = $amount;
-
-            $this->createParams['user-data']['price'] = $price;
-        }
         return $this;
     }
 
@@ -167,9 +143,16 @@ class Invoice extends AbstractModel{
         return $this;
     }
 
-    public function expired(?string $expired = null)
+    public function expire(?string $expire = null)
     {
-        $this->createParams['expired'] = $expired;
+        $this->createParams['expire'] = $expire;
+
+        return $this;
+    }
+
+    public function userData(?UserData $userData = null)
+    {
+        $this->createParams['user-data'] = ($userData instanceof UserData) ? $userData->toJson() : $userData;
 
         return $this;
     }
@@ -183,7 +166,7 @@ class Invoice extends AbstractModel{
 
     public function callbackUrl(?string $callbackUrl = null)
     {
-        $this->createParams['callbackUrl'] = $callbackUrl;
+        $this->createParams['callback-url'] = $callbackUrl;
 
         return $this;
     }
@@ -200,8 +183,11 @@ class Invoice extends AbstractModel{
 
         $account = Account::init($account);
         $created = false;
+        $options = $this->createParams;
+        $options['currency'] = $this->createParams['currency']->abbr;
+
         try {
-            $created = $account->invoiceCreate(json_encode($this->createParams));
+            $created = $account->invoiceCreate(json_encode($options));
             $this->details = InvoiceDetails::fromJson($created);
             $this->invoice = $this->details->invoice;
             $this->status = $this->details->status;
@@ -211,6 +197,7 @@ class Invoice extends AbstractModel{
         {
             throw $e;
         }
+        $this->save();
 
         return $this;
     }
@@ -277,6 +264,14 @@ class Invoice extends AbstractModel{
         return $this->details->info($private);
     }
     
+    public function toJson(): stdClass
+    {
+        $json = parent::toJson();
+        unset($json->{'create-params'});
+
+        return $json;
+    }
+
     protected function parseDetails($json)
     {
         $details = InvoiceDetails::fromJson($json);
@@ -288,4 +283,5 @@ class Invoice extends AbstractModel{
     {
         return (array) $value;
     }
+
 }

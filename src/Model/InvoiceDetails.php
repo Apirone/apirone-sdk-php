@@ -106,6 +106,13 @@ class InvoiceDetails extends AbstractModel
         }
         unset($info->{'create-params'});
 
+        if ($info->{'user-data'} !== null) {
+            foreach ($info->{'user-data'} as $key => $value) {
+                if ($value === null) {
+                    unset($info->{'user-data'}->{$key});
+                }
+            }
+        }
         return $info;
     }
 }

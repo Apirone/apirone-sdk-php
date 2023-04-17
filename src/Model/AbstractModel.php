@@ -2,6 +2,7 @@
 
 namespace Apirone\Invoice\Model;
 
+use Exception;
 use stdClass;
 
 abstract class AbstractModel
@@ -23,7 +24,6 @@ abstract class AbstractModel
 
             if(!$property->isInitialized($this)) {
                 return null;
-                // $property->setValue($this, null);
             }
 
             return $property->getValue($this);
@@ -92,7 +92,13 @@ abstract class AbstractModel
                 $items = [];
                 foreach($this->{$prop} as $key => $item) {
                     if(gettype($item) == 'object') {
-                        $items[] = $item->toArray();
+                        try{
+                            $items[] = $item->toArray();
+                        }
+                        catch (\Throwable $e) {
+                            pa($e);
+                            pa($item);
+                        }
                     }
                     else{
                         $items[$key] = $item;

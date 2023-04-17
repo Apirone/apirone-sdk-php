@@ -3,8 +3,10 @@
 namespace Apirone\Invoice\Model;
 
 use Apirone\Invoice\Model\AbstractModel;
-use Apirone\Invoice\Model\UserData\Price;
-use Apirone\Invoice\Model\UserData\TaxItem;
+use Apirone\Invoice\Model\UserData\PriceItem;
+use Apirone\Invoice\Model\UserData\ExtraItem;
+use Apirone\Invoice\Model\UserData\OrderItem;
+use stdClass;
 
 class UserData extends AbstractModel
 {
@@ -15,13 +17,16 @@ class UserData extends AbstractModel
     private ?string $url = null;
 
     // price	object	Used in the invoice to display currency and amount in fiat
-    private ?Price $price = null;
+    private ?string $price = null;
     
-    private ?array $taxRates = null;
+    private ?string $subPrice = null;
+    
+    private ?array $items = null;
+    
+    private ?array $extras = null;
 
     private function __construct()
     {
-
     }
 
     public static function init() 
@@ -38,21 +43,77 @@ class UserData extends AbstractModel
         return $class->classLoader($json);
     }
 
-    public function parsePrice($data)
+    public function merchant(?string $merchant = null)
     {
-        $userData = Price::fromJson($data);
+        $this->merchant = $merchant;
 
-        return $userData;
+        return $this;
     }
 
-    public function parseTaxRates($data)
+    public function url(?string $url = null)
     {
-        $taxRates = [];
+        $this->url = $url;
+
+        return $this;
+    }
+
+    public function price(?string $value = null)
+    {
+        $this->price = $value;
+        
+        return $this;
+    }
+
+    public function subPrice(?string $value = null)
+    {
+        $this->subPrice = $value;
+        
+        return $this;
+    }
+
+    public function addOrderItem(string $item, string $cost, int $qty, string $total)
+    {
+        $this->items[] = OrderItem::init($item, $cost, $qty, $total);
+
+        return $this;
+    }
+
+    public function addExtraItem(string $name, string $price)
+    {
+        $this->extras[] = ExtraItem::init($name, $price);
+
+        return $this;
+    }
+
+    public function parseExtras($data)
+    {
+        $taxes = [];
         foreach ($data as $item) {
-            $taxRates[] = TaxItem::fromJson($item);
+            $taxes[] = ExtraItem::fromJson($item);
         }
 
-        return $taxRates;
+        return $taxes;
     }
 
+    public function parseItems($data)
+    {
+        $items = [];
+        foreach ($data as $item) {
+            $items[] = OrderItem::fromJson($item);
+        }
+
+        return $items;
+    }
+
+    public function toJson(): stdClass
+    {
+        $json = parent::toJson();
+
+        foreach ($json as $key => $value) {
+            if ($value === null) {
+                unset($json->$key);
+            }
+        }
+        return $json;
+    }
 }
