@@ -3,5 +3,6 @@ vendor
 data
 composer.lock
 src/*.php
+src/*.json
 !src/Invoice.php
 !src/Utils.php

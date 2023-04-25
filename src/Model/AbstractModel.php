@@ -86,19 +86,14 @@ abstract class AbstractModel
             }
 
             if ($type == 'object') {
-                $settings[self::convertToSnakeCase($prop)] = $this->{$prop}->toArray();
+                $settings[self::convertToSnakeCase($prop)] = (get_class($this->{$prop}) !== 'stdClass') ? $this->{$prop}->toArray() : json_decode(json_encode($this->{$prop}), true);
+                continue;
             }
             if ($type == 'array') {
                 $items = [];
                 foreach($this->{$prop} as $key => $item) {
                     if(gettype($item) == 'object') {
-                        try{
-                            $items[] = $item->toArray();
-                        }
-                        catch (\Throwable $e) {
-                            pa($e);
-                            pa($item);
-                        }
+                        $items[] = (get_class($item) !== 'stdClass') ? $item->toArray() : json_decode(json_encode($item), true);
                     }
                     else{
                         $items[$key] = $item;
@@ -113,7 +108,13 @@ abstract class AbstractModel
 
     public function toJson(): \stdClass
     {
+
         return json_decode(json_encode($this->toArray()));
+    }
+
+    public function toJsonString($flag = 0): string
+    {        
+        return json_encode($this->toArray(), $flag);
     }
 
     /**

@@ -8,6 +8,12 @@ services:
     volumes:
       - ./src:/var/www/html/
       - ./vendor:/var/www/vendor/
+      - ./config/php.ini:/usr/local/etc/php/php.ini
+    environment:
+      XDEBUG_CONFIG: "client_host=host.docker.internal remote_port=9003"
+      XDEBUG_MODE: develop,debug
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - 80:80
   # Maria DB container
