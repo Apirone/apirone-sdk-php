@@ -5,30 +5,39 @@ namespace Apirone\Invoice\Model;
 use Apirone\API\Endpoints\Account;
 use Apirone\API\Endpoints\Service;
 use Apirone\Invoice\Model\Settings\Currency;
-use Apirone\Invoice\Model\Settings\Wallet;
 class Settings extends AbstractModel
 {
     private ?string $account = null;
 
     private ?string $transferKey = null;
 
-    private array $currencies = [];
+    private array   $currencies = [];
 
-    private \stdClass $extras;
+    private string  $merchant = '';
+
+    private int     $timeout = 1800;
+
+    private float   $factor = 1;
+
+    private string  $backlink = '';
+
+    private bool    $logo = true;
 
     private ?string $version = null;
+    
+    private \stdClass $extra;
 
     private function __construct()
     {
-        $this->extras = new \stdClass;
+        $this->extra = new \stdClass;
     }
     public static function init()
     {
         $class = new static();
 
         $class->createAccount();
-        $class->setDefaultValues();
-        $class->currencies = $class->getCurrencies();
+        // $class->setDefaultValues();
+        $class->currencies = $class->loadCurrencies();
 
         return $class;
     }
@@ -40,7 +49,7 @@ class Settings extends AbstractModel
         $class->classLoader($json);
 
         if (empty($class->currencies)) {
-            $class->currencies = $class->getCurrencies();
+            $class->currencies = $class->loadCurrencies();
         }
 
         return $class;
@@ -54,38 +63,16 @@ class Settings extends AbstractModel
         return false;
     }
 
-    public function __get($property)
+    public function toFile(string $dir, string $filename = 'invoice-config.json')
     {
-        $property = static::convertToCamelCase($property);
-        if (\property_exists($this, $property)) {
+        if (substr($dir, -1) !== DIRECTORY_SEPARATOR)
+            $dir = $dir . DIRECTORY_SEPARATOR;
+        $path = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $dir . $filename;
 
-            $class = new \ReflectionClass(static::class);
-
-            $property = $class->getProperty($property);
-            $property->setAccessible(true);
-
-            if(!$property->isInitialized($this)) {
-                return null;
-            }
-
-            return $property->getValue($this);
+        if (file_put_contents($path, json_encode($this->toJson(), JSON_PRETTY_PRINT))) {
+            return true;
         }
-        else {
-            if (property_exists($this->extras, $property)) {
-                return $this->extras->{$property};
-            }
-            return null;
-        }
-    }
-
-    public function __set($prop, $value)
-    {
-        if (\property_exists($this, $prop)) {
-            $this->{$prop} = $value;
-        }
-        else {
-            $this->extras->{$prop} = $value;
-        }
+        return false;
     }
 
     public function createAccount($renew = false)
@@ -99,28 +86,28 @@ class Settings extends AbstractModel
             $this->account = $account->account;
             $this->transferKey = $account->{'transfer-key'};
             if ($renew) {
-                $this->updateCurrencies();
+                $this->saveCurrencies();
             }
         }
 
         return $this;
     }
 
-    public function setDefaultValues()
+    public function restoreDefaults()
     {
-        $this->extras->merchant = '';
-        $this->extras->timeout = 1800;
-        $this->extras->factor = 1;
-        $this->extras->backlink = '';
-        $this->extras->logo = true;
+        $this->merchant = '';
+        $this->timeout = 1800;
+        $this->factor = 1;
+        $this->backlink = '';
+        $this->logo = true;
 
         return $this;
     }
 
-    public function getCurrencies()
+    public function loadCurrencies()
     {
         $serviceInfo = Service::account();
-        $accountInfo = $this->getAccountSettings();
+        $accountInfo = Account::init($this->account)->info()->info;
 
         $currencies = [];
         foreach($serviceInfo->currencies as $serviceItem) {
@@ -139,20 +126,13 @@ class Settings extends AbstractModel
         return $currencies;
     }
 
-    public function updateCurrencies()
+    public function saveCurrencies()
     {
         foreach ($this->currencies as $currency) {
             $currency->updateAccountSettings($this->account, $this->transferKey);
         }
 
         return $this;
-    }
-
-    private function getAccountSettings()
-    {
-        $settings = Account::init($this->account)->info();
-
-        return $settings->info;
     }
 
     public function getCurrency($abbr)
@@ -165,6 +145,191 @@ class Settings extends AbstractModel
         return false;
     }
 
+    /**
+     * Get the value of account
+     */ 
+    public function getAccount()
+    {
+        return $this->account;
+    }
+
+    /**
+     * Get the value of transferKey
+     */ 
+    public function getTransferKey()
+    {
+        return $this->transferKey;
+    }
+
+    /**
+     * Get the value of currencies
+     */ 
+    public function getCurrencies()
+    {
+        return $this->currencies;
+    }
+
+    /**
+     * Get the value of merchant
+     */ 
+    public function getMerchant()
+    {
+        return $this->merchant;
+    }
+
+    /**
+     * Set the value of merchant
+     *
+     * @return  self
+     */ 
+    public function setMerchant($merchant)
+    {
+        $this->merchant = $merchant;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of timeout
+     */ 
+    public function getTimeout()
+    {
+        return $this->timeout;
+    }
+
+    /**
+     * Set the value of timeout
+     *
+     * @return  self
+     */ 
+    public function setTimeout($timeout)
+    {
+        $this->timeout = $timeout;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of factor
+     */ 
+    public function getFactor()
+    {
+        return $this->factor;
+    }
+
+    /**
+     * Set the value of factor
+     *
+     * @return  self
+     */ 
+    public function setFactor($factor)
+    {
+        $this->factor = $factor;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of backlink
+     */ 
+    public function getBacklink()
+    {
+        return $this->backlink;
+    }
+
+    /**
+     * Set the value of backlink
+     *
+     * @return  self
+     */ 
+    public function setBacklink($backlink)
+    {
+        $this->backlink = $backlink;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of logo
+     */ 
+    public function getLogo(): bool
+    {
+        return $this->logo;
+    }
+
+    /**
+     * Set the value of logo
+     *
+     * @return  self
+     */ 
+    public function setLogo(bool $logo)
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of version
+     */ 
+    public function getVersion(): string
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set the value of version
+     *
+     * @return  self
+     */ 
+    public function setVersion(string $version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of extra
+     *
+     * @param string|null $key 
+     * @return mixed 
+     */
+    public function getExtra(string $key = null)
+    {
+        if ($key == null) {
+            return $this->extra;
+        }
+        if (property_exists($this->extra, $key)){
+            return $this->extra->{$key};
+        }
+        return null;
+    }
+
+    /**
+     * Set the value of extra
+     *
+     * @return  self
+     */ 
+    public function setExtra(string $key, string $value)
+    {
+        $this->extra->{$key} = $value;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of extra
+     *
+     * @return  self
+     */ 
+    public function setExtraObj(\stdClass $obj)
+    {
+        $this->extra = $obj;
+
+        return $this;
+    }
+
     public function parseCurrencies($json)
     {
         $items = [];
@@ -173,27 +338,5 @@ class Settings extends AbstractModel
         }
 
         return $items;
-    }
-
-    public function parseWallets($json)
-    {
-        $items = [];
-        foreach ($json as $item) {
-            $items[] = Wallet::fromJson($item);
-        }
-
-        return $items;    
-    }
-
-    public function toFile(string $dir, string $filename = 'invoice-config.json')
-    {
-        if (substr($dir, -1) !== DIRECTORY_SEPARATOR)
-            $dir = $dir . DIRECTORY_SEPARATOR;
-        $path = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $dir . $filename;
-
-        if (file_put_contents($path, json_encode($this->toJson(), JSON_PRETTY_PRINT))) {
-            return true;
-        }
-        return false;
     }
 }

@@ -2,8 +2,7 @@
 
 namespace Apirone\Invoice\Model;
 
-use Exception;
-use stdClass;
+use ReflectionException;
 
 abstract class AbstractModel
 {
@@ -40,6 +39,13 @@ abstract class AbstractModel
         return null;
     }
 
+    /**
+     * Laod class from json data
+     *
+     * @param json|stdClass 
+     * @return $this 
+     * @throws ReflectionException 
+     */
     protected function classLoader($json)
     {
         $json = gettype($json) == 'string' ? json_decode($json) : $json;
@@ -70,6 +76,8 @@ abstract class AbstractModel
     }
 
     /**
+     * Convert class data to array
+     *
      * @return array
      */
     public function toArray(): array
@@ -106,20 +114,32 @@ abstract class AbstractModel
         return $settings;
     }
 
+    /**
+     * Convert class data to stdClass
+     * 
+     * @return stdClass 
+     */
     public function toJson(): \stdClass
     {
 
         return json_decode(json_encode($this->toArray()));
     }
 
+    /**
+     * Convert class data to json string
+     *
+     * @param int $flag - second param for json_encode. For example - JSON_PRETTY_PRINT or 128
+     * @return string 
+     */
     public function toJsonString($flag = 0): string
     {        
         return json_encode($this->toArray(), $flag);
     }
 
     /**
-     * @param string $str
+     * Convert string to camelCaseValue
      *
+     * @param string $str
      * @return string
      */
     protected static function convertToCamelCase(string $str): string
@@ -137,8 +157,9 @@ abstract class AbstractModel
     }
 
     /**
-     * @param string $str
+     * Convert string to snake-case-value
      *
+     * @param string $str
      * @return string
      */
     protected static function convertToSnakeCase(string $str): string
