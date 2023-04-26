@@ -40,4 +40,36 @@ class HistoryItem extends AbstractModel
         return $item;
     }
 
+
+    /**
+     * Get the value of date
+     */ 
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Get the value of status
+     */ 
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Get the value of txid
+     */ 
+    public function getTxid()
+    {
+        return $this->txid;
+    }
+
+    /**
+     * Get the value of amount
+     */ 
+    public function getAmount()
+    {
+        return $this->amount;
+    }
 }

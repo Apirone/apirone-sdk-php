@@ -116,4 +116,52 @@ class UserData extends AbstractModel
         }
         return $json;
     }
+
+    /**
+     * Get the value of merchant
+     */ 
+    public function getMerchant()
+    {
+        return $this->merchant;
+    }
+
+    /**
+     * Get the value of url
+     */ 
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * Get the value of price
+     */ 
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Get the value of subPrice
+     */ 
+    public function getSubPrice()
+    {
+        return $this->subPrice;
+    }
+
+    /**
+     * Get the value of items
+     */ 
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    /**
+     * Get the value of extras
+     */ 
+    public function getExtras()
+    {
+        return $this->extras;
+    }
 }

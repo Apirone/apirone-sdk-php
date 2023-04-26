@@ -47,4 +47,84 @@ class OrderItem extends AbstractModel
         return $this->amount . $this->currency;
     }
 
+
+    /**
+     * Get the value of item
+     */ 
+    public function getItem()
+    {
+        return $this->item;
+    }
+
+    /**
+     * Set the value of item
+     *
+     * @return  self
+     */ 
+    public function setItem($item)
+    {
+        $this->item = $item;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of cost
+     */ 
+    public function getCost()
+    {
+        return $this->cost;
+    }
+
+    /**
+     * Set the value of cost
+     *
+     * @return  self
+     */ 
+    public function setCost($cost)
+    {
+        $this->cost = $cost;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of qty
+     */ 
+    public function getQty()
+    {
+        return $this->qty;
+    }
+
+    /**
+     * Set the value of qty
+     *
+     * @return  self
+     */ 
+    public function setQty($qty)
+    {
+        $this->qty = $qty;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of total
+     */ 
+    public function getTotal()
+    {
+        return $this->total;
+    }
+
+    /**
+     * Set the value of total
+     *
+     * @return  self
+     */ 
+    public function setTotal($total)
+    {
+        $this->total = $total;
+
+        return $this;
+    }
 }

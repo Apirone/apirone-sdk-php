@@ -98,6 +98,7 @@ class InvoiceDetails extends AbstractModel
 
         return $history;
     }
+
     public function info($private = false)
     {
         $info = $this->toJson();
@@ -114,5 +115,93 @@ class InvoiceDetails extends AbstractModel
             }
         }
         return $info;
+    }
+
+    /**
+     * Get the value of created
+     */ 
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Get the value of currency
+     */ 
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
+    /**
+     * Get the value of address
+     */ 
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * Get the value of expire
+     */ 
+    public function getExpire()
+    {
+        return $this->expire;
+    }
+
+    /**
+     * Get the value of amount
+     */ 
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * Get the value of userData
+     */ 
+    public function getUserData()
+    {
+        return $this->userData;
+    }
+
+    /**
+     * Get the value of status
+     */ 
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Get the value of history
+     */ 
+    public function getHistory()
+    {
+        return $this->history;
+    }
+
+    /**
+     * Get the value of linkback
+     */ 
+    public function getLinkback()
+    {
+        return $this->linkback;
+    }
+
+    /**
+     * Get the value of callbackUrl
+     */ 
+    public function getCallbackUrl()
+    {
+        return $this->callbackUrl;
+    }
+
+    /**
+     * Get the value of invoiceUrl
+     */ 
+    public function getInvoiceUrl()
+    {
+        return $this->invoiceUrl;
     }
 }
