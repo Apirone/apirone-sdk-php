@@ -49,6 +49,7 @@ class InvoiceQuery
 
     /**
      * Return drop invoices table SQL query
+     *
      * @param string $prefix 
      * @return string 
      */
