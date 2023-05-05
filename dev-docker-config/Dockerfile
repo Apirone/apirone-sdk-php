@@ -60,3 +60,6 @@ RUN pecl install xdebug-3.1.4 && \
 
 # Mod rewrite
 RUN a2enmod rewrite
+
+# Create symbolic link /var/www/src to /var/www/html to fix composer autoload error
+RUN cd /var/www && ln -s ./html src
