@@ -1,6 +1,6 @@
 <?php
 
-namespace Apirone\Invoice;
+namespace Apirone\Invoice\Tools;
 
 use Apirone\API\Endpoints\Service;
 

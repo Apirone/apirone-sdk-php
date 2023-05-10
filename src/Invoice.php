@@ -6,11 +6,10 @@ use Apirone\Invoice\Db\InvoiceDb;
 use Apirone\Invoice\Db\InvoiceQuery;
 use Apirone\Invoice\Model\AbstractModel;
 use Apirone\Invoice\Model\InvoiceDetails;
-use Apirone\Invoice\Model\InvoiceMeta;
 use Apirone\API\Endpoints\Service;
 use Apirone\API\Endpoints\Account;
 use Apirone\Invoice\Model\UserData;
-use Apirone\Invoice\Utils;
+use Apirone\Invoice\Tools\Utils;
 use stdClass;
 
 class Invoice extends AbstractModel{
@@ -263,7 +262,12 @@ class Invoice extends AbstractModel{
     {
         return $this->details->info($private);
     }
-    
+
+    public function show() 
+    {
+        
+    }
+
     public function toJson(): stdClass
     {
         $json = parent::toJson();

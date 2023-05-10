@@ -31,6 +31,7 @@ class Settings extends AbstractModel
     {
         $this->extra = new \stdClass;
     }
+
     public static function init()
     {
         $class = new static();
