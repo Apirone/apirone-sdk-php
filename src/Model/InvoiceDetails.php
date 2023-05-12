@@ -7,6 +7,7 @@ use Apirone\API\Endpoints\Service;
 use Apirone\Invoice\Model\AbstractModel;
 use Apirone\Invoice\Model\UserData;
 use Apirone\Invoice\Model\HistoryItem;
+use Apirone\Invoice\Tools\Utils;
 
 class InvoiceDetails extends AbstractModel
 {
@@ -203,5 +204,33 @@ class InvoiceDetails extends AbstractModel
     public function getInvoiceUrl()
     {
         return $this->invoiceUrl;
+    }
+
+    public function remains($minor = false)
+    {
+      $remains = $this->amount;
+
+      foreach ($this->history as $item) {
+        if (property_exists($item, 'amount')) {
+          $remains = $remains - $item->amount;
+        }
+      }
+      if ($minor) {
+        return $remains;
+      }
+
+      return $remains;
+    }
+
+    public function currencyInfo() {
+      return Utils::currency($this->currency);
+    }
+
+    public function countdown()
+    {
+        $expire = strtotime($this->expire);
+        $now = time();
+        
+        return ($expire > $now) ? $expire - $now : 0;
     }
 }

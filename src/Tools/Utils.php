@@ -52,7 +52,7 @@ class Utils
     public static function getQrLink($currency, $input_address, $remains) {
         $prefix = (substr_count($input_address, ':') > 0 ) ? '' : strtolower(str_replace([' ', '(', ')'], ['-', '', ''],  $currency->name)) . ':';
 
-        return 'https://chart.googleapis.com/chart?chs=225x225&cht=qr&chl=' . urlencode($prefix . $input_address . "?amount=" . $remains);
+        return 'https://chart.googleapis.com/chart?chs=225x225&cht=qr&chld=H|0&chl=' . urlencode($prefix . $input_address . "?amount=" . $remains);
     }
 
     /**

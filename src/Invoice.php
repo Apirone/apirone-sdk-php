@@ -9,6 +9,7 @@ use Apirone\Invoice\Model\InvoiceDetails;
 use Apirone\API\Endpoints\Service;
 use Apirone\API\Endpoints\Account;
 use Apirone\Invoice\Model\UserData;
+use Apirone\Invoice\Tools\Template;
 use Apirone\Invoice\Tools\Utils;
 use stdClass;
 
@@ -28,9 +29,10 @@ class Invoice extends AbstractModel{
 
     private ?array $createParams;
 
+    private ?Template $template = null;
+
     private function __construct()
     {
-        
     }
 
     public static function init(string $currency, ?int $amount = null)
@@ -62,7 +64,10 @@ class Invoice extends AbstractModel{
     {
         $class = new static();
 
-        return $class->classLoader($json);
+        $class->classLoader($json);
+        $class->template();
+
+        return $class;
     }
 
     public static function getInvoice($invoice)
@@ -198,6 +203,8 @@ class Invoice extends AbstractModel{
         }
         $this->save();
 
+        $this->template();
+
         return $this;
     }
 
@@ -263,15 +270,25 @@ class Invoice extends AbstractModel{
         return $this->details->info($private);
     }
 
-    public function show() 
+    public function template($qrOnly = false, $showLogo = false, $backlink = '')
     {
-        
+        $this->template = Template::init($this, $qrOnly, $showLogo, $backlink);
+
+        return $this;
+    }
+
+    public function render($qrOnly = false)
+    {
+        $this->template->setQrOnly($qrOnly);
+
+        return $this->template->render();
     }
 
     public function toJson(): stdClass
     {
         $json = parent::toJson();
         unset($json->{'create-params'});
+        unset($json->{'template'});
 
         return $json;
     }

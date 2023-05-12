@@ -36,7 +36,7 @@ class Settings extends AbstractModel
     {
         $class = new static();
 
-        $class->createAccount();
+        // $class->createAccount();
         // $class->setDefaultValues();
         $class->currencies = $class->loadCurrencies();
 
@@ -108,7 +108,7 @@ class Settings extends AbstractModel
     public function loadCurrencies()
     {
         $serviceInfo = Service::account();
-        $accountInfo = Account::init($this->account)->info()->info;
+        $accountInfo = ($this->account) ? Account::init($this->account)->info()->info : [];
 
         $currencies = [];
         foreach($serviceInfo->currencies as $serviceItem) {

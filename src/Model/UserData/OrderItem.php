@@ -7,7 +7,7 @@ use Apirone\Invoice\Model\AbstractModel;
 class OrderItem extends AbstractModel
 {
     // date	string	Invoice status change date
-    private ?string $item = null;
+    private ?string $name = null;
 
     // status	string	Invoice status
     private ?string $cost = null;
@@ -17,20 +17,20 @@ class OrderItem extends AbstractModel
     private ?string $total = null;
 
     private function __construct(
-        ?string $item = null,
+        ?string $name = null,
         ?string $cost = null,
         ?int $qty = null,
         ?string $total = null
     ) {
-        $this->item = $item;
+        $this->name = $name;
         $this->cost = $cost;
         $this->qty = $qty;
         $this->total = $total;
     }
 
-    public static function init(string $item, string $cost, int $qty, string $total)
+    public static function init(string $name, string $cost, int $qty, string $total)
     {
-        $class = new static($item, $cost, $qty, $total);
+        $class = new static($name, $cost, $qty, $total);
 
         return $class;
     }
@@ -49,21 +49,21 @@ class OrderItem extends AbstractModel
 
 
     /**
-     * Get the value of item
+     * Get the value of name
      */ 
-    public function getItem()
+    public function getName()
     {
-        return $this->item;
+        return $this->name;
     }
 
     /**
-     * Set the value of item
+     * Set the value of name
      *
      * @return  self
      */ 
-    public function setItem($item)
+    public function setName($name)
     {
-        $this->item = $item;
+        $this->name = $name;
 
         return $this;
     }
