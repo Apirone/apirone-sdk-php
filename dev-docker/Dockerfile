@@ -58,12 +58,15 @@ RUN pecl install xdebug-3.1.4 && \
     docker-php-ext-enable xdebug && \
     mkdir /var/log/xdebug
 
-RUN cd /var/www && \
-     composer update && \
-     composer install
+COPY dev-docker/composer_init.sh /usr/bin/composer_init.sh
+RUN cd /usr/bin && chmod +x composer_init.sh
+
+CMD ["/usr/bin/composer_init.sh"]
 
 # Mod rewrite
 RUN a2enmod rewrite
 
+
 # Create symbolic link /var/www/src to /var/www/html to fix composer autoload error
 RUN cd /var/www && ln -s ./html src
+

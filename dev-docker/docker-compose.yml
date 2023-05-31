@@ -1,16 +1,16 @@
 version: '3.8'
 services:
-  apirone-invoice-php:
+  apache:
     build:
-      context: ./dev-docker-config
+      context: ./
+      dockerfile: ./dev-docker/Dockerfile
       args:
         VERSION: 7.4
     volumes:
       - ./src:/var/www/html/
-      - ./vendor:/var/www/vendor/
-      - ./dev-docker-config/php.ini:/usr/local/etc/php/php.ini
+      - ./vendor:/var/www/vendor
+      - ./dev-docker/php.ini:/usr/local/etc/php/php.ini
       - ./composer.json:/var/www/composer.json
-      - ./composer.lock:/var/www/composer.lock
     environment:
       XDEBUG_CONFIG: "client_host=host.docker.internal remote_port=9003"
       XDEBUG_MODE: develop,debug
@@ -18,14 +18,13 @@ services:
       - "host.docker.internal:host-gateway"
     ports:
       - 80:80
-      - 8080:80
   # Maria DB container
   db:
     image: mariadb:latest
     environment:
       MYSQL_ROOT_PASSWORD: toor
     volumes:
-      - ./data/mysql:/var/lib/mysql
-      - ./data/init.sh:/docker-entrypoint-initdb.d/init.sh:ro
+      - ./dev-docker/init.sh:/docker-entrypoint-initdb.d/init.sh:ro
+      - ./dev-docker/data/mysql:/var/lib/mysql
     ports:
       - '3306:3306'
