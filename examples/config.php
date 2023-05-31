@@ -63,6 +63,3 @@ $db_handler = static function($query) {
     }
     return $result->fetch_all(MYSQLI_ASSOC);
 };
-
-// Set table prefix example
-InvoiceDb::setPrefix('pfx_');

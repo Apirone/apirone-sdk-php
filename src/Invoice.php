@@ -8,12 +8,14 @@ use Apirone\Invoice\Model\AbstractModel;
 use Apirone\Invoice\Model\InvoiceDetails;
 use Apirone\API\Endpoints\Service;
 use Apirone\API\Endpoints\Account;
+use Apirone\API\Http\ErrorDispatcher;
 use Apirone\Invoice\Model\UserData;
-use Apirone\Invoice\Tools\Template;
-use Apirone\Invoice\Tools\Utils;
-use stdClass;
+use Apirone\Invoice\Model\Settings;
+use Apirone\Invoice\Utils;
 
 class Invoice extends AbstractModel{
+
+    public static Settings $settings;
 
     private ?int $id = null;
 
@@ -29,10 +31,24 @@ class Invoice extends AbstractModel{
 
     private ?array $createParams;
 
-    private ?Template $template = null;
-
     private function __construct()
     {
+    }
+
+    public static function config(\Apirone\Invoice\Model\Settings $settings)
+    {
+        static::$settings = $settings;
+    }
+
+    public static function db(\Closure $handler, string $prefix = '')
+    {
+        InvoiceDb::setCallback($handler);
+        InvoiceDb::setPrefix($prefix);
+    }
+
+    public static function log(\Closure $handler)
+    {
+        ErrorDispatcher::setCallback($handler);
     }
 
     public static function init(string $currency, ?int $amount = null)
@@ -65,7 +81,6 @@ class Invoice extends AbstractModel{
         $class = new static();
 
         $class->classLoader($json);
-        $class->template();
 
         return $class;
     }
@@ -203,8 +218,6 @@ class Invoice extends AbstractModel{
         }
         $this->save();
 
-        $this->template();
-
         return $this;
     }
 
@@ -270,21 +283,7 @@ class Invoice extends AbstractModel{
         return $this->details->info($private);
     }
 
-    public function template($qrOnly = false, $showLogo = false, $backlink = '')
-    {
-        $this->template = Template::init($this, $qrOnly, $showLogo, $backlink);
-
-        return $this;
-    }
-
-    public function render($qrOnly = false)
-    {
-        $this->template->setQrOnly($qrOnly);
-
-        return $this->template->render();
-    }
-
-    public function toJson(): stdClass
+    public function toJson(): \stdClass
     {
         $json = parent::toJson();
         unset($json->{'create-params'});

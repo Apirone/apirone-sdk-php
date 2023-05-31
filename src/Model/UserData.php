@@ -10,6 +10,8 @@ use stdClass;
 
 class UserData extends AbstractModel
 {
+    private ?string $title = null;
+
     // merchant	string	Merchant name. Used as the invoice title
     private ?string $merchant = null;
 
@@ -41,6 +43,13 @@ class UserData extends AbstractModel
         $class = new static();
 
         return $class->classLoader($json);
+    }
+
+    public function title(?string $title = null)
+    {
+        $this->title = $title;
+
+        return $this;
     }
 
     public function merchant(?string $merchant = null)

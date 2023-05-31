@@ -1,6 +1,6 @@
 <?php
 
-namespace Apirone\Invoice\Tools;
+namespace Apirone\Invoice;
 
 use Apirone\API\Endpoints\Service;
 
@@ -46,13 +46,14 @@ class Utils
      * 
      * @param mixed $currency 
      * @param mixed $input_address 
-     * @param mixed $remains 
+     * @param mixed $amount 
      * @return void 
      */
-    public static function getQrLink($currency, $input_address, $remains) {
+    public static function getQrLink($currency, $input_address, $amount = null) {
         $prefix = (substr_count($input_address, ':') > 0 ) ? '' : strtolower(str_replace([' ', '(', ')'], ['-', '', ''],  $currency->name)) . ':';
+        $amount = ($amount !== null && $amount > 0) ? '?amount=' . $amount : '';
 
-        return 'https://chart.googleapis.com/chart?chs=225x225&cht=qr&chld=H|0&chl=' . urlencode($prefix . $input_address . "?amount=" . $remains);
+        return 'https://chart.googleapis.com/chart?chs=256x256&cht=qr&chld=H|0&chl=' . urlencode($prefix . $input_address . $amount);
     }
 
     /**

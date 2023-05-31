@@ -4,6 +4,7 @@ namespace Apirone\Invoice\Model;
 
 use Apirone\API\Endpoints\Account;
 use Apirone\API\Endpoints\Service;
+use Apirone\Invoice\Invoice;
 use Apirone\Invoice\Model\AbstractModel;
 use Apirone\Invoice\Model\UserData;
 use Apirone\Invoice\Model\HistoryItem;
@@ -206,31 +207,21 @@ class InvoiceDetails extends AbstractModel
         return $this->invoiceUrl;
     }
 
-    public function remains($minor = false)
-    {
-      $remains = $this->amount;
-
-      foreach ($this->history as $item) {
-        if (property_exists($item, 'amount')) {
-          $remains = $remains - $item->amount;
-        }
-      }
-      if ($minor) {
-        return $remains;
-      }
-
-      return $remains;
-    }
-
-    public function currencyInfo() {
-      return Utils::currency($this->currency);
-    }
-
     public function countdown()
     {
         $expire = strtotime($this->expire);
         $now = time();
         
-        return ($expire > $now) ? $expire - $now : 0;
+        return ($expire > $now) ? $expire - $now : -1;
+    }
+
+    public function statusNum() {
+        switch ($this->status) {
+            case 'success':
+            case 'expired':
+                return 0;
+            default:
+                return count($this->history);
+        }
     }
 }

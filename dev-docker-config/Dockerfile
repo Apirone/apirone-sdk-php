@@ -58,6 +58,10 @@ RUN pecl install xdebug-3.1.4 && \
     docker-php-ext-enable xdebug && \
     mkdir /var/log/xdebug
 
+RUN cd /var/www && \
+     composer update && \
+     composer install
+
 # Mod rewrite
 RUN a2enmod rewrite
 
