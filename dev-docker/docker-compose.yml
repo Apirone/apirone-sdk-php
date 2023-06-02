@@ -24,7 +24,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: toor
     volumes:
-      - ./dev-docker/init.sh:/docker-entrypoint-initdb.d/init.sh:ro
       - ./dev-docker/data/mysql:/var/lib/mysql
+      - ./dev-docker/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
     ports:
       - '3306:3306'
