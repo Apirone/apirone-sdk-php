@@ -67,6 +67,6 @@ CMD ["/usr/bin/composer_init.sh"]
 RUN a2enmod rewrite
 
 
-# Create symbolic link /var/www/src to /var/www/html to fix composer autoload error
-RUN cd /var/www && ln -s ./html src
+# # Create symbolic link /var/www/src to /var/www/html to fix composer autoload error
+# RUN cd /var/www && ln -s ./html src
 
