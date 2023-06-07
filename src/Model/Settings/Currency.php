@@ -20,7 +20,7 @@ class Currency extends AbstractModel
 
     private ?string $address = null;
     
-    private ?string $policy = null;
+    private string $policy = 'fixed';
 
     private ?string $error = null;
 
