@@ -64,6 +64,16 @@ class Settings extends AbstractModel
         return false;
     }
 
+    public static function fromExistingAccount($account, $transferKey) {
+        $class = new static();
+
+        $class->account = $account;
+        $class->transferKey = $transferKey;
+        $class->loadCurrencies();
+
+        return $class;
+    }
+
     /**
      * Save settings to file
      *
@@ -143,7 +153,7 @@ class Settings extends AbstractModel
     public function saveCurrencies()
     {
         foreach ($this->currencies as $currency) {
-            $currency->updateAccountSettings($this->account, $this->transferKey);
+            $currency->saveSettings($this->account, $this->transferKey);
         }
 
         return $this;
