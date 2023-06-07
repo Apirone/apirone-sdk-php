@@ -64,16 +64,29 @@ class Settings extends AbstractModel
         return false;
     }
 
-    public function toFile(string $dir, string $filename = 'invoice-config.json')
+    /**
+     * Save settings to file
+     *
+     * @param string $abspath
+     * @param string $filename 
+     * @return bool 
+     */
+    public function toFile($abspath)
     {
-        if (substr($dir, -1) !== DIRECTORY_SEPARATOR)
-            $dir = $dir . DIRECTORY_SEPARATOR;
-        $path = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $dir . $filename;
-
-        if (file_put_contents($path, json_encode($this->toJson(), JSON_PRETTY_PRINT))) {
+        if (file_put_contents($abspath, json_encode($this->toJson(), JSON_PRETTY_PRINT))) {
             return true;
         }
         return false;
+    }
+
+    public function toArray(): array {
+        $data = parent::toArray();
+
+        if(empty($data['extra']) && gettype($data['extra']) == 'array') {
+            $data['extra'] = new \stdClass;
+        }
+
+        return $data;
     }
 
     public function createAccount($renew = false)
