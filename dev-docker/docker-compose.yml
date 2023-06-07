@@ -10,6 +10,7 @@ services:
       - ./examples:/var/www/html/
       - ./src:/var/www/src/
       - ./vendor:/var/www/vendor
+      - ./dev-docker/settings:/var/www/settings/
       - ./dev-docker/php.ini:/usr/local/etc/php/php.ini
       - ./composer.json:/var/www/composer.json
     environment:

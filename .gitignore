@@ -1,6 +1,7 @@
 .vscode
 vendor
 dev-docker/data
+dev-docker/settings
 composer.lock
 docker-compose.yml
 !dev-docker/docker-compose.yml
