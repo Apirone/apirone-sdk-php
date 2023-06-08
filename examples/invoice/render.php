@@ -1,5 +1,5 @@
 <?php
-require_once('../common.php');
+require_once('../common/all.php');
 
 use Apirone\Invoice\Invoice;
 use Apirone\Invoice\Model\Settings;
