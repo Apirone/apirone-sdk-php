@@ -5,26 +5,70 @@ namespace Apirone\Invoice\Model;
 use Apirone\API\Endpoints\Account;
 use Apirone\API\Endpoints\Service;
 use Apirone\Invoice\Model\Settings\Currency;
+use stdClass;
+
 class Settings extends AbstractModel
 {
+    /**
+     * Invoice account
+     *
+     * @var null|string
+     */
     private ?string $account = null;
 
+    /**
+     * Account trasfer key
+     *
+     * @var null|string
+     */
     private ?string $transferKey = null;
 
+    /**
+     * Currencies
+     *
+     * @var array
+     */
     private array   $currencies = [];
 
+    /**
+     * Merchant name
+     *
+     * @var string
+     */
     private string  $merchant = '';
 
+    /**
+     * Invoice timeout
+     *
+     * @var int
+     */
     private int     $timeout = 1800;
 
+    /**
+     * Price adjustment factor
+     *
+     * @var float
+     */
     private float   $factor = 1;
 
+    /**
+     * Backlink
+     * 
+     * @var string
+     */
     private string  $backlink = '';
-
+    /**
+     * Logo
+     * 
+     * @var bool
+     */
     private bool    $logo = true;
-
-    private ?string $version = null;
     
+    /**
+     * Extra settings values object
+     *
+     * @var stdClass
+     */
     private \stdClass $extra;
 
     private function __construct()
@@ -35,9 +79,6 @@ class Settings extends AbstractModel
     public static function init()
     {
         $class = new static();
-
-        // $class->createAccount();
-        // $class->setDefaultValues();
         $class->currencies = $class->loadCurrencies();
 
         return $class;
@@ -46,7 +87,6 @@ class Settings extends AbstractModel
     public static function fromJson($json)
     {
         $class = new static();
-        
         $class->classLoader($json);
 
         if (empty($class->currencies)) {
@@ -243,7 +283,12 @@ class Settings extends AbstractModel
 
     /**
      * Set the value of factor
-     *
+
+     * If you want to add/substract percent to/from the payment amount, use the following  price adjustment factor 
+     * multiplied by the amount. 
+     * For example: 
+     * 100% * 0.99 = 99%
+     * 100% * 1.01 = 101%
      * @return  self
      */ 
     public function setFactor($factor)
@@ -289,26 +334,6 @@ class Settings extends AbstractModel
     public function setLogo(bool $logo)
     {
         $this->logo = $logo;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of version
-     */ 
-    public function getVersion(): string
-    {
-        return $this->version;
-    }
-
-    /**
-     * Set the value of version
-     *
-     * @return  self
-     */ 
-    public function setVersion(string $version)
-    {
-        $this->version = $version;
 
         return $this;
     }
