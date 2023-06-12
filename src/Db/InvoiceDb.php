@@ -72,6 +72,7 @@ class InvoiceDb
         string $charset = 'utf8',
         string $collate = 'utf8_general_ci'
     ) {
+        $prefix = static::$prefix !== false ? static::$prefix : $prefix;
         $query = InvoiceQuery::createInvoicesTable($prefix, $charset, $collate);
 
         return InvoiceDb::execute($query);

@@ -98,10 +98,12 @@ class Settings extends AbstractModel
     public static function fromFile($abspath)
     {
         $json = file_get_contents($abspath);
+
         if ($json) {
             return static::fromJson($json);
         }
-        return false;
+
+        return null;
     }
 
     public static function fromExistingAccount($account, $transferKey) {
