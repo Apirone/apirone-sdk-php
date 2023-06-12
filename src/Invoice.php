@@ -8,10 +8,19 @@ use Apirone\Invoice\Model\AbstractModel;
 use Apirone\Invoice\Model\InvoiceDetails;
 use Apirone\API\Endpoints\Service;
 use Apirone\API\Endpoints\Account;
+use Apirone\API\Exceptions\RuntimeException;
+use Apirone\API\Exceptions\ValidationFailedException;
+use Apirone\API\Exceptions\UnauthorizedException;
+use Apirone\API\Exceptions\ForbiddenException;
+use Apirone\API\Exceptions\InternalServerErrorException;
+use Apirone\API\Exceptions\NotFoundException;
+use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\API\Http\ErrorDispatcher;
 use Apirone\Invoice\Model\UserData;
 use Apirone\Invoice\Model\Settings;
 use Apirone\Invoice\Utils;
+use Closure;
+use ReflectionException;
 
 class Invoice extends AbstractModel{
 
@@ -35,23 +44,49 @@ class Invoice extends AbstractModel{
     {
     }
 
-    public static function config(\Apirone\Invoice\Model\Settings $settings)
+    /**
+     * Set settings to Iinvoice object
+     *
+     * @param Settings $settings 
+     * @return void 
+     */
+    public static function config(\Apirone\Invoice\Model\Settings $settings): void
     {
         static::$settings = $settings;
     }
 
-    public static function db(\Closure $handler, string $prefix = '')
+    /**
+     * Set DB handler & table prefix for InvoiceDb class
+     *
+     * @param Closure $handler 
+     * @param string $prefix 
+     * @return void 
+     */
+    public static function db(\Closure $handler, string $prefix = ''): void
     {
         InvoiceDb::setCallback($handler);
         InvoiceDb::setPrefix($prefix);
     }
 
-    public static function log(\Closure $handler)
+    /**
+     * Set log handler
+     *
+     * @param Closure $handler 
+     * @return void 
+     */
+    public static function log(\Closure $handler): void
     {
         ErrorDispatcher::setCallback($handler);
     }
 
-    public static function init(string $currency, ?int $amount = null)
+    /**
+     * Init new Invoice class
+     *
+     * @param string $currency 
+     * @param null|int $amount 
+     * @return static 
+     */
+    public static function init(string $currency, ?int $amount = null): Invoice
     {
         $class = new static();
 
@@ -64,7 +99,23 @@ class Invoice extends AbstractModel{
         return $class;
     }
 
-    public static function fromFiatAmount(float $value, string $from, string $to, float $factor = 1)
+    /**
+     * Create new invoice class from fiat amount
+     *
+     * @param float $value 
+     * @param string $from 
+     * @param string $to 
+     * @param float|int $factor 
+     * @return static 
+     * @throws RuntimeException 
+     * @throws ValidationFailedException 
+     * @throws UnauthorizedException 
+     * @throws ForbiddenException 
+     * @throws NotFoundException 
+     * @throws MethodNotAllowedException 
+     * @throws InternalServerErrorException 
+     */
+    public static function fromFiatAmount(float $value, string $from, string $to, float $factor = 1): Invoice
     {
         $class = new static();
         $class->currency($to);
@@ -76,7 +127,14 @@ class Invoice extends AbstractModel{
         return $class;
     }
 
-    public static function fromJson($json)
+    /**
+     * Restore invoice from JSON object
+     *
+     * @param mixed $json 
+     * @return static 
+     * @throws ReflectionException 
+     */
+    public static function fromJson($json): Invoice
     {
         $class = new static();
 
@@ -85,7 +143,14 @@ class Invoice extends AbstractModel{
         return $class;
     }
 
-    public static function getInvoice($invoice)
+    /**
+     * Get Invoce from data table
+     *
+     * @param mixed $invoice 
+     * @return null|Invoice 
+     * @throws ReflectionException 
+     */
+    public static function getInvoice($invoice): ?Invoice
     {
         $prefix = InvoiceDb::$prefix;
         $query = InvoiceQuery::selectInvoice($invoice, $prefix);
@@ -133,8 +198,21 @@ class Invoice extends AbstractModel{
         return $invoices;
     }
 
-    // TODO: Maybe add order callback handler !!!
-    public static function callbackHandler($order_handler = null) {
+    /**
+     * Invoce callback handler
+     *
+     * @param mixed $order_handler - Callback func to process your order process logic (change status, etc)
+     * @return void
+     * @throws ReflectionException 
+     * @throws RuntimeException 
+     * @throws ValidationFailedException 
+     * @throws UnauthorizedException 
+     * @throws ForbiddenException 
+     * @throws NotFoundException 
+     * @throws MethodNotAllowedException 
+     */
+    public static function callbackHandler($order_handler = null): void
+    {
 
         $data = file_get_contents('php://input');
 
@@ -147,8 +225,7 @@ class Invoice extends AbstractModel{
 
         if (!property_exists($params, 'invoice') || !property_exists($params, 'status')) {
             Utils::send_json('Wrong params received: ' . json_encode($params), 400); 
-            
-            return $result;
+            return;
         }
 
         $invoice = Invoice::getInvoice($params->invoice);
@@ -173,7 +250,19 @@ class Invoice extends AbstractModel{
         return $this;
     }
 
-    public function currency(string $currency)
+    /**
+     * Set currency
+     *
+     * @param string $currency 
+     * @return static 
+     * @throws RuntimeException 
+     * @throws ValidationFailedException 
+     * @throws UnauthorizedException 
+     * @throws ForbiddenException 
+     * @throws NotFoundException 
+     * @throws MethodNotAllowedException 
+     */
+    public function currency(string $currency): static
     {
         $currency = Utils::currency($currency);
         $this->createParams['currency'] = $currency;
@@ -181,6 +270,12 @@ class Invoice extends AbstractModel{
         return $this;
     }
 
+    /**
+     * Set amount
+     * 
+     * @param null|int $amount 
+     * @return $this 
+     */
     public function amount(?int $amount = null)
     {
         $this->createParams['amount'] = $amount;
@@ -188,6 +283,12 @@ class Invoice extends AbstractModel{
         return $this;
     }
 
+    /**
+     * set lifetime
+     * 
+     * @param null|int $lifetime 
+     * @return $this 
+     */
     public function lifetime(?int $lifetime = null)
     {
         $this->createParams['lifetime'] = $lifetime;
@@ -195,6 +296,12 @@ class Invoice extends AbstractModel{
         return $this;
     }
 
+    /**
+     * Set expire
+     * 
+     * @param null|string $expire 
+     * @return $this 
+     */
     public function expire(?string $expire = null)
     {
         $this->createParams['expire'] = $expire;
@@ -202,6 +309,12 @@ class Invoice extends AbstractModel{
         return $this;
     }
 
+    /**
+     * Set UserData object
+     *
+     * @param null|UserData $userData 
+     * @return $this 
+     */
     public function userData(?UserData $userData = null)
     {
         $this->createParams['user-data'] = ($userData instanceof UserData) ? $userData->toJson() : $userData;
@@ -209,6 +322,12 @@ class Invoice extends AbstractModel{
         return $this;
     }
 
+    /**
+     * Set linkback
+     * 
+     * @param null|string $linkback 
+     * @return $this 
+     */
     public function linkback(?string $linkback = null)
     {
         $this->createParams['linkback'] = $linkback;
@@ -216,6 +335,12 @@ class Invoice extends AbstractModel{
         return $this;
     }
 
+    /**
+     * Set callback url
+     * 
+     * @param null|string $callbackUrl 
+     * @return $this 
+     */
     public function callbackUrl(?string $callbackUrl = null)
     {
         $this->createParams['callback-url'] = $callbackUrl;
@@ -223,6 +348,20 @@ class Invoice extends AbstractModel{
         return $this;
     }
 
+    /**
+     * Create invoice from creation params
+     *
+     * @param string $account 
+     * @return $this 
+     * @throws RuntimeException 
+     * @throws ValidationFailedException 
+     * @throws UnauthorizedException 
+     * @throws ForbiddenException 
+     * @throws NotFoundException 
+     * @throws MethodNotAllowedException 
+     * @throws InternalServerErrorException 
+     * @throws ReflectionException 
+     */
     public function create(string $account)
     {
         if ($this->invoice !== null || !isset($this->createParams)) {
@@ -254,6 +393,11 @@ class Invoice extends AbstractModel{
         return $this;
     }
 
+    /**
+     * Save invoice into data table
+     * 
+     * @return bool 
+     */
     public function save(): bool
     {
         $prefix = InvoiceDb::$prefix;
@@ -267,6 +411,18 @@ class Invoice extends AbstractModel{
         return $result;
     }
 
+    /**
+     * Update invoice data from apirone & save if status changed
+     * 
+     * @return bool 
+     * @throws RuntimeException 
+     * @throws ValidationFailedException 
+     * @throws UnauthorizedException 
+     * @throws ForbiddenException 
+     * @throws NotFoundException 
+     * @throws MethodNotAllowedException 
+     * @throws ReflectionException 
+     */
     public function update(): bool
     {
         $this->details->update();
@@ -279,6 +435,13 @@ class Invoice extends AbstractModel{
         return false;
     }
 
+    /**
+     * Set invoice meta value
+     * 
+     * @param mixed $key 
+     * @param mixed $value 
+     * @return $this 
+     */
     public function setMeta($key, $value)
     {
         if ($this->meta === null)
@@ -291,11 +454,23 @@ class Invoice extends AbstractModel{
         return $this;
     }
 
+    /**
+     * Get invoice meta value by key
+     * 
+     * @param mixed $key 
+     * @return mixed 
+     */
     public function getMeta($key)
     {
         return array_key_exists('$key', $this->meta) ? $this->meta[$key] : null;
     }
 
+    /**
+     * Delete meta valie from invoice
+     *
+     * @param mixed $key 
+     * @return $this 
+     */
     public function deleteMeta($key)
     {
         if($this->meta === null) {
@@ -311,11 +486,22 @@ class Invoice extends AbstractModel{
         return $this;
     }
 
+    /**
+     * Return public or private invoice info
+     * 
+     * @param bool $private 
+     * @return Apirone\Invoice\Model\stdClass 
+     */
     public function info($private = false)
     {
         return $this->details->info($private);
     }
 
+    /**
+     * convert invoice to JSON
+     * 
+     * @return Apirone\Invoice\Model\stdClass 
+     */
     public function toJson(): \stdClass
     {
         $json = parent::toJson();
