@@ -3,9 +3,27 @@
 namespace Apirone\Invoice;
 
 use Apirone\API\Endpoints\Service;
+use Apirone\API\Exceptions\RuntimeException;
+use Apirone\API\Exceptions\ValidationFailedException;
+use Apirone\API\Exceptions\UnauthorizedException;
+use Apirone\API\Exceptions\ForbiddenException;
+use Apirone\API\Exceptions\NotFoundException;
+use Apirone\API\Exceptions\MethodNotAllowedException;
 
 class Utils
 {
+    /**
+     * Get apirone currency by abbreviation
+     * 
+     * @param string $currency 
+     * @return mixed 
+     * @throws RuntimeException 
+     * @throws ValidationFailedException 
+     * @throws UnauthorizedException 
+     * @throws ForbiddenException 
+     * @throws NotFoundException 
+     * @throws MethodNotAllowedException 
+     */
     public static function currency(string $currency) {
         $info = Service::account();
         foreach($info->currencies as $item) {
@@ -81,10 +99,24 @@ class Utils
         return sprintf('%.8f', floatval($value));
     }
 
+    /**
+     * Minor currency value to major
+     *
+     * @param mixed $value 
+     * @param mixed $unitsFactor 
+     * @return int|float 
+     */
     public static function min2cur($value, $unitsFactor) {
         return $value * $unitsFactor;
     }
 
+    /**
+     * Major currency value to minor
+     * 
+     * @param mixed $value 
+     * @param mixed $unitsFactor 
+     * @return int|float 
+     */
     public static function cur2min($value, $unitsFactor) {
         return $value / $unitsFactor;
     }
@@ -138,7 +170,7 @@ class Utils
         return false;
     }
 
-        /**
+    /**
      * @param string $date DateTime string
      *
      * @return string
@@ -149,5 +181,63 @@ class Utils
         $date->setTimezone(new \DateTimeZone(\date_default_timezone_get()));
 
         return $date->format(\DateTime::ATOM);
+    }
+
+    /**
+     * Sanitize text input to prevent XSS & SQL injection
+     *
+     * @param mixed $string 
+     * @return mixed 
+     */
+    public static function sanitize($string)
+    {
+        if ( is_object( $string ) || is_array( $string ) ) {
+            return '';
+        }
+
+        $string = trim(strip_tags($string));
+        $string = preg_replace( '/[\r\n\t ]+/', ' ', $string);
+
+        $found = false;
+        while ( preg_match( '/%[a-f0-9]{2}/i', $string, $match ) ) {
+            $string = str_replace( $match[0], '', $string );
+            $found    = true;
+        }
+
+        if ( $found ) {
+            $string = trim( preg_replace( '/ +/', ' ', $string ) );
+        }
+        return $string;
+    }
+
+    /**
+     * Send JSON response
+     * 
+     * @param mixed $data 
+     * @param int $code 
+     * @return false|void 
+     */
+    public static function send_json($data, $code = 200)
+    {
+        if (headers_sent()) {
+            return false;
+        }
+
+        http_response_code($code);
+        $json = json_encode($data);
+        if ($json === false) {
+            // Avoid echo of empty string (which is invalid JSON), and
+            // JSONify the error message instead:
+            $json = json_encode(["jsonError" => json_last_error_msg()]);
+            if ($json === false) {
+                // This should not happen, but we go all the way now:
+                $json = '{"jsonError":"unknown"}';
+            }
+            // Set HTTP response status code to: 500 - Internal Server Error
+            http_response_code(500);
+        }
+
+        header('Content-Type: application/json; charset=utf-8');
+        echo $json;
     }
 }
