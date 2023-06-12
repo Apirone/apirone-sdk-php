@@ -9,6 +9,7 @@ services:
     volumes:
       - ./examples:/var/www/html/
       - ./src:/var/www/src/
+      - ./src/assets:/var/www/html/assets
       - ./vendor:/var/www/vendor
       - ./dev-docker/settings:/var/www/settings/
       - ./dev-docker/php.ini:/usr/local/etc/php/php.ini

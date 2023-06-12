@@ -10,3 +10,4 @@ src/*.json
 !src/Invoice.php
 !src/Utils.php
 !src/Render.php
+examples/assets
