@@ -13,6 +13,7 @@ class Utils
                 return $item;
             }
         }
+
         return null;
     }
     /**
@@ -96,15 +97,17 @@ class Utils
      * @param string $to 
      * @return mixed 
      */
-    public static function fiat2crypto($value, $from='usd', $to = 'btc') {
-        if ($from == 'btc') {
+    public static function fiat2crypto($value, $from, $to) {
+        $from = trim(strtolower($from));
+        $to = trim(strtolower($to));
+        if ($from == $to) {
             return $value;
         }
 
-        $endpoint = '/v1/to' . strtolower($to);
+        $endpoint = '/v1/to' . $to;
         $params = array(
-            'currency' => trim(strtolower($from)),
-            'value' => trim(strtolower($value))
+            'currency' => $from,
+            'value' => $value
         );
         $result = Request::execute('get', $endpoint, $params );
 
@@ -112,8 +115,9 @@ class Utils
             Log::debug($result);
             return false;
         }
-        else
+        else {
             return (float) $result;
+        }
     }
 
     /**
@@ -130,8 +134,8 @@ class Utils
         if(property_exists($supported_currencies, strtolower($fiat))) {
             return true;
         }
-        return false;
 
+        return false;
     }
 
         /**
