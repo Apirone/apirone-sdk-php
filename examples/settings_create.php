@@ -1,8 +1,8 @@
 <?php
 // Init new settings object
 
-require_once('../common/pa.php'); // Just for example output
-require_once('../../vendor/autoload.php'); // Path/to/vender/folder/autoload.php
+require_once('common/pa.php'); // Just for example output
+require_once('../vendor/autoload.php'); // Path/to/vender/folder/autoload.php
 
 use Apirone\Invoice\Model\Settings;
 

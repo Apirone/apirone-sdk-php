@@ -1,14 +1,16 @@
 <?php
 require_once('../common/all.php');
 
+use Apirone\Invoice\Invoice;
+use Apirone\Invoice\Model\Settings;
 
 // Config, DB & Logs
-Invoice::config( Settings::fromFile(__DIR__ . '/invoice-config.json') );
+Invoice::config( Settings::fromFile('/var/www/settings/invoice-config.json') );
 Invoice::db($db_handler, 'pfx_');
 Invoice::log($log_handler);
 
 if ($_GET['invoice']) {
-    $id = $_GET['invoice'];
+    $id = (int) $_GET['invoice'];
     $offset = $_GET['offset'] ?? false;
 
     $invoice = Invoice::getInvoice($id);

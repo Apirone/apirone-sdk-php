@@ -6,7 +6,7 @@ use Apirone\Invoice\Model\Settings;
 use Apirone\Invoice\Render;
 
 // Config, DB & Logs
-Invoice::config( Settings::fromFile(__DIR__ . '/invoice-config.json') );
+Invoice::config( Settings::fromFile('/var/www/settings/invoice-config.json') );
 Invoice::db($db_handler, 'pfx_');
 Invoice::log($log_handler);
 
@@ -30,16 +30,18 @@ if ($_GET['invoice']) {
 
 // pa($invoice::$settings->getCurrency('btc'));
 $render = Render::init();
+$render->setDataUrl('/invoice/render.php');
 // $render->setTimeZoneByOffset(-240);
 // $render->showInvoice('79Ry0vxkPp8Adt2b');
 // $render->showInvoice($invoice);
 // $render->showInvoice(null);
 
+
 ?>
 <html>
     <head>
-        <script src="/UI/js/script.js" type="text/javascript"></script>
-        <link href="/UI/css/styles.css" rel="stylesheet">
+        <script src="/assets/js/script.js" type="text/javascript"></script>
+        <link href="/assets/css/styles.css" rel="stylesheet">
     </head>
     <body style="margin: 0;">
         <?php 
@@ -51,4 +53,3 @@ $render = Render::init();
         ?>
     </body>
 </html>
-

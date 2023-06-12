@@ -1,7 +1,7 @@
 <?php
 
 if (!function_exists('pa')) {
-    require_once('./pa.php');
+    require_once('pa.php');
 }
 
 // Log handler example
