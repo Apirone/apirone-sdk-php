@@ -1,6 +1,6 @@
 <?php
 
-require_once('./common/all.php');
+require_once('common/all.php');
 
 use Apirone\API\Endpoints\Account;
 use Apirone\Invoice\Model\InvoiceDetails;

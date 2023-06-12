@@ -1,5 +1,5 @@
 <?php
-require_once('../common/all.php');
+require_once('common/all.php');
 
 use Apirone\Invoice\Invoice;
 use Apirone\Invoice\Model\Settings;
@@ -30,7 +30,7 @@ if ($_GET['invoice']) {
 
 // pa($invoice::$settings->getCurrency('btc'));
 $render = Render::init();
-$render->setDataUrl('/invoice/render.php');
+$render->setDataUrl('/invoice_render.php');
 // $render->setTimeZoneByOffset(-240);
 // $render->showInvoice('79Ry0vxkPp8Adt2b');
 // $render->showInvoice($invoice);
