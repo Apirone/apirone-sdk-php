@@ -120,7 +120,7 @@ class Render
         // Draw output:
         list($t, $d, $c) = $this->helpers(); // translate, date, copy
         ob_start();
-        include(__DIR__ . '/UI/tpl/' . $template . '.php');
+        include(__DIR__ . '/Templates/' . $template . '.php');
         if (!$echo)
             return ob_get_clean();
         echo ob_get_clean();
@@ -201,7 +201,7 @@ class Render
 
     private function locales()
     {
-        require(__DIR__ . '/UI/locales.php');
+        require(__DIR__ . '/Templates/locales.php');
 
         return $locales;    
     }
