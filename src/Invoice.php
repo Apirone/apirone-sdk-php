@@ -91,7 +91,7 @@ class Invoice extends AbstractModel{
         $query = InvoiceQuery::selectInvoice($invoice, $prefix);
 
         $result = InvoiceDb::execute($query);
-        
+
         if (empty($result)) {
             return null;
         }
@@ -131,6 +131,39 @@ class Invoice extends AbstractModel{
             $invoices[] = Invoice::fromJson($json);
         }
         return $invoices;
+    }
+
+    // TODO: Maybe add order callback handler !!!
+    public static function callbackHandler($order_handler = null) {
+
+        $data = file_get_contents('php://input');
+
+        $params = ($data) ? json_decode(Utils::sanitize($data)) : null;
+
+        if (!$params) {
+            Utils::send_json('Data not received', 400);
+            return;
+        }
+
+        if (!property_exists($params, 'invoice') || !property_exists($params, 'status')) {
+            Utils::send_json('Wrong params received: ' . json_encode($params), 400); 
+            
+            return $result;
+        }
+
+        $invoice = Invoice::getInvoice($params->invoice);
+
+        if (!$invoice) {
+            Utils::send_json("Invoice not found: " . $params->invoice, 404);
+            return;
+        }
+
+		if($invoice->update()) {
+            if($order_handler !== null) {
+                $order_handler($invoice);
+            }
+		}
+		exit;
     }
 
     public function order(?int $order = null)
@@ -221,7 +254,7 @@ class Invoice extends AbstractModel{
         return $this;
     }
 
-    public function save()
+    public function save(): bool
     {
         $prefix = InvoiceDb::$prefix;
         $query = ($this->id === null) ? InvoiceQuery::createInvoice($this, $prefix) : InvoiceQuery::updateInvoice($this, $prefix);
@@ -234,7 +267,7 @@ class Invoice extends AbstractModel{
         return $result;
     }
 
-    public function update()
+    public function update(): bool
     {
         $this->details->update();
 
