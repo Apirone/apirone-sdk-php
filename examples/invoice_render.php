@@ -1,13 +1,13 @@
 <?php
-require_once('common/all.php');
+require_once('helpers/common.php');
 
 use Apirone\Invoice\Invoice;
 use Apirone\Invoice\Model\Settings;
 use Apirone\Invoice\Render;
 
 // Config, DB & Logs
-Invoice::config( Settings::fromFile('/var/www/settings/invoice-config.json') );
-Invoice::db($db_handler, 'pfx_');
+Invoice::config( Settings::fromFile('/var/www/storage/settings.json') );
+Invoice::db($db_handler, $table_prefix);
 Invoice::log($log_handler);
 
 if ($_GET['invoice']) {
@@ -25,17 +25,9 @@ if ($_GET['invoice']) {
         echo $invoice->details->statusNum();
     exit;
 }
-// $invoice = Invoice::getInvoice('79Ry0vxkPp8Adt2b'); // expired
-// $invoice = Invoice::getInvoice('fPlb8egiPSqqXgcb'); // created
 
-// pa($invoice::$settings->getCurrency('btc'));
 $render = Render::init();
 $render->setDataUrl('/invoice_render.php');
-// $render->setTimeZoneByOffset(-240);
-// $render->showInvoice('79Ry0vxkPp8Adt2b');
-// $render->showInvoice($invoice);
-// $render->showInvoice(null);
-
 
 ?>
 <html>

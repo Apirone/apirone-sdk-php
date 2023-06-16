@@ -1,15 +1,12 @@
 <?php
-// Init new settings object
 
-require_once('common/pa.php'); // Just for example output
-require_once('../vendor/autoload.php'); // Path/to/vender/folder/autoload.php
-
+require_once('/var/www/vendor/autoload.php'); // Path/to/vender/folder/autoload.php
 use Apirone\Invoice\Model\Settings;
 
 // Do not store settings file inside public html directory.
-$file = '/var/www/settings/settings.json';
+$path = '/var/www/storage/settings.json';
 
-if (!file_exists($file)) {
+if (!file_exists($path)) {
     // Create settings object
     $settings = Settings::init();
 
@@ -18,7 +15,7 @@ if (!file_exists($file)) {
 }
 else {
     // Load saved config
-    $settings = Settings::fromFile($file);
+    $settings = Settings::fromFile($path);
 }
 
 // Set destination & fee policy for btc curency (for example)
@@ -27,17 +24,8 @@ $fee = 'percentage';
 
 $settings->getCurrency('btc')->setAddress($destination)->setPolicy($fee);
 
-// Get & prinit all service cryptos
-pa($settings->getCurrencies(), 'Service Currencies');
-
 // Save currencies settings into account
 $settings->saveCurrencies();
 
 // Save settings to file
-$settings->toFile($file);
-
-// Restore saved settings from file
-$saved = Settings::fromFile($file);
-
-// Print saved as JSON
-pa($saved->toJson(), 'Saved settings');
+$settings->toFile($path);

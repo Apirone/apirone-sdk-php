@@ -1,12 +1,12 @@
 <?php
 // Advanced invoice settings
 
-require_once('common/pa.php'); // Just for example output
+require_once('helpers/pa.php'); // Just for example output
 require_once('../vendor/autoload.php'); // Path/to/vender/folder/autoload.php
 
 use Apirone\Invoice\Model\Settings;
 
-$file = '/var/www/settings/settings.json';
+$file = '/var/www/storage/settings.json';
 
 $settings = Settings::fromFile($file);
 

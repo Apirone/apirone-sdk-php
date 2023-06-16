@@ -96,6 +96,7 @@ class InvoiceDb
      */
     public static function uninstall(string $prefix = '')
     {
+        $prefix = static::$prefix !== false ? static::$prefix : $prefix;
         $query = InvoiceQuery::dropInvoicesTable($prefix);
         
         return InvoiceDb::execute($query);

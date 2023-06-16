@@ -1,14 +1,15 @@
 <?php
 
 // DB settings
-$host = 'db';
-$user = 'root';
-$pass = 'toor';
-$db = 'apirone';
+$host         = 'db';
+$user         = 'root';
+$pass         = 'apirone';
+$database     = 'apirone';
 $table_prefix = 'pfx_';
 
-$conn = new mysqli($host, $user, $pass, $db);
-$conn->select_db($db);
+// MySQL connection example
+$conn = new mysqli($host, $user, $pass, $database);
+$conn->select_db($database);
 
 // DB MySQL handler example
 $db_handler = static function($query) {
