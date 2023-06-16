@@ -23,5 +23,5 @@ switch ($action) {
 }
 
 $file = (int) file_exists($path);
-$content = ($file) ? load_file_content($path) : false;
+$content = ($file) ? load_file_content($path,  false) : false;
 Utils::send_json($content);

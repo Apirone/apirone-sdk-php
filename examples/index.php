@@ -24,11 +24,11 @@ require_once('helpers/common.php');
             </div>
             <div>
                 <h2>Create database callback function</h2>
-                <pre><code class="language-php"><?php echo load_file_content('db_config_example.php'); ?></code></pre>
+                <?php echo load_file_content('db_config_example.php'); ?>
             </div>
             <div x-data="table" x-init="load" id="step_2">
                 <h2>Invoice data table</h2>
-                <pre><code class="language-php"><?php echo load_file_content('db_table_setup.php'); ?></code></pre>
+                <?php echo load_file_content('db_table_setup.php'); ?>
                 <button class="text-white font-simibold rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2" @click="doAction" x-text="label" :disabled="table"></button>
             </div>
             <div id="step_3">
@@ -42,13 +42,13 @@ require_once('helpers/common.php');
                     You can store the settings in a file or get them as a JSON-object and save them in any way you like.
                     In this example, we will save the settings to a file.<br />
                 </p>
-                <pre><code class="language-php"><?php echo load_file_content('settings_create.php'); ?></code></pre>
+                <?php echo load_file_content('settings_create.php'); ?>
 
                 <div x-data="settings" x-init="load" class="mt-20">
                     <p>Settings config example</p>
                     <div class="relative">
                         <button x-show="file" class="absolute top-4 right-10 text-gray-200" @click="toggle" x-text="expand ? 'Collapse' : 'Expand'"></button>
-                        <pre class="_relative"><code class="language-json" :class="{'' : expand, 'max-h-96' : !expand}" x-text="content"></code></pre>
+                        <pre><code class="language-json" :class="{'' : expand, 'max-h-96' : !expand}" x-text="content"></code></pre>
                     </div>
                     <button class="text-white font-simibold rounded-md w-48 bg-sky-500 hover:bg-sky-700 p-2 disabled:bg-gray-300" @click="doAction" x-text="label" :disabled="file"></button>
                 </div>
@@ -65,17 +65,17 @@ require_once('helpers/common.php');
                     If you want to process invoice statuses for your system, 
                     you need to create a callback function that will handle the changed invoice status.
                 </p>
-                <pre><code class="language-php"><?php echo load_file_content('./invoice_callback.php'); ?></code></pre>
+                <?php echo load_file_content('./invoice_callback.php'); ?>
 
             </div>
             <div>
                 <h2>Create an invoice</h2>
-                <pre><code class="language-php"><?php echo load_file_content('./invoice_create.php'); ?></code></pre>
+                <?php echo load_file_content('./invoice_create.php'); ?>
             </div>
             <div>
                 <h2>Show invoice</h2>
-                <pre><code class="language-php"><?php echo load_file_content('./invoice_render.php'); ?></code></pre>
-                <pre><code class="language-php"><?php echo load_file_content('./invoice_render_json.php'); ?></code></pre>
+                <?php echo load_file_content('./invoice_render.php'); ?>
+                <?php echo load_file_content('./invoice_render_json.php'); ?>
             </div>
             <div id="step_5">
                 <h2>Playground</h2>
