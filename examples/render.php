@@ -1,14 +1,14 @@
 <?php
 require_once('helpers/common.php');
+require_once('db.php');
 
 use Apirone\Invoice\Invoice;
 use Apirone\Invoice\Model\Settings;
 use Apirone\Invoice\Render;
 
-// Config, DB & Logs
-Invoice::config( Settings::fromFile('/var/www/storage/settings.json') );
+// Config & DB
 Invoice::db($db_handler, $table_prefix);
-Invoice::log($log_handler);
+Invoice::config( Settings::fromFile('/var/www/storage/settings.json') );
 
 if ($_GET['invoice']) {
     $id = $_GET['invoice'];
@@ -37,11 +37,9 @@ $render->setDataUrl('/invoice_render.php');
     </head>
     <body style="margin: 0;">
         <?php 
-            // $render->showInvoice($invoice); 
-            // $render->showInvoice('79Ry0vxkPp8Adt2b'); 
-            $render->showInvoice('QeqskSWixgoa7m95'); 
-            // $render->showInvoice(null);
-            // $render->showInvoice('fPlb8egiPSqqXgcb');
+            $render->showInvoice('aJi6bqNgfTvEgje8'); 
+            // $invoice = Invoice::getInvoice('aJi6bqNgfTvEgje8');
+            // pa($invoice->details->toJson());
         ?>
     </body>
 </html>

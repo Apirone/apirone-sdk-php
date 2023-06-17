@@ -24,11 +24,11 @@ require_once('helpers/common.php');
             </div>
             <div>
                 <h2>Create database callback function</h2>
-                <?php echo load_file_content('db_config_example.php'); ?>
+                <?php echo load_file_content('db.php'); ?>
             </div>
             <div x-data="table" x-init="load" id="step_2">
                 <h2>Invoice data table</h2>
-                <?php echo load_file_content('db_table_setup.php'); ?>
+                <?php echo load_file_content('table.php'); ?>
                 <button class="text-white font-simibold rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2" @click="doAction" x-text="label" :disabled="table"></button>
             </div>
             <div id="step_3">
@@ -42,7 +42,7 @@ require_once('helpers/common.php');
                     You can store the settings in a file or get them as a JSON-object and save them in any way you like.
                     In this example, we will save the settings to a file.<br />
                 </p>
-                <?php echo load_file_content('settings_create.php'); ?>
+                <?php echo load_file_content('settings.php'); ?>
 
                 <div x-data="settings" x-init="load" class="mt-20">
                     <p>Settings config example</p>
@@ -65,57 +65,60 @@ require_once('helpers/common.php');
                     If you want to process invoice statuses for your system, 
                     you need to create a callback function that will handle the changed invoice status.
                 </p>
-                <?php echo load_file_content('./invoice_callback.php'); ?>
+                <?php echo load_file_content('./callback.php'); ?>
 
             </div>
             <div>
                 <h2>Create an invoice</h2>
-                <?php echo load_file_content('./invoice_create.php'); ?>
+                <?php echo load_file_content('./invoice.php'); ?>
             </div>
             <div>
                 <h2>Show invoice</h2>
-                <?php echo load_file_content('./invoice_render.php'); ?>
-                <?php echo load_file_content('./invoice_render_json.php'); ?>
+                <?php echo load_file_content('./render.php'); ?>
             </div>
             <div id="step_5">
                 <h2>Playground</h2>
                 <div x-show="!$store.table || !$store.settings">
                     Before creating an invoice you need make prev steps!
                 </div>
-                <div x-show="$store.table && $store.settings">
-                        <div class="mt-8 max-w-md">
-                            <div class="grid grid-cols-1 gap-6">
+                <div x-show="$store.table && $store.settings" class="pb-10">
+                    <div class="my-8">
+                        <form x-data="playground" @submit.prevent="send">
+                            <div class="grid grid-cols-2 gap-6">
                                 <label class="block">
-                                    <span class="text-gray-700">Full name</span>
-                                    <input type="text" class="mt-1 block w-full" placeholder="">
-                                </label>
-                                <label class="block">
-                                    <span class="text-gray-700">When is your event?</span>
-                                    <input type="date" class="mt-1 block w-full">
-                                </label>
-                                <label class="block">
-                                    <span class="text-gray-700">What type of event is it?</span>
-                                    <select class="block w-full mt-1">
-                                        <option>Corporate event</option>
-                                        <option>Wedding</option>
-                                        <option>Birthday</option>
-                                        <option>Other</option>
+                                    <span class="text-gray-700">Currency (required)</span>
+                                    <select x-model="data.currency" class="block w-full mt-1">
+                                        <option value="">Select currency</option>
+                                        <template x-if="$store.settings">
+                                            <template x-for="currency in $store.settings.currencies">
+                                                <option x-text="currency.abbr"></option>
+                                            </template>
+                                        </template>
                                     </select>
                                 </label>
-                                <div class="block">
-                                    <div class="mt-2">
-                                        <div>
-                                            <label class="inline-flex items-center">
-                                                <input type="checkbox" checked="">
-                                                <span class="ml-2">Email me news and special offers</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
+                                <label class="block">
+                                    <span class="text-gray-700">Amount</span>
+                                    <input type="number" x-model="data.amount" min="0" class="mt-1 block w-full" placeholder="Enter amount value in minor units">
+                                </label>
+                                <label class="block">
+                                    <span class="text-gray-700">Lifetime, sec.</span>
+                                    <input x-model="data.lifetime" type="number" class="mt-1 block w-full" min="0" value="300">
+                                </label>
+                                <label class="block">
+                                    <span class="text-gray-700">Callback URL</span>
+                                    <input x-model="data.callbackUrl" type="text" class="mt-1 block w-full" placeholder="https://yourhost.com/callback.php">
+                                </label>
+                                <button type="submit" :disabled="!data.currency" class="text-white font-simibold rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2" @click="$event.prevent; send" x-text="label"></button>
                             </div>
-                        </div>
+                            <h3>Invoice details</h3>
+                            <div class="relative">
+                                <button x-show="invoice" class="absolute top-4 right-10 text-gray-200" @click="toggle" x-text="expand ? 'Collapse' : 'Expand'"></button>
+                                <pre><code class="language-json" :class="{'' : expand, 'max-h-96' : !expand}" x-text="content"></code></pre>
+                            </div>
+                        </form>
                     </div>
-                </div>            </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>

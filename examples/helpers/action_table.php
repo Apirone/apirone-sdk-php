@@ -1,7 +1,7 @@
 <?php
 
 require_once('../helpers/common.php');
-require_once('../db_config_example.php');
+require_once('../db.php');
 
 use Apirone\Invoice\Utils;
 use Apirone\Invoice\Db\InvoiceDb;
