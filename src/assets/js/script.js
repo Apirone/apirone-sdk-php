@@ -23,29 +23,12 @@ document.addEventListener("DOMContentLoaded", function(e) {
       })
     }
   }
-
-  async function init() {
-    // if (id) {
-    //   if (loading) { await load() }
-    //   else {
-    //     stat = await getStat();
-
-    //     async function refresh() {
-    //         if (statusNum === 0) { clearInterval(processId); return; }
-    //         statusNum = await getStat();
-    //         if (statusNum !== stat) { document.location.reload();}
-    //     };
-    //     if (statusNum > 0) { processId = setInterval(refresh, 1e4); }
-    //   }
-    // }
-    
-  }
   
   async function load() {
     if (!url) {
       return;
     }
-    const response = await fetch(`${url}?invoice=${id}&offset=${offset}`);
+    const response = await fetch(`${url}?invoice=${id}&offset=${offset}`,{method: 'POST', headers: {'X-Requested-With': 'XMLHttpRequest'}});
     const result = await response.text();
     const wrapper = d.getElementById('__apn-invoice');
     wrapper.outerHTML = result;

@@ -11,7 +11,7 @@ Invoice::db($db_handler, $table_prefix);
 Invoice::config( Settings::fromFile('/var/www/storage/settings.json') );
 
 $id = array_key_exists('invoice', $_GET) ? $_GET['invoice'] : null ;
-$is_ajax = (array_key_exists('X-Requested-With', $_SERVER) && $_SERVER['X-Requested-With'] == 'XMLHttpRequest') ? true : false;
+$is_ajax = (array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') ? true : false;
 
 if ($id && $is_ajax) {
     $id = $_GET['invoice'];
@@ -20,8 +20,6 @@ if ($id && $is_ajax) {
     $invoice = Invoice::getInvoice($id);
     $render = Render::init();
     $render->setTimeZoneByOffset($offset);
-pa($invoice);
-exit;
     header("Content-Type: text/plain");
     if ($offset)
         $render->showInvoice($invoice);
