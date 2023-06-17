@@ -72,7 +72,6 @@ document.addEventListener("DOMContentLoaded", function(e) {
       return;
     }
     let distance = expire.value;
-    console.log(distance)
     const interval = setInterval(() => {
       const days = Math.floor(distance / (60 * 60 * 24));
       const hours = Math.floor((distance % (60 * 60 * 24)) / (60 * 60));

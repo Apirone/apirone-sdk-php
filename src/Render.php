@@ -120,9 +120,11 @@ class Render
             }
         }
         else {
+            // update invoice if page refreshed manually
+            Invoice::getInvoice($id)->update();
+
             $invoice = $userData = $currency = null;
         }
-        // pa($statusNum);
         $statusLink = $this->dataUrl ? $this->dataUrl : '/';
         $status = $this->statusDescription(($show) ? $invoice->status : $id);
         $template = !$this->qrOnly ? 'full' : 'qr-only';
