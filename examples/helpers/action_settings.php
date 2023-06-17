@@ -1,16 +1,15 @@
 <?php
 
-require_once('../helpers/common.php');
+require_once('common.php');
 
 use Apirone\Invoice\Utils;
-use Apirone\Invoice\Model\Settings;
 
 $path = '/var/www/storage/settings.json';
 $action = $_GET['action'] ?? false;
 
 switch ($action) {
     case 'create':
-        require_once('../settings_create.php');
+        require_once('../settings.php');
         break;
     case 'delete':
         if (file_exists($path)) {
