@@ -47,12 +47,15 @@ function playground() {
     content: 'Invoice not created yet.',
     data: {currency: null, amount: null, lifetime: null, callbackUrl: null},
     expand: false,
-    async send() {
+    async create() {
       this.label = 'Creating...'; 
       url = '/helpers/action_invoice.php?data=' + JSON.stringify(this.data);
       result = await ajax(url);
       if(result) { this.invoice = result; this.content = JSON.stringify(result, null, 2); }
       this.label = 'Create'; 
+    },
+    render() {
+      window.open('/render.php?invoice=' + this.invoice.invoice, '_blank').focus();
     },
     toggle() {this.expand = !this.expand;}
   }

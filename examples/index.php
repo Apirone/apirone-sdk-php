@@ -83,10 +83,10 @@ require_once('helpers/common.php');
                 </div>
                 <div x-show="$store.table && $store.settings" class="pb-10">
                     <div class="my-8">
-                        <form x-data="playground" @submit.prevent="send">
+                        <form x-data="playground" @submit.prevent="create">
                             <div class="grid grid-cols-2 gap-6">
                                 <label class="block">
-                                    <span class="text-gray-700">Currency (required)</span>
+                                    <span class="text-gray-700">Currency</span>
                                     <select x-model="data.currency" class="block w-full mt-1">
                                         <option value="">Select currency</option>
                                         <template x-if="$store.settings">
@@ -95,20 +95,36 @@ require_once('helpers/common.php');
                                             </template>
                                         </template>
                                     </select>
+                                    <span class="inline-block mt-2 text-gray-300 text-sm">
+                                        Currency type (any cryptocurrency supported by service). Required	
+                                    </span>
                                 </label>
                                 <label class="block">
                                     <span class="text-gray-700">Amount</span>
                                     <input type="number" x-model="data.amount" min="0" class="mt-1 block w-full" placeholder="Enter amount value in minor units">
+                                    <span class="inline-block mt-2 text-gray-300 text-sm">
+                                        Amount for the checkout in the selected currency of the invoice object. Also you may create invoices without fixed amount. The amount is indicated in minor units	
+                                    </span>
                                 </label>
                                 <label class="block">
-                                    <span class="text-gray-700">Lifetime, sec.</span>
+                                    <span class="text-gray-700">Lifetime</span>
                                     <input x-model="data.lifetime" type="number" class="mt-1 block w-full" min="0" value="300">
+                                    <span class="inline-block mt-2 text-gray-300 text-sm">
+                                        Duration of invoice validity (indicated in seconds)	
+                                    </span>
                                 </label>
                                 <label class="block">
                                     <span class="text-gray-700">Callback URL</span>
                                     <input x-model="data.callbackUrl" type="text" class="mt-1 block w-full" placeholder="https://yourhost.com/callback.php">
+                                    <span class="inline-block mt-2 text-gray-300 text-sm">
+                                        Enter the protocol and domain name or IP address of your host and add /callback.php for the example to work correctly.
+                                        Your host must be accessible from the internet.
+                                    </span>
                                 </label>
-                                <button type="submit" :disabled="!data.currency" class="text-white font-simibold rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2" @click="$event.prevent; send" x-text="label"></button>
+                                <div>
+                                    <button type="submit" :disabled="!data.currency" class="text-white font-simibold rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2" @click="$event.prevent; create" x-text="label"></button>
+                                    <button type="button" x-show="invoice" class="text-white font-simibold rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2" @click="render">Show invoice</button>
+                                </div>
                             </div>
                             <h3>Invoice details</h3>
                             <div class="relative">

@@ -10,14 +10,18 @@ use Apirone\Invoice\Render;
 Invoice::db($db_handler, $table_prefix);
 Invoice::config( Settings::fromFile('/var/www/storage/settings.json') );
 
-if ($_GET['invoice']) {
+$id = array_key_exists('invoice', $_GET) ? $_GET['invoice'] : null ;
+$is_ajax = (array_key_exists('X-Requested-With', $_SERVER) && $_SERVER['X-Requested-With'] == 'XMLHttpRequest') ? true : false;
+
+if ($id && $is_ajax) {
     $id = $_GET['invoice'];
     $offset = $_GET['offset'] ?? false;
 
     $invoice = Invoice::getInvoice($id);
     $render = Render::init();
     $render->setTimeZoneByOffset($offset);
-    // sleep(1);
+pa($invoice);
+exit;
     header("Content-Type: text/plain");
     if ($offset)
         $render->showInvoice($invoice);
@@ -27,7 +31,7 @@ if ($_GET['invoice']) {
 }
 
 $render = Render::init();
-$render->setDataUrl('/invoice_render.php');
+$render->setDataUrl('/render.php');
 
 ?>
 <html>
@@ -37,9 +41,7 @@ $render->setDataUrl('/invoice_render.php');
     </head>
     <body style="margin: 0;">
         <?php 
-            $render->showInvoice('aJi6bqNgfTvEgje8'); 
-            // $invoice = Invoice::getInvoice('aJi6bqNgfTvEgje8');
-            // pa($invoice->details->toJson());
+            $render->showInvoice($id); 
         ?>
     </body>
 </html>

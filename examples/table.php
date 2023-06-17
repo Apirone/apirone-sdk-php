@@ -14,4 +14,4 @@ InvoiceDb::install();
 
 // Call uninstall method to drop table
 // WARNING! All table data will be lost
-InvoiceDb::uninstall();
+// InvoiceDb::uninstall();
