@@ -100,7 +100,8 @@ class Invoice extends AbstractModel{
     {
         $class = new static();
 
-        $class->createParams['currency'] = $currency;
+        // $class->createParams['currency'] = $currency;
+        $class->currency($currency);
 
         if ($amount !== null ) {
             $class->createParams['amount'] = $amount;
@@ -372,7 +373,7 @@ class Invoice extends AbstractModel{
      * @throws InternalServerErrorException 
      * @throws ReflectionException 
      */
-    public function create(string $account)
+    public function create(?string $account = null)
     {
         if ($this->invoice !== null || !isset($this->createParams)) {
             return $this;
@@ -381,8 +382,9 @@ class Invoice extends AbstractModel{
         $this->order = array_key_exists('order', $this->createParams) ? $this->createParams['order'] : 0;
 
         unset($this->createParams['order']);
+        $account_id = ($account === null) ? Invoice::$settings->getAccount() : $account;
 
-        $account = Account::init($account);
+        $account = Account::init($account_id);
         $created = false;
         $options = $this->createParams;
         $options['currency'] = $this->createParams['currency']->abbr;
