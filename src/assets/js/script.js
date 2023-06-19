@@ -9,8 +9,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
   let statusNum = null;
 
   async function getStat() {
-    // if (!url) { return; }
-    const response = await fetch(`${url}?invoice=${id}`);
+    const response = await fetch(`${url}?invoice=${id}`,{method: 'POST', headers: {'X-Requested-With': 'XMLHttpRequest'}});
     const result = await response.text();
     return result;
   }

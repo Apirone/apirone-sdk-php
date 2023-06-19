@@ -11,15 +11,19 @@ Invoice::db($db_handler, $table_prefix);
 Invoice::config( Settings::fromFile('/var/www/storage/settings.json') );
 
 $id = array_key_exists('invoice', $_GET) ? $_GET['invoice'] : null ;
-$is_ajax = (array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') ? true : false;
+$is_ajax = (array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) 
+    && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') ? true : false;
+
+$id = $_GET['invoice'];
+$offset = $_GET['offset'] ?? false;
+
+$render = Render::init();
+$render->setDataUrl('/render.php');
+$render->setTimeZoneByOffset($offset);
 
 if ($id && $is_ajax) {
-    $id = $_GET['invoice'];
-    $offset = $_GET['offset'] ?? false;
-
     $invoice = Invoice::getInvoice($id);
     $render = Render::init();
-    $render->setTimeZoneByOffset($offset);
     header("Content-Type: text/plain");
     if ($offset)
         $render->showInvoice($invoice);
@@ -27,10 +31,6 @@ if ($id && $is_ajax) {
         echo $invoice->details->statusNum();
     exit;
 }
-
-$render = Render::init();
-$render->setDataUrl('/render.php');
-
 ?>
 <html>
     <head>

@@ -91,7 +91,7 @@ require_once('helpers/common.php');
                                         <option value="">Select currency</option>
                                         <template x-if="$store.settings">
                                             <template x-for="currency in $store.settings.currencies">
-                                                <option x-text="currency.abbr"></option>
+                                                <option x-text="currency.abbr" :disabled="currency.address === null"></option>
                                             </template>
                                         </template>
                                     </select>
@@ -128,7 +128,7 @@ require_once('helpers/common.php');
                             </div>
                             <h3>Invoice details</h3>
                             <div class="relative">
-                                <button x-show="invoice" class="absolute top-4 right-10 text-gray-200" @click="toggle" x-text="expand ? 'Collapse' : 'Expand'"></button>
+                                <button x-show="invoice" class="absolute top-4 right-10 text-gray-200" @click.prevent="toggle" x-text="expand ? 'Collapse' : 'Expand'"></button>
                                 <pre><code class="language-json" :class="{'' : expand, 'max-h-96' : !expand}" x-text="content"></code></pre>
                             </div>
                         </form>
