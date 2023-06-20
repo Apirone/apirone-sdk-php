@@ -4,7 +4,7 @@ require_once('common.php');
 require_once('../db.php');
 
 use Apirone\Invoice\Invoice;
-use Apirone\Invoice\Utils;
+use Apirone\Invoice\Service\Utils;
 use Apirone\Invoice\Model\Settings;
 
 // Config & DB

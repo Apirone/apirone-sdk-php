@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace Apirone\Invoice;
+namespace Apirone\Invoice\Service;
 
 use Apirone\API\Endpoints\Service;
 use Apirone\API\Exceptions\RuntimeException;

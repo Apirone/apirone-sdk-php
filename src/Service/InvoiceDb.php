@@ -10,9 +10,9 @@
 
 declare(strict_types=1);
 
-namespace Apirone\Invoice\Db;
+namespace Apirone\Invoice\Service;
 
-use Apirone\Invoice\Db\InvoiceQuery;
+use Apirone\Invoice\Service\InvoiceQuery;
 
 class InvoiceDb
 {

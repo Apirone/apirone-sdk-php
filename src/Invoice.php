@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Apirone\Invoice;
 
-use Apirone\Invoice\Db\InvoiceDb;
-use Apirone\Invoice\Db\InvoiceQuery;
+use Apirone\Invoice\Service\InvoiceDb;
+use Apirone\Invoice\Service\InvoiceQuery;
 use Apirone\Invoice\Model\AbstractModel;
 use Apirone\Invoice\Model\InvoiceDetails;
 use Apirone\API\Endpoints\Service;
@@ -28,7 +28,7 @@ use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\API\Http\ErrorDispatcher;
 use Apirone\Invoice\Model\UserData;
 use Apirone\Invoice\Model\Settings;
-use Apirone\Invoice\Utils;
+use Apirone\Invoice\Service\Utils;
 use Closure;
 use ReflectionException;
 

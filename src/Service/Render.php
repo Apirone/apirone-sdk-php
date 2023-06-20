@@ -10,12 +10,10 @@
 
 declare(strict_types=1);
 
-namespace Apirone\Invoice;
+namespace Apirone\Invoice\Service;
 
-use Apirone\Invoice\Model\Settings\Currency;
-use Apirone\Invoice\Utils;
-use DateTime;
-use IntlDateFormatter;
+use Apirone\Invoice\Invoice;
+use Apirone\Invoice\Service\Utils;
 
 class Render
 {
@@ -132,7 +130,7 @@ class Render
         // Draw output:
         list($t, $d, $c) = $this->helpers(); // translate, date, copy
         ob_start();
-        include(__DIR__ . '/Templates/' . $template . '.php');
+        include(__DIR__ . '/../Templates/' . $template . '.php');
         if (!$echo)
             return ob_get_clean();
         echo ob_get_clean();
@@ -188,7 +186,7 @@ class Render
         // Locale date formatter callback
         $fmt = datefmt_create( substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2), 3, 2, $this->timeZone, 1);
         $d = static function($date, $echo = true) use ($fmt) {
-            $result = datefmt_format($fmt, new DateTime($date));
+            $result = datefmt_format($fmt, new \DateTime($date));
 
             if (!$echo) {
                 return $result;
@@ -213,7 +211,7 @@ class Render
 
     private function locales()
     {
-        require(__DIR__ . '/Templates/locales.php');
+        require(__DIR__ . '/../Templates/locales.php');
 
         return $locales;    
     }

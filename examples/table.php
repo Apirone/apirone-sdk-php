@@ -2,11 +2,11 @@
 require_once('../vendor/autoload.php');
 require_once('db.php');
 
-use Apirone\Invoice\Db\InvoiceDb;
+use Apirone\Invoice\Service\InvoiceDb;
 
-// Just set callback & prefix
-InvoiceDb::setCallback($db_handler); // See step 1
-InvoiceDb::setPrefix($table_prefix); // See step 1
+// Just set callback & prefix. See db.php for details
+InvoiceDb::setCallback($db_handler);
+InvoiceDb::setPrefix($table_prefix);
 
 
 // Call install method to create table

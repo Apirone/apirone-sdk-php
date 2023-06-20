@@ -2,7 +2,7 @@
 
 require_once('common.php');
 
-use Apirone\Invoice\Utils;
+use Apirone\Invoice\Service\Utils;
 
 $path = '/var/www/storage/settings.json';
 $action = $_GET['action'] ?? false;

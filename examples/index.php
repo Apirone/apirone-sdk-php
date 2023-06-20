@@ -88,35 +88,35 @@ require_once('helpers/common.php');
                                 <label class="block">
                                     <span class="text-gray-700">Currency</span>
                                     <select x-model="data.currency" class="block w-full mt-1">
-                                        <option value="">Select currency</option>
+                                        <option value="" class="text-gray-400">Select currency</option>
                                         <template x-if="$store.settings">
                                             <template x-for="currency in $store.settings.currencies">
                                                 <option x-text="currency.abbr" :disabled="currency.address === null"></option>
                                             </template>
                                         </template>
                                     </select>
-                                    <span class="inline-block mt-2 text-gray-300 text-sm">
+                                    <span class="inline-block mt-2 text-gray-400 text-sm">
                                         Currency type (any cryptocurrency supported by service). Required	
                                     </span>
                                 </label>
                                 <label class="block">
                                     <span class="text-gray-700">Amount</span>
-                                    <input type="number" x-model="data.amount" min="0" class="mt-1 block w-full" placeholder="Enter amount value in minor units">
-                                    <span class="inline-block mt-2 text-gray-300 text-sm">
+                                    <input type="number" x-model="data.amount" min="0" class="mt-1 block w-full placeholder-gray-400" placeholder="Enter amount value in minor units">
+                                    <span class="inline-block mt-2 text-gray-400 text-sm">
                                         Amount for the checkout in the selected currency of the invoice object. Also you may create invoices without fixed amount. The amount is indicated in minor units	
                                     </span>
                                 </label>
                                 <label class="block">
                                     <span class="text-gray-700">Lifetime</span>
                                     <input x-model="data.lifetime" type="number" class="mt-1 block w-full" min="0" value="300">
-                                    <span class="inline-block mt-2 text-gray-300 text-sm">
+                                    <span class="inline-block mt-2 text-gray-400 text-sm">
                                         Duration of invoice validity (indicated in seconds)	
                                     </span>
                                 </label>
                                 <label class="block">
                                     <span class="text-gray-700">Callback URL</span>
-                                    <input x-model="data.callbackUrl" type="text" class="mt-1 block w-full" placeholder="https://yourhost.com/callback.php">
-                                    <span class="inline-block mt-2 text-gray-300 text-sm">
+                                    <input x-model="data.callbackUrl" type="text" class="mt-1 block w-full placeholder-gray-400" placeholder="https://yourhost.com/callback.php">
+                                    <span class="inline-block mt-2 text-gray-400 text-sm">
                                         Enter the protocol and domain name or IP address of your host and add /callback.php for the example to work correctly.
                                         Your host must be accessible from the internet.
                                     </span>
