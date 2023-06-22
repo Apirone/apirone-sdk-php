@@ -49,10 +49,7 @@ class Invoice extends AbstractModel{
 
     private ?array $createParams;
 
-    private function __construct()
-    {
-        // $this->details = new InvoiceDetails;
-    }
+    private function __construct() { }
 
     public static function setup(Settings $settings, \Closure $db_handler, string $table_prefix, ?string $dataUrl = null, ?\Closure $log_handler = null)
     {
@@ -65,7 +62,7 @@ class Invoice extends AbstractModel{
     }
 
     /**
-     * Set settings to Iinvoice object
+     * Set settings to Invoice object
      *
      * @param Settings $settings 
      * @return void 
@@ -73,6 +70,10 @@ class Invoice extends AbstractModel{
     public static function settings(\Apirone\Invoice\Model\Settings $settings): void
     {
         static::$settings = $settings;
+
+        Render::$backlink = $settings->getBacklink();
+        Render::$logo = $settings->getLogo();
+        Render::$qrOnly = $settings->getQrOnly();
     }
 
     /**

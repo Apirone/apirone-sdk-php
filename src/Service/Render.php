@@ -27,14 +27,6 @@ class Render
     
     public static bool $logo = true;
 
-    private function __construct($dataUrl = '', $qrOnly = false, $logo = true, $backlink = '')
-    {
-        self::$dataUrl = $dataUrl;
-        self::$qrOnly = $qrOnly;
-        self::$logo = $logo;
-        self::$backlink = $backlink;
-    }
-
     public static function init($dataUrl = '', $qrOnly = false, $logo = true, $backlink = '')
     {
         self::$dataUrl = $dataUrl;
@@ -57,18 +49,17 @@ class Render
     }
     
     public static function show(Invoice $invoice)
-    {   
+    {
         $show = ($invoice->invoice) ? true : false;
         $loading  = !$show;
         $id = $invoice->invoice;
         $status = self::statusDescription($invoice);
         $statusLink = self::$dataUrl ? self::$dataUrl : '/';
+        $backlink = Invoice::$settings->getBacklink();
         $template = !self::$qrOnly ? 'full' : 'qr-only';
-        $logo = self::$logo;
 
         if ($show) {
             $invoice = $invoice->details;
-            // pa($invoice);
             $userData = $invoice->getUserData();
             $currency = Invoice::$settings->getCurrency($invoice->getCurrency());
             $statusNum = $invoice->statusNum();
@@ -144,7 +135,7 @@ class Render
             $locale = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
             $locale = array_key_exists($locale, $locales) ? $locale : 'en';
 
-            $result = array_key_exists($key, $locales[$locale]) ? $locales[$locale][$key] : $key;
+            $result = array_key_exists($key, $locales[$locale]) ? $locales[$locale][$key] : $locales['en'][$key];
 
             if (!$echo) {
                 return $result;

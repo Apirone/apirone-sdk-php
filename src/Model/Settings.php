@@ -73,7 +73,7 @@ class Settings extends AbstractModel
      * 
      * @var bool
      */
-    private bool    $qr = false;
+    private bool    $qrOnly = false;
 
     /**
      * Logo
@@ -372,21 +372,21 @@ class Settings extends AbstractModel
      *
      * @return  bool
      */ 
-    public function getQr()
+    public function getQrOnly()
     {
-        return $this->qr;
+        return $this->qrOnly;
     }
 
     /**
      * Set qR Template
      *
-     * @param  bool  $qr  QR Template
+     * @param  bool  $qrOnly  QR Template
      *
      * @return  self
      */ 
-    public function setQr(bool $qr)
+    public function setQrOnly(bool $qrOnly)
     {
-        $this->qr = $qr;
+        $this->qrOnly = $qrOnly;
 
         return $this;
     }
