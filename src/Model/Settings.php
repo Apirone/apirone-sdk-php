@@ -67,12 +67,29 @@ class Settings extends AbstractModel
      * @var string
      */
     private string  $backlink = '';
+
+    /**
+     * QR Template
+     * 
+     * @var bool
+     */
+    private bool    $qr = false;
+
     /**
      * Logo
      * 
      * @var bool
      */
     private bool    $logo = true;
+
+    /**
+     * Debug
+     * 
+     * @var bool
+     */
+    private bool    $debug = false;
+
+
     
     /**
      * Extra settings values object
@@ -346,6 +363,54 @@ class Settings extends AbstractModel
     public function setLogo(bool $logo)
     {
         $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * Get qR Template
+     *
+     * @return  bool
+     */ 
+    public function getQr()
+    {
+        return $this->qr;
+    }
+
+    /**
+     * Set qR Template
+     *
+     * @param  bool  $qr  QR Template
+     *
+     * @return  self
+     */ 
+    public function setQr(bool $qr)
+    {
+        $this->qr = $qr;
+
+        return $this;
+    }
+
+    /**
+     * Get debug
+     *
+     * @return  bool
+     */ 
+    public function getDebug()
+    {
+        return $this->debug;
+    }
+
+    /**
+     * Set debug
+     *
+     * @param  bool  $debug  Debug
+     *
+     * @return  self
+     */ 
+    public function setDebug(bool $debug)
+    {
+        $this->debug = $debug;
 
         return $this;
     }
