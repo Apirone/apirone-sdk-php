@@ -17,60 +17,33 @@ use Apirone\Invoice\Service\Utils;
 
 class Render
 {
-    private string $dataUrl = '';
+    public static string $dataUrl = '';
 
-    private string $backlink = '';
+    public static string $backlink = '';
 
-    private string $timeZone = 'UTC';
+    public static string $timeZone = 'UTC';
 
-    private bool $qrOnly = false;
+    public static bool $qrOnly = false;
     
-    private bool $logo = true;
+    public static bool $logo = true;
 
     private function __construct($dataUrl = '', $qrOnly = false, $logo = true, $backlink = '')
     {
-        $this->dataUrl = $dataUrl;
-        $this->qrOnly = $qrOnly;
-        $this->logo = $logo;
-        $this->backlink = $backlink;
+        self::$dataUrl = $dataUrl;
+        self::$qrOnly = $qrOnly;
+        self::$logo = $logo;
+        self::$backlink = $backlink;
     }
 
     public static function init($dataUrl = '', $qrOnly = false, $logo = true, $backlink = '')
     {
-        $class = new static($dataUrl, $qrOnly, $logo, $backlink);
-
-        return $class;
+        self::$dataUrl = $dataUrl;
+        self::$qrOnly = $qrOnly;
+        self::$logo = $logo;
+        self::$backlink = $backlink;
     }
 
-    public function setQrOnly($qrOnly = true)
-    {
-        $this->qrOnly = $qrOnly;
-
-        return $this;
-    }
-
-    public function showLogo($show = true)
-    {
-        $this->logo = $show;
-
-        return $this;
-    }
-
-    public function setBacklink($backlink = '')
-    {
-        $this->backlink = $backlink;
-
-        return $this;
-    }
-
-    public function setTimeZone($timeZone = 'UTC')
-    {
-        $this->timeZone = $timeZone;
-
-        return $this;
-    }
-
-    public function setTimeZoneByOffset($offset = 0)
+    public static function setTimeZoneByOffset(int $offset = 0)
     {
         if ($offset == 0 || abs($offset >= 1140)) {
             $tz = 'UTC';
@@ -80,26 +53,22 @@ class Render
             $t = sprintf('%02d:%02d', intdiv($abs, 60), fmod($abs, 60));
             $tz = 'GMT' . (($offset < 0) ? '+' : '-') . $t;
         }
-        $this->timeZone = $tz;
-
-        return $this;
-    }
-
-    public function setDataUrl($dataUrl)
-    {
-        $this->dataUrl = $dataUrl;
-
-        return $this;
+        self::$timeZone = $tz;
     }
     
-    public function showInvoice($invoice, $echo = true)
+    public static function show(Invoice $invoice)
     {   
-        $show = ($invoice instanceof Invoice) ? true : false;
+        $show = ($invoice->invoice) ? true : false;
         $loading  = !$show;
-        $id = ($show) ? $invoice->invoice : $invoice;
+        $id = $invoice->invoice;
+        $status = self::statusDescription($invoice);
+        $statusLink = self::$dataUrl ? self::$dataUrl : '/';
+        $template = !self::$qrOnly ? 'full' : 'qr-only';
+        $logo = self::$logo;
 
         if ($show) {
             $invoice = $invoice->details;
+            // pa($invoice);
             $userData = $invoice->getUserData();
             $currency = Invoice::$settings->getCurrency($invoice->getCurrency());
             $statusNum = $invoice->statusNum();
@@ -118,28 +87,28 @@ class Render
             }
         }
         else {
-            // update invoice if page refreshed manually
-            Invoice::getInvoice($id)->update();
-
             $invoice = $userData = $currency = null;
         }
-        $statusLink = $this->dataUrl ? $this->dataUrl : '/';
-        $status = $this->statusDescription(($show) ? $invoice->status : $id);
-        $template = !$this->qrOnly ? 'full' : 'qr-only';
 
         // Draw output:
-        list($t, $d, $c) = $this->helpers(); // translate, date, copy
+        list($t, $d, $c) = self::helpers(); // translate, date, copy
         ob_start();
-        include(__DIR__ . '/../Templates/' . $template . '.php');
-        if (!$echo)
-            return ob_get_clean();
-        echo ob_get_clean();
+        include(__DIR__ . '/tpl/' . $template . '.php');
+
+        return ob_get_clean();
     }
 
-    private function statusDescription($ivoiceStatus)
+    public static function isAjaxRequest(): bool
     {
+        return (array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) 
+            && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') ? true : false;
+    }
+
+    private function statusDescription(Invoice $invoice)
+    {
+
         $status = new \stdClass;
-        switch ($ivoiceStatus) {
+        switch ($invoice->status) {
             case 'created':
             case 'partpaid':
             case 'paid':
@@ -167,10 +136,10 @@ class Render
 
         return $status;
     }
-    private function helpers()
+    private static function helpers()
     {
         // Localize callback
-        $locales = $this->locales();
+        $locales = self::locales();
         $t = static function($key, $echo = true) use ($locales) {
             $locale = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
             $locale = array_key_exists($locale, $locales) ? $locale : 'en';
@@ -184,7 +153,7 @@ class Render
         };
 
         // Locale date formatter callback
-        $fmt = datefmt_create( substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2), 3, 2, $this->timeZone, 1);
+        $fmt = datefmt_create( substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2), 3, 2, self::$timeZone, 1);
         $d = static function($date, $echo = true) use ($fmt) {
             $result = datefmt_format($fmt, new \DateTime($date));
 
@@ -209,9 +178,9 @@ class Render
         return [$t, $d, $c];    
     }
 
-    private function locales()
+    private static function locales()
     {
-        require(__DIR__ . '/../Templates/locales.php');
+        require(__DIR__ . '/tpl/locales.php');
 
         return $locales;    
     }

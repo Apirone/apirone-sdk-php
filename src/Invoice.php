@@ -28,9 +28,8 @@ use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\API\Http\ErrorDispatcher;
 use Apirone\Invoice\Model\UserData;
 use Apirone\Invoice\Model\Settings;
+use Apirone\Invoice\Service\Render;
 use Apirone\Invoice\Service\Utils;
-use Closure;
-use ReflectionException;
 
 class Invoice extends AbstractModel{
 
@@ -52,6 +51,17 @@ class Invoice extends AbstractModel{
 
     private function __construct()
     {
+        // $this->details = new InvoiceDetails;
+    }
+
+    public static function setup(Settings $settings, \Closure $db_handler, string $table_prefix, ?string $dataUrl = null, ?\Closure $log_handler = null)
+    {
+        Invoice::settings($settings);
+        Invoice::db($db_handler, $table_prefix);
+        if ($dataUrl)
+            Invoice::dataUrl($dataUrl);
+        if ($log_handler)
+            Invoice::dataUrl($dataUrl);
     }
 
     /**
@@ -60,7 +70,7 @@ class Invoice extends AbstractModel{
      * @param Settings $settings 
      * @return void 
      */
-    public static function config(\Apirone\Invoice\Model\Settings $settings): void
+    public static function settings(\Apirone\Invoice\Model\Settings $settings): void
     {
         static::$settings = $settings;
     }
@@ -76,6 +86,17 @@ class Invoice extends AbstractModel{
     {
         InvoiceDb::setCallback($handler);
         InvoiceDb::setPrefix($prefix);
+    }
+
+    /**
+     * Set Render invoice dataUrl
+     * 
+     * @param string $dataUrl 
+     * @return void 
+     */
+    public static function dataUrl(string $dataUrl)
+    {
+        Render::$dataUrl = $dataUrl;
     }
 
     /**
@@ -161,15 +182,15 @@ class Invoice extends AbstractModel{
      * @return null|Invoice 
      * @throws ReflectionException 
      */
-    public static function getInvoice($invoice): ?Invoice
+    public static function getInvoice(?string $invoice): ?Invoice
     {
         $prefix = InvoiceDb::$prefix;
-        $query = InvoiceQuery::selectInvoice($invoice, $prefix);
+        $query = InvoiceQuery::selectInvoice((string)$invoice, $prefix);
 
         $result = InvoiceDb::execute($query);
 
         if (empty($result)) {
-            return null;
+            return new static();
         }
         $row = $result[0];
         $json = new \stdClass;
@@ -412,6 +433,10 @@ class Invoice extends AbstractModel{
      */
     public function save(): bool
     {
+        if(!isset($this->details)) {
+            return false;
+        }
+
         $prefix = InvoiceDb::$prefix;
         $query = ($this->id === null) ? InvoiceQuery::createInvoice($this, $prefix) : InvoiceQuery::updateInvoice($this, $prefix);
         $result = InvoiceDb::execute($query);
@@ -437,14 +462,58 @@ class Invoice extends AbstractModel{
      */
     public function update(): bool
     {
-        $this->details->update();
+        if(isset($this->details)) {
+            $this->details->update();
 
-        if ($this->status !== $this->details->status) {
-            $this->status = $this->details->status;
-            return $this->save();
+            if ($this->status !== $this->details->status) {
+                $this->status = $this->details->status;
+                return $this->save();
+            }
         }
 
         return false;
+    }
+
+    public static function renderLoader(?string $invoice_id = null)
+    {
+        if(Render::isAjaxRequest()) {
+            Invoice::renderLoader();
+            return;
+        }
+
+        $id = ($invoice_id === null && array_key_exists('invoice', $_GET)) ? Utils::sanitize($_GET['invoice']) : $invoice_id;
+        $invoice = Invoice::getInvoice($id);
+        $invoice->update();
+        return Render::show($invoice);
+    }
+
+    public static function renderAjax($echo = false)
+    {
+        if (Render::isAjaxRequest()) {
+            $id = (string) array_key_exists('invoice', $_GET) ? Utils::sanitize($_GET['invoice']) : '';
+            $offset = $_GET['offset'] ? (int) Utils::sanitize($_GET['offset']) : 0;
+
+            if ($id) {
+                header("Content-Type: text/plain");
+                $invoice = Invoice::getInvoice($id);
+                if ($offset) {
+                    Render::setTimeZoneByOffset($offset);
+                    echo $invoice->render();
+                }
+                else {
+                    echo $invoice->details->statusNum();
+                }
+            }
+            exit;
+        }
+        echo 0;
+        exit;
+    }
+
+    public function render()
+    {
+
+        return Render::show($this);
     }
 
     /**

@@ -17,7 +17,7 @@ $order_handler = static function($invoice)
 
 // Setup DB and Settinfs into invoice object
 Invoice::db($db_handler, $table_prefix);
-Invoice::config(Settings::fromFile('/var/www/storage/settings.json'));
+Invoice::settings(Settings::fromFile('/var/www/storage/settings.json'));
 
 
 Invoice::callbackHandler($order_handler);

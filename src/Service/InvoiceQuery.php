@@ -72,7 +72,7 @@ class InvoiceQuery
         return $query;
     }
 
-    public static function selectInvoice (string $invoice, string $prefix = '')
+    public static function selectInvoice (?string $invoice, string $prefix = '')
     {
         $table = $prefix . self::TABLE_INVOICE;
 

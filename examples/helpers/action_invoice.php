@@ -9,7 +9,7 @@ use Apirone\Invoice\Model\Settings;
 
 // Config & DB
 Invoice::db($db_handler, $table_prefix);
-Invoice::config( Settings::fromFile('/var/www/storage/settings.json') );
+Invoice::settings( Settings::fromFile('/var/www/storage/settings.json') );
 
 $params = json_decode($_GET['data']);
 

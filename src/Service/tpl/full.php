@@ -194,7 +194,7 @@
                 <?php endif; ?>
                 
                 __BACKLINK_WILL_BE_HERE__
-                <?php if ($this->logo) : ?>
+                <?php if ($logo) : ?>
                 <div class="invoice__footer">
                     <p>
                         Powered by

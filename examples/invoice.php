@@ -7,7 +7,7 @@ use Apirone\Invoice\Model\Settings;
 
 // Setup DB and Settinfs into invoice object
 Invoice::db($db_handler, $table_prefix);
-Invoice::config(Settings::fromFile('/var/www/storage/settings.json'));
+Invoice::settings(Settings::fromFile('/var/www/storage/settings.json'));
 
 // For example you neet to pay in btc 25000 satoshi
 $invoice = Invoice::init('btc', 25000);
