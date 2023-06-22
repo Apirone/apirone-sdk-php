@@ -79,6 +79,7 @@ class Render
         }
         else {
             $invoice = $userData = $currency = null;
+            $loading = true;
         }
 
         // Draw output:

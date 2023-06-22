@@ -19,6 +19,9 @@
 .invoice.invoice__qr-only {
   width: auto;
 }
+.invoice.invoice__qr-only .qr__wrapper {
+  margin: 0 auto 1rem;
+}
 .invoice h1 {
   margin: 0;
 }
@@ -265,6 +268,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0;
+  text-align: center;
 }
 
 .status__qr-only > p > span {
@@ -313,11 +318,10 @@
   overflow: hidden;
   background-color: #f1f1f1;
   border-radius: 1rem;
-  /* color: rgba(0, 0, 0, 0); */
+  color: rgba(0, 0, 0, 0);
 }
 .loading .skeleton__box > span {
-  /* opacity: 0; */
-  opacity: 0.5;
+  opacity: 0;
 }
 .loading .skeleton__box::after {
   content: "";
