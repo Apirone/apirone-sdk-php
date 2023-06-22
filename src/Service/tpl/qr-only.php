@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
+use Apirone\Invoice\Service\Utils;
 
 ?>
 <div id="__apn-invoice" class="invoice-wrapper">
@@ -18,6 +18,7 @@ declare(strict_types=1);
                 <div class="qr__wrapper">
                     <div class="skeleton__box">
                     <?php if ($invoice) : ?>
+                        <input type="hidden" id="statusNum" value="<?php echo $invoice->statusNum(); ?>">
                         <input type="hidden" id = "expire" value="<?php echo $invoice->countdown(); ?>">
                         <?php if ($invoice->status !== 'expired' && $invoice->status !== 'success') : ?>
                         <figure class="qr">
@@ -31,14 +32,14 @@ declare(strict_types=1);
                     </div>
                 </div>
             </div>
-            <div  class="status status__qr-only skeleton__box <?php echo strtolower($status->title); ?>">
+            <div class="status status__qr-only skeleton__box">
                 <?php if ($id !== null) : ?>
                 <input id="invoice_id" type="hidden" value="<?php echo $id; ?>">
                 <a id="statusUrl" href="<?php echo $statusLink; ?>" style="display: none"></a>
                 <?php endif; ?>
             </div>
-            <div class="status status__qr-only  <?php echo strtolower($status->title); ?>">
-                <p >
+            <div class="status__qr-only <?php echo strtolower($status->title); ?>">
+                <p>
                     <span class="icon-status icon-<?php echo strtolower($status->title); ?>"></span>
                     <?php $t($status->description); ?>
                 </p>

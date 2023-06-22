@@ -102,7 +102,6 @@ require_once('helpers/common.php');
                                         <option value="" class="text-gray-400">Select currency</option>
                                         <template x-if="$store.settings">
                                             <template x-for="currency in $store.settings.currencies">
-                                                <!-- <option x-text="currency.abbr" :disabled="currency.address === null"></option> -->
                                                 <option x-text="currency.abbr"></option>
                                             </template>
                                         </template>

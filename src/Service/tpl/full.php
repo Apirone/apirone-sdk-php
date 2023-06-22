@@ -9,7 +9,8 @@
  * file that was distributed with this source code.
  */
 
-    use Apirone\Invoice\Service\Utils;
+use Apirone\Invoice\Service\Utils;
+
 ?>
 
 <div id="__apn-invoice" class="invoice-wrapper">
