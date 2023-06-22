@@ -4,7 +4,6 @@ require_once('db.php');
 
 use Apirone\Invoice\Invoice;
 use Apirone\Invoice\Model\Settings;
-use Apirone\Invoice\Service\Render;
 
 // Config & DB
 Invoice::db($db_handler, $table_prefix);
@@ -18,7 +17,7 @@ Invoice::dataUrl('/render_ajax_response.php');
         <link href="/assets/css/styles.css" rel="stylesheet">
     </head>
     <body style="margin: 0;">
-        <?php 
+        <?php
             echo Invoice::renderLoader();
         ?>
     </body>
