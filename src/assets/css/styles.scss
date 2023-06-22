@@ -245,18 +245,22 @@
     height: 2rem;
 }
 
+.icon-status.icon-refresh,
 .status.refresh .status__icon {
     background-color: #5d8ab9;
 }
 
+.icon-status.icon-success,
 .status.success .status__icon {
     background-color: #30cb83;
 }
 
+.icon-status.icon-expired,
 .status.expired .status__icon {
     background-color: #a5a5a5;
 }
 
+.icon-status.icon-warning,
 .status.warning .status__icon {
     background-color: #f39c12;
 }
@@ -491,15 +495,6 @@ body .status-data.historyFlag .toggler .btn__icon {
     left: 50%;
     transform: translate(-50%, -50%) scale(.4);
 }
-
-// .btn_loading {
-//     & .btn__loader {
-//         opacity: 1;
-//     }
-//     & .btn__text {
-//         opacity: 0;
-//     }
-// }
 
 .btn .btn__icon {
     display: inline-block;

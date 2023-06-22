@@ -237,18 +237,22 @@
   height: 2rem;
 }
 
+.icon-status.icon-refresh,
 .status.refresh .status__icon {
   background-color: #5d8ab9;
 }
 
+.icon-status.icon-success,
 .status.success .status__icon {
   background-color: #30cb83;
 }
 
+.icon-status.icon-expired,
 .status.expired .status__icon {
   background-color: #a5a5a5;
 }
 
+.icon-status.icon-warning,
 .status.warning .status__icon {
   background-color: #f39c12;
 }
