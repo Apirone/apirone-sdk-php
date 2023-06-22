@@ -74,12 +74,23 @@ require_once('helpers/common.php');
             </div>
             <div>
                 <h2>Show invoice</h2>
+                <p>
+                    To display an invoice, use <code>Invoice::renderLoader()</code>.<br />
+                    You can pass an optional <code>$invoice_id</code> parameter to display an invoice by its ID.
+                    If the parameter is not set, the function will try to get it from the GET request parameter "invoice".
+                </p>
                 <?php echo load_file_content('./render.php'); ?>
+                <p>
+                    To process ajax requests from the ivoice output page, you need to add a request processing page via 
+                    <code>Invoice::dataUrl('/render_ajax_response.php');</code> The required parameters will be added by the JS script. 
+                    The request is made using the POST method and also has an additional header <code>HTTP_X_REQUESTED_WITH = XMLHttpRequest</code>
+                </p>
+                <?php echo load_file_content('./render_ajax_response.php'); ?>
             </div>
             <div id="step_5">
                 <h2>Playground</h2>
                 <div x-show="!$store.table || !$store.settings">
-                    Before creating an invoice you need make prev steps!
+                    Before creating an invoice you need create datatable and settings!
                 </div>
                 <div x-show="$store.table && $store.settings" class="pb-10">
                     <div class="my-8">
@@ -91,7 +102,8 @@ require_once('helpers/common.php');
                                         <option value="" class="text-gray-400">Select currency</option>
                                         <template x-if="$store.settings">
                                             <template x-for="currency in $store.settings.currencies">
-                                                <option x-text="currency.abbr" :disabled="currency.address === null"></option>
+                                                <!-- <option x-text="currency.abbr" :disabled="currency.address === null"></option> -->
+                                                <option x-text="currency.abbr"></option>
                                             </template>
                                         </template>
                                     </select>
