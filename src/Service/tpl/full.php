@@ -149,7 +149,8 @@ use Apirone\Invoice\Service\Utils;
                 <?php endif; ?>
                 <div class="status-data__wrapper">
                     <div class="status-data">
-                        <div class="status skeleton__box <?php echo strtolower($status->title); ?>">
+                        <?php $class_skeleton = $status->title == "Loading" ? ' skeleton__box' : ''; ?>
+                        <div class="status<?php echo $class_skeleton; ?> <?php echo strtolower($status->title); ?>">
                             <div class="status__icon">
                                 <?php if ($status->title !== 'Loading') : ?>
                                 <span class="icon-status icon-<?php echo strtolower($status->title); ?>"></span>

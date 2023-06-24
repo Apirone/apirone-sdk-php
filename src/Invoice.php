@@ -491,10 +491,15 @@ class Invoice extends AbstractModel{
     public static function renderAjax($echo = false)
     {
         if (Render::isAjaxRequest()) {
-            $id = (string) array_key_exists('invoice', $_GET) ? Utils::sanitize($_GET['invoice']) : '';
-            $offset = $_GET['offset'] ? (int) Utils::sanitize($_GET['offset']) : 0;
+            $data = file_get_contents('php://input');
+            $params = ($data) ? json_decode(Utils::sanitize($data)) : null;
 
-            if ($id) {
+            // $id = (string) array_key_exists('invoice', $_GET) ? Utils::sanitize($_GET['invoice']) : '';
+            // $offset = $_GET['offset'] ? (int) Utils::sanitize($_GET['offset']) : 0;
+
+            if ($params) {
+                $id = property_exists($params, 'invoice') ? (string) $params->invoice : '';
+                $offset = property_exists($params, 'offset') ? (int) $params->offset : 0;
                 header("Content-Type: text/plain");
                 $invoice = Invoice::getInvoice($id);
                 if ($offset) {

@@ -4,12 +4,14 @@ document.addEventListener("DOMContentLoaded", function(e) {
   const loading = d.querySelector('.loading');
   const _id = d.getElementById('invoice_id');  
   const id = _id ? _id.value : null;
-  const link = d.getElementById('statusUrl');
-  const url = link ? link.attributes.href.value : null;
+  const link = (ln = d.getElementById('statusUrl')) ? ln.attributes.href.value : null;
+  const url = link;
   let statusNum = null;
 
+  const params = {method:'POST',headers:{'X-Requested-With':'XMLHttpRequest'}};
   async function getStat() {
-    const response = await fetch(`${url}?invoice=${id}`,{method: 'POST', headers: {'X-Requested-With': 'XMLHttpRequest'}});
+    params.body = JSON.stringify({'invoice':id});
+    const response = await fetch(url, params);
     const result = await response.text();
     return result;
   }
@@ -24,10 +26,11 @@ document.addEventListener("DOMContentLoaded", function(e) {
   }
   
   async function load() {
-    if (!url) {
+    if (!url) { 
       return;
     }
-    const response = await fetch(`${url}?invoice=${id}&offset=${offset}`,{method: 'POST', headers: {'X-Requested-With': 'XMLHttpRequest'}});
+    params.body = JSON.stringify({'invoice':id,'offset':offset});
+    const response = await fetch(url, params);
     const result = await response.text();
     const wrapper = d.getElementById('__apn-invoice');
     wrapper.outerHTML = result;
