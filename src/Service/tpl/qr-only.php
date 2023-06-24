@@ -33,10 +33,8 @@ use Apirone\Invoice\Service\Utils;
                 </div>
             </div>
             <div class="status status__qr-only skeleton__box">
-                <?php if ($id !== null) : ?>
                 <input id="invoice_id" type="hidden" value="<?php echo $id; ?>">
                 <a id="statusUrl" href="<?php echo $statusLink; ?>" style="display: none"></a>
-                <?php endif; ?>
             </div>
             <div class="status__qr-only <?php echo strtolower($status->title); ?>">
                 <p>

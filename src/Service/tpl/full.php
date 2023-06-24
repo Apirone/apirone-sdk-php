@@ -73,10 +73,8 @@ use Apirone\Invoice\Service\Utils;
                     </div>
                 <?php endif; /* Loading/Invoce end */ ?>
                 </div>
-                <?php if ($id !== null) : ?>
                 <input id="invoice_id" type="hidden" value="<?php echo $id; ?>">
                 <a id="statusUrl" href="<?php echo $statusLink; ?>" style="display: none"></a>
-                <?php endif; ?>
             </div>
             <div>
                 <?php if( $status->title == 'Refresh' ) : ?>

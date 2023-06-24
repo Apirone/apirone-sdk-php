@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
     const result = await response.text();
     const wrapper = d.getElementById('__apn-invoice');
     wrapper.outerHTML = result;
-    statusNum = d.getElementById('statusNum').value;
+    statusNum = (stn = d.getElementById('statusNum')) ? stn.value : 0;
     setCopy();
     setToggler();
     countdown();
