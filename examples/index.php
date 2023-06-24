@@ -134,7 +134,8 @@ require_once('helpers/common.php');
                                 </label>
                                 <div>
                                     <button type="submit" :disabled="!data.currency" class="text-white font-simibold rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2" @click="$event.prevent; create" x-text="label"></button>
-                                    <button type="button" x-show="invoice" class="text-white font-simibold rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2" @click="render">Show invoice</button>
+                                    <button type="button" x-show="invoice" class="text-white font-simibold rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2 ml-2" @click="render">Show invoice</button>
+                                    <label x-show="invoice">QR Only<input class="mx-2" type="checkbox" x-model="qrOnly" /></label>
                                 </div>
                             </div>
                             <h3>Invoice details</h3>

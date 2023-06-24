@@ -9,7 +9,12 @@ use Apirone\Invoice\Service\Render;
 // Config & DB
 Invoice::db($db_handler, $table_prefix);
 Invoice::settings( Settings::fromFile('/var/www/storage/settings.json') );
-Invoice::dataUrl('/render_ajax_response.php');
+Invoice::dataUrl($_SERVER['REQUEST_URI']);
 
-Render::$qrOnly = true;
+// Override settings value qrOnly from GET-param
+$qrOnly = $_GET['qr-only'] ?? false;
+if ($qrOnly) {
+    Render::$qrOnly = $qrOnly;
+}
+
 Invoice::renderAjax();

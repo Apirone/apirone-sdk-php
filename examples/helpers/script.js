@@ -47,6 +47,7 @@ function playground() {
     content: 'Invoice not created yet.',
     data: {currency: null, amount: null, lifetime: null, callbackUrl: null},
     expand: false,
+    qrOnly: false,
     async create() {
       this.label = 'Creating...'; 
       url = '/helpers/action_invoice.php?data=' + JSON.stringify(this.data);
@@ -55,7 +56,8 @@ function playground() {
       this.label = 'Create'; 
     },
     render() {
-      window.open('/render.php?invoice=' + this.invoice.invoice, '_blank').focus();
+      qr = this.qrOnly ? '&qr-only=1' : '';
+      window.open('/render.php?invoice=' + this.invoice.invoice + qr, '_blank').focus();
     },
     toggle() {this.expand = !this.expand;}
   }
