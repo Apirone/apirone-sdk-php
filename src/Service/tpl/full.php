@@ -61,13 +61,13 @@ use Apirone\Invoice\Service\Utils;
                     <?php endif; /* UserData end */ ?>
                     <p class="skeleton__box info__date"><span><?php $d($invoice->created); ?></span></p>
                     <p class="skeleton__box info__amount">
-                        <?php if ($invoice->status == 'partpaid') : ?>
+                    <?php if ($invoice->status == 'partpaid') : ?>
                         <small><?php $t("remainsToPay"); ?> <br></small>
-                        <?php endif; ?>
-                        <?php if($invoice && $invoice->status !== 'expired') : ?>
-                            <?php $c($amount, 'margin-right: .5rem;'); ?>
-                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if($invoice && $amount && $invoice->status !== 'expired') : ?>
+                        <?php $c($amount, 'margin-right: .5rem;'); ?>
                         <span><?php echo $amount . ' ' . strtoupper($invoice->currency); ?></span>
+                    <?php endif; ?>
                     </p>
                     </div>
                 <?php endif; /* Loading/Invoce end */ ?>
@@ -168,7 +168,7 @@ use Apirone\Invoice\Service\Utils;
                                 <?php foreach ($invoice->history as $item) : ?>
                                 <li>
                                     <?php if ($item->getAmount()) : ?>
-                                    <a class="history__item" href="<?php echo Utils::getTransactionLink($currency, $item->getTxid()); ?>">
+                                    <a class="history__item" href="<?php echo Utils::getTransactionLink($currency, $item->getTxid()); ?>" target="_blank">
                                         <span><?php $d($item->getDate()); ?> <span>(<?php echo Utils::exp2dec($item->getAmount() * $currency->getUnitsFactor() ) ?>)</span></span>
                                         <span style="text-align: right;"><?php $t($item->getStatus()); ?></span>
                                     </a>
