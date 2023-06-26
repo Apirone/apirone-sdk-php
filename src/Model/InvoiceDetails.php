@@ -225,6 +225,9 @@ class InvoiceDetails extends AbstractModel
      */
     public function countdown()
     {
+        if ($this->expire == null) {
+            return -1;
+        }
         $expire = strtotime($this->expire);
         $now = time();
         

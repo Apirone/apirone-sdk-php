@@ -20,7 +20,6 @@ use Apirone\Invoice\Service\Utils;
                 <div class="qr__wrapper">
                     <div class="skeleton__box">
                     <?php if ($invoice) : ?>
-                        <input type="hidden" id = "expire" value="<?php echo $invoice->countdown(); ?>">
                         <?php if ($invoice->status !== 'expired' && $invoice->status !== 'success') : ?>
                         <figure class="qr">
                             <img src="<?php echo Utils::getQrLink($currency, $invoice->address, $amount); ?>" />
@@ -157,6 +156,7 @@ use Apirone\Invoice\Service\Utils;
                             <div class="status__text">
                                 <p><?php $t($status->description); ?></p>
                                 <?php if($invoice && $invoice->countdown() > 0) : ?>
+                                <input type="hidden" id = "expire" value="<?php echo $invoice->countdown(); ?>">
                                 <p id="countdown" class="countdown"></p>
                                 <?php endif; ?>
                             </div>
@@ -188,8 +188,7 @@ use Apirone\Invoice\Service\Utils;
                 </div>
                 <?php if($invoice && @$invoice->showLinkback()) : ?> 
                 <p class="countdown" style="text-align: center;">
-                    <?php // echo sprintf($t('getBack', false), 15, $invoice->linkback); ?>
-                    <?php echo sprintf($t('getBack', false), 15, '/'); ?>
+                    <?php echo sprintf($t('getBack', false), 15, $invoice->linkback); ?>
                 </p>
                 <?php endif; ?>
                 

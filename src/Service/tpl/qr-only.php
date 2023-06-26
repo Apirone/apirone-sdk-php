@@ -19,7 +19,6 @@ use Apirone\Invoice\Service\Utils;
                     <div class="skeleton__box">
                     <?php if ($invoice) : ?>
                         <input type="hidden" id="statusNum" value="<?php echo $invoice->statusNum(); ?>">
-                        <input type="hidden" id = "expire" value="<?php echo $invoice->countdown(); ?>">
                         <?php if ($invoice->status !== 'expired' && $invoice->status !== 'success') : ?>
                         <figure class="qr">
                             <img src="<?php echo Utils::getQrLink($currency, $invoice->address, $amount); ?>" />
