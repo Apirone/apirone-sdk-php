@@ -81,7 +81,7 @@ use Apirone\Invoice\Service\Utils;
                     <div class="address__title"><?php $t("paymentAddress"); ?></div>
                     <p class="skeleton__box">
                         <?php if (!$loading && $invoice) : ?>
-                        <span><?php echo $invoice->address; ?></span>
+                        <a href="<?php echo Utils::getAddressLink($currency, $invoice->address); ?>" target="_blank"><?php echo $invoice->address; ?></a>
                         <?php endif; ?>
                     </p>
                     <?php if (!$loading && $status->title !== 'Expired') : ?>
