@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
     setCopy();
     setToggler();
     countdown();
+    linkback();
     stat = await getStat();
 
     async function refresh() {
@@ -45,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
         statusNum = await getStat();
         if (statusNum !== stat) { document.location.reload();}
     };
-    if (statusNum > 0) { processId = setInterval(refresh, 1e4); }
+    if (statusNum > 0) { processId = setInterval(refresh, 5e3); }
   }
   
   function setCopy() {
@@ -87,6 +88,23 @@ document.addEventListener("DOMContentLoaded", function(e) {
       if (distance < 0) {
         clearInterval(interval);
         counter.innerHTML = '';
+      }
+    }, 1000);
+  }
+  function linkback() {
+    let linkback = d.getElementById('linkback');
+    let counter = d.getElementById('linkback-counter');
+    if (linkback === null || counter === null) {
+      return;
+    }
+    let count = counter.innerHTML;
+    let link = linkback.attributes.href.value;
+    const interval = setInterval(() => {
+      counter.innerHTML = count;
+      count -=1;
+      if (count == 0) {
+        clearInterval(interval);
+        d.location.href = link;
       }
     }, 1000);
   }

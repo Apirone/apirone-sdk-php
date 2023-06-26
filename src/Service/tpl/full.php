@@ -156,8 +156,7 @@ use Apirone\Invoice\Service\Utils;
                             </div>
                             <div class="status__text">
                                 <p><?php $t($status->description); ?></p>
-                                <?php if($invoice) : ?>
-                                <?php //if($invoice && $invoice->countdown() > 0) : ?>
+                                <?php if($invoice && $invoice->countdown() > 0) : ?>
                                 <p id="countdown" class="countdown"></p>
                                 <?php endif; ?>
                             </div>
@@ -187,9 +186,10 @@ use Apirone\Invoice\Service\Utils;
                         <?php endif; ?>
                     </div>
                 </div>
-                <?php if($invoice && @$invoice->showLinkback) : ?> 
+                <?php if($invoice && @$invoice->showLinkback()) : ?> 
                 <p class="countdown" style="text-align: center;">
-                    <?php echo sprintf($t('getBack', false), 15, $invoice->linkback); ?>
+                    <?php // echo sprintf($t('getBack', false), 15, $invoice->linkback); ?>
+                    <?php echo sprintf($t('getBack', false), 15, '/'); ?>
                 </p>
                 <?php endif; ?>
                 

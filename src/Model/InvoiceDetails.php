@@ -217,12 +217,26 @@ class InvoiceDetails extends AbstractModel
         return $this->invoiceUrl;
     }
 
+    /**
+     * Returns the number of seconds until an invoice expires
+     * If the invoice is expired returns -1
+     *
+     * @return int
+     */
     public function countdown()
     {
         $expire = strtotime($this->expire);
         $now = time();
         
         return ($expire > $now) ? $expire - $now : -1;
+    }
+
+    public function showLinkback()
+    {
+        if ($this->linkback && $this->status == 'success')
+            return true;
+
+        return false;
     }
 
     public function statusNum() {
