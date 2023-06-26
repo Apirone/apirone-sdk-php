@@ -244,7 +244,7 @@ class InvoiceDetails extends AbstractModel
 
     public function statusNum() {
         switch ($this->status) {
-            case 'success':
+            case 'completed':
             case 'expired':
                 return 0;
             default:

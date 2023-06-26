@@ -108,7 +108,7 @@ class Render
                 $status->title = 'Refresh';
                 $status->description = 'waitingForPayment';
                 break;
-            case 'success':
+            case 'completed':
                 $status->title = 'Success';
                 $status->description = 'paymentAccepted';
                 break;

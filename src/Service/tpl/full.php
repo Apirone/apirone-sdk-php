@@ -169,7 +169,7 @@ use Apirone\Invoice\Service\Utils;
                                 <li>
                                     <?php if ($item->getAmount()) : ?>
                                     <a class="history__item" href="<?php echo Utils::getTransactionLink($currency, $item->getTxid()); ?>">
-                                        <span><?php $d($item->getDate()); ?> <span><?php echo ($item->getAmount() * $currency->getUtitsFactor() ) ?></span></span>
+                                        <span><?php $d($item->getDate()); ?> <span><?php echo Utils::exp2dec($item->getAmount() * $currency->getUnitsFactor() ) ?></span></span>
                                         <span style="text-align: right;"><?php $t($item->getStatus()); ?></span>
                                     </a>
                                     <?php else : ?>
