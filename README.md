@@ -4,35 +4,171 @@
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](https://raw.githubusercontent.com/Apirone/apirone-invoce-php/main/LICENSE)
 
-This library provides the methods of [Apirone API](https://apirone.com/docs) with PHP. 
-
-[About apirone invoices](https://apirone.com/docs/invoices/)
+This Library provides classes for working with [Apirone invoices](https://apirone.com/docs/invoices/).
+Easy integration of cryptocurrency payments.
 
 ## Requirements
 
-- PHP 7.4 or higher. Tested up to 8.2.
-- cURL extension
-- JSON extension
+- PHP 7.4 or higher with cURL and JSON extentions. Tested up to 8.2.
+- MySQL or MariaDB
 - [Apirone API PHP](https://github.com/Apirone/apirone-api-php)
 
-## Getting starting
-
-### Installation via composer
+## Installation and preparation for use
 
 Use [composer](https://getcomposer.org/) for library installation.
 
-```bash
-composer require apirone/apirone-invoice-php
+    composer require apirone/apirone-invoice-php
+
+### Assets configure
+
+Copy ```src/assets``` folder into your public html.
+On the invoice display page you need to add ```css/styles.css``` and ``js/script.js`` from asssets folder. Also you can use minimized versions.
+
+### Database and Logs handlers
+
+To connect library to your database-engine and log-engine you need to create two callback function and pass them to the library.
+
+Db handler example for php MySQLi
+```php
+
+// Our MySQL engine example
+$conn = new mysqli('host', 'user', 'pass', 'database');
+$conn->select_db('database');
+
+// DB MySQL handler example
+$db_handler = static function($query) {
+    global $conn;
+    $result = $conn->query($query, MYSQLI_STORE_RESULT);
+
+    if (!$result) {
+        return $conn->error;
+    }
+    if (gettype($result) == 'boolean') {
+        return $result;
+    }
+    return $result->fetch_all(MYSQLI_ASSOC);
+};
+
 ```
-### Get package
 
-Download latest [release](https://github.com/Apirone/apirone-invoice-php/releases) from repo and unpack into your source folder.
+Log handler example:
 
-### Assets
+```php
+$log_handler = static function($message) {
+    // Handle message with yor log engine
+    // Message is an associative array with two keys 'body' and 'details'
+    // For example you have log function to provide logging
+    // log($message['body'], $message['details']);
 
-Copy ```src/assets``` folder into your public html. On the invoice page you neet to add ```css/styles.css``` and ``js/script.js`` from asssets folder. Also you can use minimized versions.
+    print_r($message);
+};
+```
 
-## Invoice SDK usage
+Set a handlers to the library:
+
+```php
+use Apirone\Invoice\Invoice;
+
+Invoice::db($db_handler, 'table_prefix_');
+Invoice::log($log_handler);
+```
+
+Create an invoce table:
+
+```php
+use Apirone\Invoice\Service\InvoiceDb;
+
+// Create invoice table if not exists
+InvoiceDb::install('tbale_prefix', $charset = 'urf8', $collate = 'utf_general_ci');
+```
+
+For more Datatbase details see [docs/Settings.md](./docs/Database.md)
+
+Create common file for invoce class configure:
+
+```php
+// Setup invoice handlers and Settings
+Invoice::db($db_handler, $table_prefix);
+Invoice::log($log_handler);
+Invoice::settings(Settings::fromFile('/absolute/path/to/settings.json'));
+```
+
+## Settings
+
+The settings class is used to create an account, manage currency settings, and save and restore the settings object.
+
+Create new settings object:
+```php
+use Apirone\Invoice\Model\Settings;
+
+$settings = Settings::init();
+$settings->createAccount();
+
+// Save settings object to file
+$settings->toFile('absolute/path/to/settings.json');
+
+// Get settings as JSON-object to save it to database
+$json = $settings->toJson();
+
+```
+
+Load existing settings object
+
+```php
+$fromFile = Settings::fromFile('/absolute/path/to/settings.json');
+
+// For example you have get_option function
+$json = get_option('apirone_settings');
+
+$fromJson = Settings::fromJson($json);
+
+```
+
+For more Settings class details see [docs/Settings.md](./docs/Settings.md)
+
+## Create an Invoice
+
+```php
+
+use Apirone\Invoice\Invoice;
+use Apirone\Invoice\Model\Settings;
+
+// Setup invoice handlers and Settings
+Invoice::db($db_handler, $table_prefix);
+Invoice::log($log_handler);
+Invoice::settings(Settings::fromFile('/absolute/path/to/settings.json'));
+
+$invoice = Invoice::init('btc', 25000);
+
+$invoice->callbackUrl('https://example.com/callback_page');
+$invoice->lifetime(1800);
+
+$invoice->crete();
+
+// You can see created invoice JSON data
+$json = $invoice->toJson();
+```
+
+## Get existing invoice
+
+
+## Show invoice
+
+```php
+use Apirone\Invoice\Invoice;
+use Apirone\Invoice\Model\Settings;
+
+// Setup invoice handlers and Settings
+Invoice::db($db_handler, $table_prefix);
+Invoice::log($log_handler);
+Invoice::settings(Settings::fromFile('/absolute/path/to/settings.json'));
+
+// Set invoice data url - render ajsx response page
+Invoice::dataUrl('render_ajax_response.php')
+
+Invoice::renderLoader();
+```
+<!-- ## Invoice SDK usage
 
 - [Database](./docs/Database.md)
   
@@ -46,9 +182,9 @@ Copy ```src/assets``` folder into your public html. On the invoice page you neet
 ## Support
 
 * https://github.com/Apirone/apirone-invoice-php/issues  
-* support@apirone.com
+* support@apirone.com -->
 
-## License
+<!-- ## License
 
 MIT License
 
@@ -70,4 +206,4 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+SOFTWARE. -->
