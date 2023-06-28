@@ -151,7 +151,39 @@ $json = $invoice->toJson();
 
 ## Get existing invoice
 
+```php
+use Apirone\Invoice\Invoice;
+use Apirone\Invoice\Model\Settings;
 
+// Setup invoice handlers and Settings
+Invoice::db($db_handler, $table_prefix);
+Invoice::log($log_handler);
+Invoice::settings(Settings::fromFile('/absolute/path/to/settings.json'));
+
+$id = '9qAs2OQao43VWz72';
+$invoice = Invoice::getInvoice($id);
+
+```
+
+## Callbacks handler
+Apirone service interacts with the library through [callbacks](https://apirone.com/docs/receiving-callbacks/#invoices).
+To get invoice statuses, you need to create a URL and add a callback handler to your code.
+This address must be set when creating a new invoice.
+
+If you need to process the order status based on the status of the invoice, you can create a callback function to handle the status change.
+
+```php
+// Create oder process function
+$order_status_handler = static function ($invoice) {
+    // You need to set the order_id when creating an invoice.
+    $order_id = $invoice->order();
+    // ... Write here your business logic
+}
+// ... Setup invoice handlers and settings
+
+
+Invoice::callbackHandler($order_status_handler);
+```
 ## Show invoice
 
 ```php
