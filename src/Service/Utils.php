@@ -45,7 +45,7 @@ class Utils
         return null;
     }
     /**
-     * Returnt transaction link to blockchair.com
+     * Return transaction link to blockchair.com
      * 
      * @param mixed $currency
      * @return string 
@@ -58,7 +58,7 @@ class Utils
     }
 
     /**
-     * Returnt transaction link to blockchair.com
+     * Return transaction link to blockchair.com
      * 
      * @param mixed $currency
      * @return string 
@@ -132,7 +132,7 @@ class Utils
     }
 
     /**
-     * Convert fiat value to cripto by request to apirone api
+     * Convert fiat value to crypto by request to apirone api
      * 
      * @param mixed $value 
      * @param string $from 
@@ -163,7 +163,7 @@ class Utils
     }
 
     /**
-     * Check is fiat supported
+     * Check is fiat supported by apirone
      * 
      * @param mixed $fiat string
      * @return bool 
@@ -178,19 +178,6 @@ class Utils
         }
 
         return false;
-    }
-
-    /**
-     * @param string $date DateTime string
-     *
-     * @return string
-     */
-    public static function convertToIso8601(string $date): string
-    {
-        $date = new \DateTime($date);
-        $date->setTimezone(new \DateTimeZone(\date_default_timezone_get()));
-
-        return $date->format(\DateTime::ATOM);
     }
 
     /**

@@ -14,11 +14,18 @@ namespace Apirone\Invoice\Model;
 
 use Apirone\API\Endpoints\Account;
 use Apirone\API\Endpoints\Service;
+use Apirone\API\Exceptions\RuntimeException;
+use Apirone\API\Exceptions\ValidationFailedException;
+use Apirone\API\Exceptions\UnauthorizedException;
+use Apirone\API\Exceptions\ForbiddenException;
+use Apirone\API\Exceptions\NotFoundException;
+use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\Invoice\Invoice;
 use Apirone\Invoice\Model\AbstractModel;
 use Apirone\Invoice\Model\UserData;
 use Apirone\Invoice\Model\HistoryItem;
 use Apirone\Invoice\Tools\Utils;
+use ReflectionException;
 
 class InvoiceDetails extends AbstractModel
 {
@@ -68,6 +75,11 @@ class InvoiceDetails extends AbstractModel
     {
     }
 
+    /**
+     * Create a new instance
+     *
+     * @return static 
+     */
     public static function init() 
     {
         $class = new static();
@@ -75,6 +87,13 @@ class InvoiceDetails extends AbstractModel
         return $class;
     }
 
+    /**
+     * Restore instance from JSON
+     *
+     * @param mixed $json 
+     * @return $this 
+     * @throws ReflectionException 
+     */
     public static function fromJson($json)
     {
         $class = new static();
@@ -82,11 +101,18 @@ class InvoiceDetails extends AbstractModel
         return $class->classLoader($json);
     }
 
-    protected function loadJson($json)
-    {
-        return $this->classLoader($json);
-    }
-
+    /**
+     * Get invoice info from apirone and create instance from it
+     *
+     * @return $this 
+     * @throws RuntimeException 
+     * @throws ValidationFailedException 
+     * @throws UnauthorizedException 
+     * @throws ForbiddenException 
+     * @throws NotFoundException 
+     * @throws MethodNotAllowedException 
+     * @throws ReflectionException 
+     */
     public function update()
     {
         $json = Account::init($this->account)->invoiceInfo($this->invoice);
@@ -94,6 +120,13 @@ class InvoiceDetails extends AbstractModel
         return $this->classLoader($json);
     }
 
+    /**
+     * Invoice UserData parser
+     *
+     * @param mixed $data 
+     * @return UserData 
+     * @throws ReflectionException 
+     */
     protected function parseUserData($data)
     {
         $userData = UserData::fromJson($data);
@@ -101,6 +134,13 @@ class InvoiceDetails extends AbstractModel
         return $userData;
     }
 
+    /**
+     * Invoice history data parser
+     *
+     * @param mixed $data 
+     * @return array 
+     * @throws ReflectionException 
+     */
     protected function parseHistory($data)
     {
         $history = [];
@@ -111,6 +151,12 @@ class InvoiceDetails extends AbstractModel
         return $history;
     }
 
+    /**
+     * Return invoice public or private invoice info
+     *
+     * @param bool $private 
+     * @return Apirone\Invoice\Model\stdClass 
+     */
     public function info($private = false)
     {
         $info = $this->toJson();
@@ -129,13 +175,13 @@ class InvoiceDetails extends AbstractModel
         return $info;
     }
 
-    /**
-     * Get the value of created
-     */ 
-    public function getCreated()
-    {
-        return $this->created;
-    }
+    // /**
+    //  * Get the value of created
+    //  */ 
+    // public function getCreated()
+    // {
+    //     return $this->created;
+    // }
 
     /**
      * Get the value of currency
@@ -242,6 +288,12 @@ class InvoiceDetails extends AbstractModel
         return false;
     }
 
+    /**
+     * Return count of history items.
+     * In case when invoice completed or expired return zero value
+     *
+     * @return int|int<0, max> 
+     */
     public function statusNum() {
         switch ($this->status) {
             case 'completed':

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Apirone\Invoice\Model;
 
 use Apirone\Invoice\Model\AbstractModel;
+use ReflectionException;
 
 class HistoryItem extends AbstractModel
 {
@@ -32,6 +33,13 @@ class HistoryItem extends AbstractModel
     {
     }
     
+    /**
+     * Restore object from JSON
+     *
+     * @param mixed $json 
+     * @return $this 
+     * @throws ReflectionException 
+     */
     public static function fromJson($json)
     {
         $class = new static();
@@ -39,6 +47,11 @@ class HistoryItem extends AbstractModel
         return $class->classLoader($json);
     }
 
+    /**
+     * Convert object to array
+     *
+     * @return array 
+     */
     public function toArray(): array
     {
         $item = parent::toArray();

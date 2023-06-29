@@ -14,19 +14,57 @@ namespace Apirone\Invoice\Service;
 
 use Apirone\Invoice\Invoice;
 use Apirone\Invoice\Service\Utils;
+use DivisionByZeroError;
+use ArithmeticError;
+use Closure;
+use stdClass;
 
 class Render
 {
+    /**
+     * Invoice data url for ajax request
+     *
+     * @var string
+     */
     public static string $dataUrl = '';
 
+    /**
+     * Invoice store back link
+     *
+     * @var string
+     */
     public static string $backlink = '';
 
+    /**
+     * Invoice timezone
+     *
+     * @var string
+     */
     public static string $timeZone = 'UTC';
 
+    /**
+     * Show qr template only
+     *
+     * @var bool
+     */
     public static bool $qrOnly = false;
     
+    /**
+     * Show apirone logo on invoice template
+     *
+     * @var bool
+     */
     public static bool $logo = true;
 
+    /**
+     * Set render options
+     *
+     * @param string $dataUrl 
+     * @param bool $qrOnly 
+     * @param bool $logo 
+     * @param string $backlink 
+     * @return void 
+     */
     public static function init($dataUrl = '', $qrOnly = false, $logo = true, $backlink = '')
     {
         self::$dataUrl = $dataUrl;
@@ -35,6 +73,14 @@ class Render
         self::$backlink = $backlink;
     }
 
+    /**
+     * Set timezone by local timezone to UTC offset
+     *
+     * @param int $offset 
+     * @return void 
+     * @throws DivisionByZeroError 
+     * @throws ArithmeticError 
+     */
     public static function setTimeZoneByOffset(int $offset = 0)
     {
         if ($offset == 0 || abs($offset >= 1140)) {
@@ -48,6 +94,12 @@ class Render
         self::$timeZone = $tz;
     }
     
+    /**
+     * Render invoice html
+     * 
+     * @param Invoice $invoice 
+     * @return string|false 
+     */
     public static function show(Invoice $invoice)
     {
         $show = ($invoice->invoice) ? true : false;
@@ -90,13 +142,24 @@ class Render
         return ob_get_clean();
     }
 
+    /**
+     * Check request headers
+     *
+     * @return bool 
+     */
     public static function isAjaxRequest(): bool
     {
         return (array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) 
             && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') ? true : false;
     }
 
-    private function statusDescription(Invoice $invoice)
+    /**
+     * Return status description by invoice status
+     *
+     * @param Invoice $invoice 
+     * @return stdClass 
+     */
+    private function statusDescription(Invoice $invoice): \stdClass
     {
 
         $status = new \stdClass;
@@ -128,6 +191,15 @@ class Render
 
         return $status;
     }
+
+    /**
+     * Return template helpers closures array
+     *
+     * @return (
+        Closure(mixed $key, bool $echo = true): string|void|
+        Closure(mixed $date, bool $echo = true): string|false|void|
+        Closure(mixed $value, string $style = '', bool $echo = true): string|void)[] 
+     */
     private static function helpers()
     {
         // Localize callback
@@ -170,6 +242,11 @@ class Render
         return [$t, $d, $c];    
     }
 
+    /**
+     * Return locales for template
+     *
+     * @return string[][] 
+     */
     private static function locales()
     {
         require(__DIR__ . '/tpl/locales.php');

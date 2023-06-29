@@ -14,7 +14,14 @@ namespace Apirone\Invoice\Model;
 
 use Apirone\API\Endpoints\Account;
 use Apirone\API\Endpoints\Service;
+use Apirone\API\Exceptions\RuntimeException;
+use Apirone\API\Exceptions\ValidationFailedException;
+use Apirone\API\Exceptions\UnauthorizedException;
+use Apirone\API\Exceptions\ForbiddenException;
+use Apirone\API\Exceptions\NotFoundException;
+use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\Invoice\Model\Settings\Currency;
+use ReflectionException;
 use stdClass;
 
 class Settings extends AbstractModel
@@ -89,8 +96,6 @@ class Settings extends AbstractModel
      */
     private bool    $debug = false;
 
-
-    
     /**
      * Extra settings values object
      *
@@ -98,11 +103,28 @@ class Settings extends AbstractModel
      */
     private \stdClass $extra;
 
+    /**
+     * Class constructor
+     *
+     * @return void 
+     */
     private function __construct()
     {
         $this->extra = new \stdClass;
     }
 
+    /**
+     * Create instance
+     *
+     * @return static 
+     * @throws RuntimeException 
+     * @throws ValidationFailedException 
+     * @throws UnauthorizedException 
+     * @throws ForbiddenException 
+     * @throws NotFoundException 
+     * @throws MethodNotAllowedException 
+     * @throws ReflectionException 
+     */
     public static function init()
     {
         $class = new static();
@@ -111,6 +133,19 @@ class Settings extends AbstractModel
         return $class;
     }
 
+    /**
+     * Restore settings from JSON
+     * 
+     * @param mixed $json 
+     * @return static 
+     * @throws ReflectionException 
+     * @throws RuntimeException 
+     * @throws ValidationFailedException 
+     * @throws UnauthorizedException 
+     * @throws ForbiddenException 
+     * @throws NotFoundException 
+     * @throws MethodNotAllowedException 
+     */
     public static function fromJson($json)
     {
         $class = new static();
@@ -122,6 +157,20 @@ class Settings extends AbstractModel
 
         return $class;
     }
+
+    /**
+     * Restore settings from file
+     *
+     * @param mixed $abspath 
+     * @return static|null 
+     * @throws ReflectionException 
+     * @throws RuntimeException 
+     * @throws ValidationFailedException 
+     * @throws UnauthorizedException 
+     * @throws ForbiddenException 
+     * @throws NotFoundException 
+     * @throws MethodNotAllowedException 
+     */
     public static function fromFile($abspath)
     {
         $json = @file_get_contents($abspath);
@@ -133,6 +182,20 @@ class Settings extends AbstractModel
         return null;
     }
 
+    /**
+     * Create instance for existing apirone account
+     *
+     * @param mixed $account 
+     * @param mixed $transferKey 
+     * @return static 
+     * @throws RuntimeException 
+     * @throws ValidationFailedException 
+     * @throws UnauthorizedException 
+     * @throws ForbiddenException 
+     * @throws NotFoundException 
+     * @throws MethodNotAllowedException 
+     * @throws ReflectionException 
+     */
     public static function fromExistingAccount($account, $transferKey) {
         $class = new static();
 
@@ -158,6 +221,11 @@ class Settings extends AbstractModel
         return false;
     }
 
+    /**
+     * Convert instance to array
+     *
+     * @return array 
+     */
     public function toArray(): array {
         $data = parent::toArray();
 
@@ -168,6 +236,18 @@ class Settings extends AbstractModel
         return $data;
     }
 
+    /**
+     * Create a new apirone account
+     * 
+     * @param bool $renew 
+     * @return $this 
+     * @throws RuntimeException 
+     * @throws ValidationFailedException 
+     * @throws UnauthorizedException 
+     * @throws ForbiddenException 
+     * @throws NotFoundException 
+     * @throws MethodNotAllowedException 
+     */
     public function createAccount($renew = false)
     {
         if ($renew == false && isset($this->account)) {
@@ -186,6 +266,11 @@ class Settings extends AbstractModel
         return $this;
     }
 
+    /**
+     * Reset settings to default values
+     *
+     * @return $this 
+     */
     public function restoreDefaults()
     {
         $this->merchant = '';
@@ -197,6 +282,18 @@ class Settings extends AbstractModel
         return $this;
     }
 
+    /**
+     * Load currencies from an apirone service
+     *
+     * @return array 
+     * @throws RuntimeException 
+     * @throws ValidationFailedException 
+     * @throws UnauthorizedException 
+     * @throws ForbiddenException 
+     * @throws NotFoundException 
+     * @throws MethodNotAllowedException 
+     * @throws ReflectionException 
+     */
     public function loadCurrencies()
     {
         $serviceInfo = Service::account();
@@ -219,6 +316,11 @@ class Settings extends AbstractModel
         return $currencies;
     }
 
+    /**
+     * Save currencies into apirone account
+     *
+     * @return $this 
+     */
     public function saveCurrencies()
     {
         foreach ($this->currencies as $currency) {
@@ -228,6 +330,12 @@ class Settings extends AbstractModel
         return $this;
     }
 
+    /**
+     * Get currency object by it abbreviation
+     * 
+     * @param mixed $abbr 
+     * @return Currency | false
+     */
     public function getCurrency($abbr)
     {
         foreach($this->currencies as $currency) {
@@ -456,6 +564,13 @@ class Settings extends AbstractModel
         return $this;
     }
 
+    /**
+     * Currencies list parser
+     *
+     * @param mixed $json 
+     * @return array 
+     * @throws ReflectionException 
+     */
     public function parseCurrencies($json)
     {
         $items = [];

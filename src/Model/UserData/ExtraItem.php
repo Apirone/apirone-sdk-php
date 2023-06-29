@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Apirone\Invoice\Model\UserData;
 
 use Apirone\Invoice\Model\AbstractModel;
+use ReflectionException;
 
 class ExtraItem extends AbstractModel
 {
@@ -20,12 +21,26 @@ class ExtraItem extends AbstractModel
 
     private ?string $price = null;
 
+    /**
+     * Class constructor
+     *
+     * @param null|string $name 
+     * @param null|string $price 
+     * @return void 
+     */
     private function __construct(?string $name = null, ?string $price = null)
     {
         $this->name = $name;
         $this->price = $price;
     }
 
+    /**
+     * Create instance
+     * 
+     * @param string $name 
+     * @param string $price 
+     * @return static 
+     */
     public static function init(string $name, string $price)
     {
         $class = new static($name, $price);
@@ -33,6 +48,13 @@ class ExtraItem extends AbstractModel
         return $class;
     }
     
+    /**
+     * Restore instance from JSON
+     * 
+     * @param mixed $json 
+     * @return $this 
+     * @throws ReflectionException 
+     */
     public static function fromJson($json)
     {
         $class = new static();
@@ -40,6 +62,11 @@ class ExtraItem extends AbstractModel
         return $class->classLoader($json);
     }
 
+    /**
+     * Convert instance to string
+     *
+     * @return string 
+     */
     public function toString()
     {
         return $this->name . $this->price;

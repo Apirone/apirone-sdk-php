@@ -55,7 +55,7 @@ class InvoiceDb
     }
 
     /**
-     * Database exec funtion
+     * Database exec function
      * 
      * @param mixed $query 
      * @return mixed 
@@ -89,7 +89,7 @@ class InvoiceDb
     }
 
     /**
-     * Unistall invoice table from database
+     * Uninstall invoice table from database
      *
      * @param string $prefix 
      * @return mixed 

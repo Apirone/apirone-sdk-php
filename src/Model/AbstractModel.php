@@ -50,7 +50,7 @@ abstract class AbstractModel
     }
 
     /**
-     * Laod class from json data
+     * Load class from json data
      *
      * @param json|stdClass 
      * @return $this 

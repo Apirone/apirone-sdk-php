@@ -72,6 +72,13 @@ class InvoiceQuery
         return $query;
     }
 
+    /**
+     * Return select invoice query by invoice id
+     *
+     * @param null|string $invoice 
+     * @param string $prefix 
+     * @return string 
+     */
     public static function selectInvoice (?string $invoice, string $prefix = '')
     {
         $table = $prefix . self::TABLE_INVOICE;
@@ -79,6 +86,13 @@ class InvoiceQuery
         return "SELECT * FROM `$table` WHERE `invoice` = \"$invoice\"";
     }
 
+    /**
+     * Return select invoices query by order id
+     *
+     * @param string $order 
+     * @param string $prefix 
+     * @return string 
+     */
     public static function selectOrder (string $order, string $prefix = '')
     {
         $table = $prefix . self::TABLE_INVOICE;
@@ -86,6 +100,13 @@ class InvoiceQuery
         return "SELECT * FROM `$table` WHERE `order` = \"$order\" order by time DESC";
     }
 
+    /**
+     * Return create invoice query
+     *
+     * @param Invoice $invoice 
+     * @param string $prefix 
+     * @return string 
+     */
     public static function createInvoice(Invoice $invoice, string $prefix = '')
     {
         $table = $prefix . self::TABLE_INVOICE;
@@ -103,6 +124,13 @@ class InvoiceQuery
         return $query;
     }
 
+    /**
+     * Return update invoice query
+     * 
+     * @param Invoice $invoice 
+     * @param string $prefix 
+     * @return string 
+     */
     public static function updateInvoice(Invoice $invoice, string $prefix = '')
     {
         $table = $prefix . self::TABLE_INVOICE;

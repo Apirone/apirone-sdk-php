@@ -13,22 +13,19 @@ declare(strict_types=1);
 namespace Apirone\Invoice\Model;
 
 use Apirone\Invoice\Model\AbstractModel;
-use Apirone\Invoice\Model\UserData\PriceItem;
 use Apirone\Invoice\Model\UserData\ExtraItem;
 use Apirone\Invoice\Model\UserData\OrderItem;
+use ReflectionException;
 use stdClass;
 
 class UserData extends AbstractModel
 {
     private ?string $title = null;
 
-    // merchant	string	Merchant name. Used as the invoice title
     private ?string $merchant = null;
 
-    // url	string	Merchant url
     private ?string $url = null;
 
-    // price	object	Used in the invoice to display currency and amount in fiat
     private ?string $price = null;
     
     private ?string $subPrice = null;
@@ -37,10 +34,13 @@ class UserData extends AbstractModel
     
     private ?array $extras = null;
 
-    private function __construct()
-    {
-    }
+    private function __construct() { }
 
+    /**
+     * Create instance
+     * 
+     * @return static 
+     */
     public static function init() 
     {
         $class = new static();
@@ -48,6 +48,13 @@ class UserData extends AbstractModel
         return $class;
     }
 
+    /**
+     * Restore instance from JSON
+     * 
+     * @param mixed $json 
+     * @return $this 
+     * @throws ReflectionException 
+     */
     public static function fromJson($json)
     {
         $class = new static();
@@ -55,6 +62,12 @@ class UserData extends AbstractModel
         return $class->classLoader($json);
     }
 
+    /**
+     * Set the title value
+     *
+     * @param null|string $title 
+     * @return $this 
+     */
     public function title(?string $title = null)
     {
         $this->title = $title;
@@ -62,6 +75,12 @@ class UserData extends AbstractModel
         return $this;
     }
 
+    /**
+     * Set the merchant value
+     *
+     * @param null|string $merchant 
+     * @return $this 
+     */
     public function merchant(?string $merchant = null)
     {
         $this->merchant = $merchant;
@@ -69,6 +88,12 @@ class UserData extends AbstractModel
         return $this;
     }
 
+    /**
+     * Set the url value
+     * 
+     * @param null|string $url 
+     * @return $this 
+     */
     public function url(?string $url = null)
     {
         $this->url = $url;
@@ -76,6 +101,12 @@ class UserData extends AbstractModel
         return $this;
     }
 
+    /**
+     * Set the price value
+     * 
+     * @param null|string $value 
+     * @return $this 
+     */
     public function price(?string $value = null)
     {
         $this->price = $value;
@@ -83,6 +114,12 @@ class UserData extends AbstractModel
         return $this;
     }
 
+    /**
+     * Set the subPrice value
+     * 
+     * @param null|string $value 
+     * @return $this 
+     */
     public function subPrice(?string $value = null)
     {
         $this->subPrice = $value;
@@ -90,6 +127,15 @@ class UserData extends AbstractModel
         return $this;
     }
 
+    /**
+     * Add order item
+     * 
+     * @param string $item 
+     * @param string $cost 
+     * @param int $qty 
+     * @param string $total 
+     * @return $this 
+     */
     public function addOrderItem(string $item, string $cost, int $qty, string $total)
     {
         $this->items[] = OrderItem::init($item, $cost, $qty, $total);
@@ -97,6 +143,13 @@ class UserData extends AbstractModel
         return $this;
     }
 
+    /**
+     * Add extra item
+     *
+     * @param string $name 
+     * @param string $price 
+     * @return $this 
+     */
     public function addExtraItem(string $name, string $price)
     {
         $this->extras[] = ExtraItem::init($name, $price);
@@ -104,6 +157,13 @@ class UserData extends AbstractModel
         return $this;
     }
 
+    /**
+     * Extras parser
+     *
+     * @param mixed $data 
+     * @return array 
+     * @throws ReflectionException 
+     */
     public function parseExtras($data)
     {
         $taxes = [];
@@ -114,6 +174,13 @@ class UserData extends AbstractModel
         return $taxes;
     }
 
+    /**
+     * Items parser
+     * 
+     * @param mixed $data 
+     * @return array 
+     * @throws ReflectionException 
+     */
     public function parseItems($data)
     {
         $items = [];
@@ -124,6 +191,11 @@ class UserData extends AbstractModel
         return $items;
     }
 
+    /**
+     * Convert instance to JSON
+     * 
+     * @return Apirone\Invoice\Model\stdClass 
+     */
     public function toJson(): stdClass
     {
         $json = parent::toJson();

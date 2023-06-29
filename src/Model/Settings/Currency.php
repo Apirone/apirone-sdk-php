@@ -13,8 +13,15 @@ declare(strict_types=1);
 namespace Apirone\Invoice\Model\Settings;
 
 use Apirone\API\Endpoints\Account;
+use Apirone\API\Exceptions\RuntimeException;
+use Apirone\API\Exceptions\ValidationFailedException;
+use Apirone\API\Exceptions\UnauthorizedException;
+use Apirone\API\Exceptions\ForbiddenException;
+use Apirone\API\Exceptions\NotFoundException;
+use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\Invoice\Model\AbstractModel;
 use Exception;
+use ReflectionException;
 
 class Currency extends AbstractModel
 {
@@ -38,6 +45,11 @@ class Currency extends AbstractModel
     {
     }
 
+    /**
+     * Create a currency instance
+     *
+     * @return static 
+     */
     public static function init()
     {
         $class = new static();
@@ -45,6 +57,13 @@ class Currency extends AbstractModel
         return $class;
     }
     
+    /**
+     * Restore currency instance from JSON
+     * 
+     * @param mixed $json 
+     * @return $this 
+     * @throws ReflectionException 
+     */
     public static function fromJson($json)
     {
         $class = new static();
@@ -52,11 +71,28 @@ class Currency extends AbstractModel
         return $class->classLoader($json);
     }
 
+    /**
+     * Check is a test currency
+     *
+     * @return bool 
+     */
     public function isTestnet()
     {
         return (substr_count(strtolower($this->name), 'testnet') > 0) ? true : false;
     }
 
+    /**
+     * Load currency settings from account
+     *
+     * @param mixed $account 
+     * @return $this 
+     * @throws RuntimeException 
+     * @throws ValidationFailedException 
+     * @throws UnauthorizedException 
+     * @throws ForbiddenException 
+     * @throws NotFoundException 
+     * @throws MethodNotAllowedException 
+     */
     public function loadSettings($account)
     {
         $account = Account::init($account)->info($this->abbr);
@@ -69,6 +105,13 @@ class Currency extends AbstractModel
         return $this;
     }
 
+    /**
+     * Cave currency settings to account
+     * 
+     * @param mixed $account 
+     * @param mixed $transferKey 
+     * @return $this 
+     */
     public function saveSettings($account, $transferKey)
     {
         $options = [];
@@ -128,13 +171,19 @@ class Currency extends AbstractModel
     }
 
     /**
-     * Get the value of address
+     * Get the currency destination address
      */ 
     public function getAddress()
     {
         return $this->address;
     }
 
+    /**
+     * Set currency destination address
+     *
+     * @param null|string $address 
+     * @return $this 
+     */
     public function setAddress(?string $address = null)
     {
         $this->address = $address;
@@ -150,13 +199,18 @@ class Currency extends AbstractModel
         return $this->policy;
     }
 
+    /**
+     * Set the value of policy
+     *
+     * @param null|string $policy 
+     * @return $this 
+     */
     public function setPolicy(?string $policy = null)
     {
         $this->policy = $policy;
 
         return $this;
     }
-
 
     /**
      * Get the value of error
