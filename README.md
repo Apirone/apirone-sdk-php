@@ -1,11 +1,29 @@
 <img src="https://apirone.com/docs/logo.svg" width="200">
 
-# Apirone Invoice PHP | SDK
+# Apirone Invoice PHP | SDK  <!-- omit in toc -->
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](https://raw.githubusercontent.com/Apirone/apirone-invoce-php/main/LICENSE)
 
 This Library provides classes for working with [Apirone invoices](https://apirone.com/docs/invoices/).
 Easy integration of cryptocurrency payments.
+
+---
+
+- [Requirements](#requirements)
+- [Installation and preparation for use](#installation-and-preparation-for-use)
+    - [Assets configure](#assets-configure)
+    - [Database and Logs handlers](#database-and-logs-handlers)
+- [Settings](#settings)
+- [Create an Invoice](#create-an-invoice)
+- [Get existing invoice](#get-existing-invoice)
+- [Callbacks handler](#callbacks-handler)
+- [Show invoice](#show-invoice)
+    - [Render loader](#render-loader)
+    - [Render AJAX response](#render-ajax-response)
+- [Support](#support)
+- [License](#license)
+
+---
 
 ## Requirements
 
