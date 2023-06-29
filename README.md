@@ -82,9 +82,7 @@ use Apirone\Invoice\Service\InvoiceDb;
 InvoiceDb::install('tbale_prefix', $charset = 'urf8', $collate = 'utf_general_ci');
 ```
 
-For more Datatbase details see [docs/Settings.md](./docs/Database.md)
-
-Create common file for invoce class configure:
+You can create a common file to set up an account class and include it in your code
 
 ```php
 // Setup invoice handlers and Settings
@@ -123,8 +121,6 @@ $json = get_option('apirone_settings');
 $fromJson = Settings::fromJson($json);
 
 ```
-
-For more Settings class details see [docs/Settings.md](./docs/Settings.md)
 
 ## Create an Invoice
 
@@ -186,6 +182,11 @@ Invoice::callbackHandler($order_status_handler);
 ```
 ## Show invoice
 
+### Render loader
+
+To display the invoice, use the renderLoader() function.
+Also, a style file and js script should be added to the page template from assets folder.
+
 ```php
 use Apirone\Invoice\Invoice;
 use Apirone\Invoice\Model\Settings;
@@ -196,27 +197,40 @@ Invoice::log($log_handler);
 Invoice::settings(Settings::fromFile('/absolute/path/to/settings.json'));
 
 // Set invoice data url - render ajsx response page
-Invoice::dataUrl('render_ajax_response.php')
+Invoice::dataUrl('render_ajax_response.php');
 
-Invoice::renderLoader();
+// In case when $invoice_id not set function try to find id from request params - $_GET['invoice']
+$ = Invoice::renderLoader();
+
+// If you got the required invoice ID in any other way, just pass it to the function
+$id = 'MyInvoiceid';
+Invoice::renderLoader($id);
 ```
-<!-- ## Invoice SDK usage
 
-- [Database](./docs/Database.md)
-  
-- [Settings](./docs/Settings.md)
+### Render AJAX response
 
-- [Invoice](./docs/Invoice.md)
+To update the invoice data, you need to create a URL and add the renderAjaxResponse() function to the code.
+This URL used as ```Invoice::dataUrl()``` parameter.
 
-- [Render](./docs/Render.md)
+```php
+use Apirone\Invoice\Invoice;
+use Apirone\Invoice\Model\Settings;
 
-- [Utils](./docs/Utils.md)
+// Setup invoice handlers and Settings
+Invoice::db($db_handler, $table_prefix);
+Invoice::log($log_handler);
+Invoice::settings(Settings::fromFile('/absolute/path/to/settings.json'));
+
+Invoice::renderAjax();
+```
+
 ## Support
 
-* https://github.com/Apirone/apirone-invoice-php/issues  
-* support@apirone.com -->
+- https://github.com/Apirone/apirone-invoice-php/issues
 
-<!-- ## License
+- support@apirone.com
+
+## License
 
 MIT License
 
@@ -238,4 +252,4 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE. -->
+SOFTWARE.
