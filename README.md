@@ -20,6 +20,7 @@ Easy integration of cryptocurrency payments.
 - [Show invoice](#show-invoice)
     - [Render loader](#render-loader)
     - [Render AJAX response](#render-ajax-response)
+- [Examples and playground](#examples-and-playground)
 - [Support](#support)
 - [License](#license)
 
@@ -40,7 +41,7 @@ Use [composer](https://getcomposer.org/) for library installation.
 ### Assets configure
 
 Copy ```src/assets``` folder into your public html.
-On the invoice display page you need to add ```css/styles.css``` and ``js/script.js`` from asssets folder. Also you can use minimized versions.
+On the invoice display page you need to add ```css/styles.css``` and ``js/script.js`` from assets folder. Also you can use minimized versions.
 
 ### Database and Logs handlers
 
@@ -73,7 +74,7 @@ Log handler example:
 
 ```php
 $log_handler = static function($message) {
-    // Handle message with yor log engine
+    // Handle message with your log engine
     // Message is an associative array with two keys 'body' and 'details'
     // For example you have log function to provide logging
     // log($message['body'], $message['details']);
@@ -91,13 +92,13 @@ Invoice::db($db_handler, 'table_prefix_');
 Invoice::log($log_handler);
 ```
 
-Create an invoce table:
+Create an invoice table:
 
 ```php
 use Apirone\Invoice\Service\InvoiceDb;
 
-// Create invoice table if not exists
-InvoiceDb::install('tbale_prefix', $charset = 'urf8', $collate = 'utf_general_ci');
+// Create invoice table if doesn't exists
+InvoiceDb::install('table_prefix', $charset = 'urf8', $collate = 'utf_general_ci');
 ```
 
 You can create a common file to set up an account class and include it in your code
@@ -187,7 +188,7 @@ This address must be set when creating a new invoice.
 If you need to process the order status based on the status of the invoice, you can create a callback function to handle the status change.
 
 ```php
-// Create oder process function
+// Create order process function
 $order_status_handler = static function ($invoice) {
     // You need to set the order_id when creating an invoice.
     $order_id = $invoice->order();
@@ -198,11 +199,12 @@ $order_status_handler = static function ($invoice) {
 
 Invoice::callbackHandler($order_status_handler);
 ```
+
 ## Show invoice
 
 ### Render loader
 
-To display the invoice, use the renderLoader() function.
+To display the invoice, use the ```renderLoader()``` function.
 Also, a style file and js script should be added to the page template from assets folder.
 
 ```php
@@ -221,7 +223,7 @@ Invoice::dataUrl('render_ajax_response.php');
 $ = Invoice::renderLoader();
 
 // If you got the required invoice ID in any other way, just pass it to the function
-$id = 'MyInvoiceid';
+$id = 'MyInvoiceId';
 Invoice::renderLoader($id);
 ```
 
@@ -241,6 +243,19 @@ Invoice::settings(Settings::fromFile('/absolute/path/to/settings.json'));
 
 Invoice::renderAjax();
 ```
+
+## Examples and playground
+
+In the ```examples``` folder, you can find a ready-made implementation of using the library.
+
+You can also run the playground.
+To run the playground, you need Docker and Docker Compose installed.
+
+To do this, you need to copy the ```docker-compose.yml``` file from the ```dev-docker``` folder to the library root folder and run the command:
+
+    docker-compose up -d --build
+
+After the start of the containers, the playground will be available in the browser at http://localhost
 
 ## Support
 
