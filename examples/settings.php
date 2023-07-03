@@ -1,7 +1,7 @@
 <?php
 
 require_once('/var/www/vendor/autoload.php'); // Path/to/vender/folder/autoload.php
-use Apirone\Invoice\Model\Settings;
+use Apirone\SDK\Model\Settings;
 
 // Do not store settings file inside public html directory.
 $path = '/var/www/storage/settings.json';

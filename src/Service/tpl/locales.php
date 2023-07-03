@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Apirone Invoice library.
+ * This file is part of the Apirone SDK.
  *
  * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
  *

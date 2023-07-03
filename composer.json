@@ -1,11 +1,11 @@
 {
-    "name": "apirone/apirone-invoice-php",
-    "description": "Apirone Invoice SDK",
+    "name": "apirone/apirone-sdk-php",
+    "description": "Apirone SDK",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Apirone\\Invoice\\": "src"
+            "Apirone\\SDK\\": "src"
         }
     },
     "authors": [

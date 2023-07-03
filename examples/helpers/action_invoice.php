@@ -3,9 +3,9 @@
 require_once('common.php');
 require_once('../db.php');
 
-use Apirone\Invoice\Invoice;
-use Apirone\Invoice\Service\Utils;
-use Apirone\Invoice\Model\Settings;
+use Apirone\SDK\Invoice;
+use Apirone\SDK\Service\Utils;
+use Apirone\SDK\Model\Settings;
 
 // Config & DB
 Invoice::db($db_handler, $table_prefix);

@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Apirone Invoice library.
+ * This file is part of the Apirone SDK.
  *
  * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
  *
@@ -10,12 +10,12 @@
 
 declare(strict_types=1);
 
-namespace Apirone\Invoice;
+namespace Apirone\SDK;
 
-use Apirone\Invoice\Service\InvoiceDb;
-use Apirone\Invoice\Service\InvoiceQuery;
-use Apirone\Invoice\Model\AbstractModel;
-use Apirone\Invoice\Model\InvoiceDetails;
+use Apirone\SDK\Service\InvoiceDb;
+use Apirone\SDK\Service\InvoiceQuery;
+use Apirone\SDK\Model\AbstractModel;
+use Apirone\SDK\Model\InvoiceDetails;
 use Apirone\API\Endpoints\Service;
 use Apirone\API\Endpoints\Account;
 use Apirone\API\Exceptions\RuntimeException;
@@ -26,10 +26,10 @@ use Apirone\API\Exceptions\InternalServerErrorException;
 use Apirone\API\Exceptions\NotFoundException;
 use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\API\Http\ErrorDispatcher;
-use Apirone\Invoice\Model\UserData;
-use Apirone\Invoice\Model\Settings;
-use Apirone\Invoice\Service\Render;
-use Apirone\Invoice\Service\Utils;
+use Apirone\SDK\Model\UserData;
+use Apirone\SDK\Model\Settings;
+use Apirone\SDK\Service\Render;
+use Apirone\SDK\Service\Utils;
 use DivisionByZeroError;
 use ArithmeticError;
 use ReflectionException;
@@ -65,7 +65,7 @@ class Invoice extends AbstractModel{
      * @param Settings $settings 
      * @return void 
      */
-    public static function settings(\Apirone\Invoice\Model\Settings $settings): void
+    public static function settings(\Apirone\SDK\Model\Settings $settings): void
     {
         static::$settings = $settings;
 
@@ -612,7 +612,7 @@ class Invoice extends AbstractModel{
      * Return public or private invoice info
      * 
      * @param bool $private 
-     * @return Apirone\Invoice\Model\stdClass 
+     * @return Apirone\SDK\Model\stdClass 
      */
     public function info($private = false)
     {
@@ -622,7 +622,7 @@ class Invoice extends AbstractModel{
     /**
      * Convert invoice object to JSON
      * 
-     * @return Apirone\Invoice\Model\stdClass 
+     * @return Apirone\SDK\Model\stdClass 
      */
     public function toJson(): \stdClass
     {

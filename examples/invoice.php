@@ -2,8 +2,8 @@
 require_once('../vendor/autoload.php');
 require_once('db.php');
 
-use Apirone\Invoice\Invoice;
-use Apirone\Invoice\Model\Settings;
+use Apirone\SDK\Invoice;
+use Apirone\SDK\Model\Settings;
 
 // Setup DB and Settinfs into invoice object
 Invoice::db($db_handler, $table_prefix);

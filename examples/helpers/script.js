@@ -27,12 +27,12 @@ function settings() {
     async load() {
       path = '/helpers/action_settings.php',
       this.label = 'Loading...',
-      this.content = 'Settings file not exist. Press \'Crete settings\' button';
+      this.content = 'Settings file not exist. Press \'Create settings\' button';
       url = (this.action) ? path + `?action=${this.action}` : path;
       data = await ajax(url);
       if(data !== false) { this.file = true; this.content = data;}
       else { this.file = false}
-      this.label = this.file ? 'Settings already exist' : 'Creare settings';
+      this.label = this.file ? 'Settings already exist' : 'Create settings';
       this.$store.settings = JSON.parse(data);
     },
     doAction() { this.action = this.file ? 'delete' : 'create'; this.load(); },

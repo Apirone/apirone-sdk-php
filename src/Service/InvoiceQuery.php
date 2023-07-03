@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Apirone Invoice library.
+ * This file is part of the Apirone SDK.
  *
  * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
  *
@@ -10,9 +10,9 @@
 
 declare(strict_types=1);
 
-namespace Apirone\Invoice\Service;
+namespace Apirone\SDK\Service;
 
-use Apirone\Invoice\Invoice;
+use Apirone\SDK\Invoice;
 
 class InvoiceQuery
 {

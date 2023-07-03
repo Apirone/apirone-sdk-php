@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Apirone Invoice library.
+ * This file is part of the Apirone SDK.
  *
  * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
  *
@@ -10,10 +10,10 @@
 
 declare(strict_types=1);
 
-namespace Apirone\Invoice\Service;
+namespace Apirone\SDK\Service;
 
-use Apirone\Invoice\Invoice;
-use Apirone\Invoice\Service\Utils;
+use Apirone\SDK\Invoice;
+use Apirone\SDK\Service\Utils;
 use DivisionByZeroError;
 use ArithmeticError;
 use Closure;

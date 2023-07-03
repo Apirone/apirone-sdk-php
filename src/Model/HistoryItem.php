@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Apirone Invoice library.
+ * This file is part of the Apirone SDK.
  *
  * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
  *
@@ -10,9 +10,9 @@
 
 declare(strict_types=1);
 
-namespace Apirone\Invoice\Model;
+namespace Apirone\SDK\Model;
 
-use Apirone\Invoice\Model\AbstractModel;
+use Apirone\SDK\Model\AbstractModel;
 use ReflectionException;
 
 class HistoryItem extends AbstractModel

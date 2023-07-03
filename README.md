@@ -1,6 +1,6 @@
 <img src="https://apirone.com/docs/logo.svg" width="200">
 
-# Apirone Invoice PHP | SDK  <!-- omit in toc -->
+# Apirone SDK PHP <!-- omit in toc -->
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](https://raw.githubusercontent.com/Apirone/apirone-invoce-php/main/LICENSE)
 
@@ -36,7 +36,7 @@ Easy integration of cryptocurrency payments.
 
 Use [composer](https://getcomposer.org/) for library installation.
 
-    composer require apirone/apirone-invoice-php
+    composer require apirone/apirone-sdk-php
 
 ### Assets configure
 
@@ -86,7 +86,7 @@ $log_handler = static function($message) {
 Set handlers to the library:
 
 ```php
-use Apirone\Invoice\Invoice;
+use Apirone\SDK\Invoice;
 
 Invoice::db($db_handler, 'table_prefix_');
 Invoice::log($log_handler);
@@ -95,7 +95,7 @@ Invoice::log($log_handler);
 Create an invoice table:
 
 ```php
-use Apirone\Invoice\Service\InvoiceDb;
+use Apirone\SDK\Service\InvoiceDb;
 
 // Create the invoice table if it doesn't exist
 InvoiceDb::install('table_prefix', $charset = 'urf8', $collate = 'utf_general_ci');
@@ -116,7 +116,7 @@ The settings class is used to create an account, manage currency settings, and s
 
 Create a new settings object:
 ```php
-use Apirone\Invoice\Model\Settings;
+use Apirone\SDK\Model\Settings;
 
 $settings = Settings::init();
 $settings->createAccount();
@@ -145,8 +145,8 @@ $fromJson = Settings::fromJson($json);
 
 ```php
 
-use Apirone\Invoice\Invoice;
-use Apirone\Invoice\Model\Settings;
+use Apirone\SDK\Invoice;
+use Apirone\SDK\Model\Settings;
 
 // Setup invoice handlers and Settings
 Invoice::db($db_handler, $table_prefix);
@@ -167,8 +167,8 @@ $json = $invoice->toJson();
 ## Get an existing invoice
 
 ```php
-use Apirone\Invoice\Invoice;
-use Apirone\Invoice\Model\Settings;
+use Apirone\SDK\Invoice;
+use Apirone\SDK\Model\Settings;
 
 // Setup invoice handlers and Settings
 Invoice::db($db_handler, $table_prefix);
@@ -208,8 +208,8 @@ To display the invoice, use the ```renderLoader()``` function.
 Also, a style file and js script should be added to the page template from the assets folder.
 
 ```php
-use Apirone\Invoice\Invoice;
-use Apirone\Invoice\Model\Settings;
+use Apirone\SDK\Invoice;
+use Apirone\SDK\Model\Settings;
 
 // Setup invoice handlers and Settings
 Invoice::db($db_handler, $table_prefix);
@@ -233,8 +233,8 @@ To update the invoice data, you need to create a URL and add the renderAjaxRespo
 This URL used as ```Invoice::dataUrl()``` parameter.
 
 ```php
-use Apirone\Invoice\Invoice;
-use Apirone\Invoice\Model\Settings;
+use Apirone\SDK\Invoice;
+use Apirone\SDK\Model\Settings;
 
 // Setup invoice handlers and Settings
 Invoice::db($db_handler, $table_prefix);
@@ -259,7 +259,7 @@ After the start of the containers, the playground will be available in the brows
 
 ## Support
 
-- https://github.com/Apirone/apirone-invoice-php/issues
+- https://github.com/Apirone/apirone-sdk-php/issues
 
 - support@apirone.com
 

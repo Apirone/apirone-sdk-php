@@ -5,7 +5,7 @@ require_once('helpers/common.php');
 ?>
 <html class="dark">
     <head>
-        <title>Invoice Apirone library examples</title>
+        <title>Apirone SDK PHP examples</title>
         <script src="//unpkg.com/alpinejs" defer></script>
         <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
         <link rel="stylesheet" href="https://unpkg.com/@tailwindcss/typography@0.4.1/dist/typography.min.css">
@@ -17,10 +17,10 @@ require_once('helpers/common.php');
     </head>
     <body class="flex" x-data>
         <div class="container mx-auto max-w-5xl prose prose-base">
-            <h1 class="pt-16">Apirone Invoice library examples</h1>
+            <h1 class="pt-16">Apirone SDK PHP examples</h1>
             <div>
                 <h2>Install via composer</h2>
-                <pre><code class="language-bash">composer require apirone-invoice-php</code></pre>
+                <pre><code class="language-bash">composer require apirone-sdk-php</code></pre>
             </div>
             <div>
                 <h2>Create database callback function</h2>
@@ -29,7 +29,7 @@ require_once('helpers/common.php');
             <div x-data="table" x-init="load" id="step_2">
                 <h2>Invoice data table</h2>
                 <?php echo load_file_content('table.php'); ?>
-                <button class="text-white font-simibold rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2" @click="doAction" x-text="label" :disabled="table"></button>
+                <button class="text-white rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2" @click="doAction" x-text="label" :disabled="table"></button>
             </div>
             <div id="step_3">
                 <h2>Settings</h2>
@@ -50,7 +50,7 @@ require_once('helpers/common.php');
                         <button x-show="file" class="absolute top-4 right-10 text-gray-200" @click="toggle" x-text="expand ? 'Collapse' : 'Expand'"></button>
                         <pre><code class="language-json" :class="{'' : expand, 'max-h-96' : !expand}" x-text="content"></code></pre>
                     </div>
-                    <button class="text-white font-simibold rounded-md w-48 bg-sky-500 hover:bg-sky-700 p-2 disabled:bg-gray-300" @click="doAction" x-text="label" :disabled="file"></button>
+                    <button class="text-white rounded-md w-48 bg-sky-500 hover:bg-sky-700 p-2 disabled:bg-gray-300" @click="doAction" x-text="label" :disabled="file"></button>
                 </div>
 
             </div>
@@ -81,7 +81,7 @@ require_once('helpers/common.php');
                 </p>
                 <?php echo load_file_content('./render.php'); ?>
                 <p>
-                    To process ajax requests from the ivoice output page, you need to add a request processing page via 
+                    To process ajax requests from the invoice output page, you need to add a request processing page via 
                     <code>Invoice::dataUrl('/render_ajax_response.php');</code> The required parameters will be added by the JS script. 
                     The request is made using the POST method and also has an additional header <code>HTTP_X_REQUESTED_WITH = XMLHttpRequest</code>
                 </p>
@@ -90,7 +90,7 @@ require_once('helpers/common.php');
             <div id="step_5">
                 <h2>Playground</h2>
                 <div x-show="!$store.table || !$store.settings">
-                    Before creating an invoice you need create datatable and settings!
+                    Before creating an invoice you need create data table and settings!
                 </div>
                 <div x-show="$store.table && $store.settings" class="pb-10">
                     <div class="my-8">
@@ -133,8 +133,8 @@ require_once('helpers/common.php');
                                     </span>
                                 </label>
                                 <div>
-                                    <button type="submit" :disabled="!data.currency" class="text-white font-simibold rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2" @click="$event.prevent; create" x-text="label"></button>
-                                    <button type="button" x-show="invoice" class="text-white font-simibold rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2 ml-2" @click="render">Show invoice</button>
+                                    <button type="submit" :disabled="!data.currency" class="text-white rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2" @click="$event.prevent; create" x-text="label"></button>
+                                    <button type="button" x-show="invoice" class="text-white rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2 ml-2" @click="render">Show invoice</button>
                                     <label x-show="invoice">QR Only<input class="mx-2" type="checkbox" x-model="qrOnly" /></label>
                                 </div>
                             </div>

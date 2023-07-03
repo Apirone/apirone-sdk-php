@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Apirone Invoice library.
+ * This file is part of the Apirone SDK.
  *
  * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
  *
@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace Apirone\Invoice\Model;
+namespace Apirone\SDK\Model;
 
 use Apirone\API\Endpoints\Account;
 use Apirone\API\Endpoints\Service;
@@ -20,11 +20,11 @@ use Apirone\API\Exceptions\UnauthorizedException;
 use Apirone\API\Exceptions\ForbiddenException;
 use Apirone\API\Exceptions\NotFoundException;
 use Apirone\API\Exceptions\MethodNotAllowedException;
-use Apirone\Invoice\Invoice;
-use Apirone\Invoice\Model\AbstractModel;
-use Apirone\Invoice\Model\UserData;
-use Apirone\Invoice\Model\HistoryItem;
-use Apirone\Invoice\Tools\Utils;
+use Apirone\SDK\Invoice;
+use Apirone\SDK\Model\AbstractModel;
+use Apirone\SDK\Model\UserData;
+use Apirone\SDK\Model\HistoryItem;
+use Apirone\SDK\Tools\Utils;
 use ReflectionException;
 
 class InvoiceDetails extends AbstractModel
@@ -155,7 +155,7 @@ class InvoiceDetails extends AbstractModel
      * Return invoice public or private invoice info
      *
      * @param bool $private 
-     * @return Apirone\Invoice\Model\stdClass 
+     * @return Apirone\SDK\Model\stdClass 
      */
     public function info($private = false)
     {

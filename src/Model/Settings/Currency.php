@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Apirone Invoice library.
+ * This file is part of the Apirone SDK.
  *
  * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
  *
@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace Apirone\Invoice\Model\Settings;
+namespace Apirone\SDK\Model\Settings;
 
 use Apirone\API\Endpoints\Account;
 use Apirone\API\Exceptions\RuntimeException;
@@ -19,7 +19,7 @@ use Apirone\API\Exceptions\UnauthorizedException;
 use Apirone\API\Exceptions\ForbiddenException;
 use Apirone\API\Exceptions\NotFoundException;
 use Apirone\API\Exceptions\MethodNotAllowedException;
-use Apirone\Invoice\Model\AbstractModel;
+use Apirone\SDK\Model\AbstractModel;
 use Exception;
 use ReflectionException;
 

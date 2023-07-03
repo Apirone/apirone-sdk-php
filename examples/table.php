@@ -2,7 +2,7 @@
 require_once('../vendor/autoload.php');
 require_once('db.php');
 
-use Apirone\Invoice\Service\InvoiceDb;
+use Apirone\SDK\Service\InvoiceDb;
 
 // Just set callback & prefix. See db.php for details
 InvoiceDb::setCallback($db_handler);

@@ -3,8 +3,8 @@
 require_once('common.php');
 require_once('../db.php');
 
-use Apirone\Invoice\Service\Utils;
-use Apirone\Invoice\Service\InvoiceDb;
+use Apirone\SDK\Service\Utils;
+use Apirone\SDK\Service\InvoiceDb;
 
 InvoiceDb::$handler = $db_handler;
 

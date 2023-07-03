@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Apirone Invoice library.
+ * This file is part of the Apirone SDK.
  *
  * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
  *
@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-use Apirone\Invoice\Service\Utils;
+use Apirone\SDK\Service\Utils;
 
 ?>
 <div id="__apn-invoice" class="invoice-wrapper">
