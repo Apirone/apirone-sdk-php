@@ -8,13 +8,13 @@ use Apirone\SDK\Model\Settings;
 // Config & DB
 Invoice::db($db_handler, $table_prefix);
 Invoice::settings( Settings::fromFile('/var/www/storage/settings.json') );
-$invoceDataUrl = 'render_ajax_response.php';
+$invoiceDataUrl = 'render_ajax_response.php';
 
 if (array_key_exists('qr-only', $_GET)) {
-    $invoceDataUrl .= '?qr-only=' . $_GET['qr-only'];
+    $invoiceDataUrl .= '?qr-only=' . $_GET['qr-only'];
 }
 
-Invoice::dataUrl($invoceDataUrl);
+Invoice::dataUrl($invoiceDataUrl);
 ?>
 <html>
     <head>

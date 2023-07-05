@@ -109,6 +109,7 @@ class Render
         $statusLink = self::$dataUrl ? self::$dataUrl : '/';
         $backlink = Invoice::$settings->getBacklink();
         $template = !self::$qrOnly ? 'full' : 'qr-only';
+        $note = null;
 
         if ($show) {
             $invoice = $invoice->details;
@@ -116,14 +117,23 @@ class Render
             $currency = Invoice::$settings->getCurrency($invoice->getCurrency());
             $statusNum = $invoice->statusNum();
             if ($invoice->amount !== null) {
+                $overpaid = false;
                 $remains = $invoice->amount;
                 foreach ($invoice->history as $item) {
                     if (property_exists($item, 'amount')) {
                         $remains = $remains - $item->amount;
                     }
+                    if ($overpaid == null && $item->status == 'overpaid') {
+                        $overpaid = true;
+                    }
                 }
                 $amount = ($remains <= 0) ? $invoice->amount : $remains;
                 $amount = Utils::exp2dec($amount * $currency->getUnitsFactor());
+
+                if ($invoice->status == 'created' || $invoice->status == 'partpaid') {
+                    $note = 'notePayment';
+                }
+                $note = ($overpaid) ? 'noteOverpaid' : $note;
             }
             else {
                 $amount = null;
@@ -161,16 +171,23 @@ class Render
      */
     private function statusDescription(Invoice $invoice): \stdClass
     {
-
         $status = new \stdClass;
+
         switch ($invoice->status) {
             case 'created':
             case 'partpaid':
+                $status->title = 'Refresh';
+                if ($invoice->details->expire !== null && strtotime($invoice->details->expire) <= time()) {
+                    $status->title = 'Expired';
+                    $status->description = 'paymentExpired';
+                    // $status->description = 'statusUpdating';
+                }
+                else {
+                    $status->description = 'waitingForPayment';
+                }
+                break;
             case 'paid':
             case 'overpaid':
-                $status->title = 'Refresh';
-                $status->description = 'waitingForPayment';
-                break;
             case 'completed':
                 $status->title = 'Success';
                 $status->description = 'paymentAccepted';

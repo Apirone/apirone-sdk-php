@@ -174,7 +174,7 @@ class Invoice extends AbstractModel{
     }
 
     /**
-     * Get Invoce from database table
+     * Get Invoice from database table
      *
      * @param mixed $invoice 
      * @return null|Invoice 
@@ -235,7 +235,7 @@ class Invoice extends AbstractModel{
     }
 
     /**
-     * Invoce callback handler
+     * Invoice callback handler
      *
      * @param mixed $order_handler - Callback func to process your order process logic (change status, etc)
      * @return void

@@ -21,5 +21,5 @@ $invoice->callbackUrl('https://yourhost.com/invoice_callback.php');
 // Create invoice
 $invoice->create();
 
-// Print invoce info
+// Print invoice info
 print_r($invoice->details->toJson());

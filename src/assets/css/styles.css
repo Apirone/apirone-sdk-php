@@ -185,6 +185,13 @@
   width: 100%;
 }
 
+.status-note {
+  padding-top: 6rem;
+  font-size: 0.8rem;
+  margin: 0 4rem;
+  color: #a5a5a5;
+}
+
 .history {
   height: 0;
   overflow-y: hidden;
@@ -323,8 +330,17 @@
   text-align: center;
 }
 .invoice__footer .logo {
+  display: inline-block;
   width: 5rem;
+  height: 1rem;
   transform: translateY(2px);
+  background-color: #5d8ab9;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-image: url("icons/logo.svg");
+  mask-image: url("icons/logo.svg");
 }
 
 .loading .skeleton__box {
@@ -402,11 +418,6 @@
 }
 .qr__wrapper canvas {
   max-width: 100%;
-}
-
-.invoice__footer .logo {
-  width: 5rem;
-  transform: translateY(2px);
 }
 
 .btn__copy {
@@ -582,13 +593,6 @@ body .status-data.historyFlag .toggler .btn__icon {
 }
 .invoice-table tbody tr:nth-child(even) {
   background-color: rgba(241, 241, 241, 0.5);
-}
-
-.logo {
-  height: 100%;
-}
-.logo__part {
-  fill: #5d8ab9;
 }
 
 .icon-status {

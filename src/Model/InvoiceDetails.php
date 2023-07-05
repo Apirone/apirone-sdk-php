@@ -264,6 +264,22 @@ class InvoiceDetails extends AbstractModel
     }
 
     /**
+     * Is invoice expired
+     *
+     * @return bool 
+     */
+    public function isExpired(): bool
+    {
+        // if ($this->expire == null) {
+        //     return false;
+        // }
+        if ($this->expire == null || strtotime($this->expire) > time()) {
+            return false;
+        }
+
+        return true;
+    }
+    /**
      * Returns the number of seconds until an invoice expires
      * If the invoice is expired returns -1
      *
@@ -280,6 +296,11 @@ class InvoiceDetails extends AbstractModel
         return ($expire > $now) ? $expire - $now : -1;
     }
 
+    /**
+     * Show linkback if set and invoice status is success
+     *
+     * @return bool 
+     */
     public function showLinkback()
     {
         if ($this->linkback && $this->status == 'success')

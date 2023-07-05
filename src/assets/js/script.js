@@ -88,6 +88,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
       if (distance < 0) {
         clearInterval(interval);
         counter.innerHTML = '';
+        document.location.reload();
       }
     }, 1000);
   }

@@ -2,7 +2,7 @@
 
 # Apirone SDK PHP <!-- omit in toc -->
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](https://raw.githubusercontent.com/Apirone/apirone-invoce-php/main/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](https://raw.githubusercontent.com/Apirone/apirone-sdk-php/main/LICENSE)
 
 This Library provides classes for working with [Apirone invoices](https://apirone.com/docs/invoices/).
 Easy integration of cryptocurrency payments.
