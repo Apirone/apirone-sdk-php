@@ -19,13 +19,13 @@ use Apirone\SDK\Service\Utils;
                     <div class="skeleton__box">
                     <?php if ($invoice) : ?>
                         <input type="hidden" id="statusNum" value="<?php echo $invoice->statusNum(); ?>">
-                        <?php if ($invoice->status !== 'expired' && $invoice->status !== 'success') : ?>
+                        <?php if ($invoice->status !== 'expired' && $invoice->status !== 'success' && $invoice->isExpired() == false) : ?>
                         <figure class="qr">
                             <img src="<?php echo Utils::getQrLink($currency, $invoice->address, $amount); ?>" />
                             <span class="qr__logo <?php echo str_replace('@', '-', $invoice->currency); ?>" title="<?php echo $currency->name; ?>"></span>
                         </figure>
                         <?php else : ?>
-                        <div class="qr__<?php echo $invoice->status; ?>"></div>
+                        <div class="qr__<?php echo ($invoice->isExpired()) ? 'expired' : $invoice->status; ?>"></div>
                         <?php endif; ?>
                     <?php endif; ?>
                     </div>
