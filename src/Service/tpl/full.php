@@ -134,11 +134,11 @@ use Apirone\SDK\Service\Utils;
                         <span><?php echo $item->price ?? '' ;?></span>
                     </div>
                 <?php endforeach; ?>
-                    <?php if ($userData->subPrice) : ?>
+                    <?php if ($userData->price) : ?>
                     <div>
                         <strong><?php $t('total') ?>:</strong>
                         <span>
-                        <strong><?php echo $userData->subPrice ?? '' ;?></strong>
+                        <strong><?php echo $userData->price ?? '' ;?></strong>
                         </span>
                     </div>
                     <?php endif; ?>

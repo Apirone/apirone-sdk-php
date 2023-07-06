@@ -42,24 +42,38 @@ function settings() {
 
 function playground() {
   return {
-    label: 'Create',
+    label: 'Create invoice',
     invoice: null,
     content: 'Invoice not created yet.',
     data: {currency: null, amount: null, lifetime: null, callbackUrl: null},
+    userData: {title: null, merchant: null, url:null, price: null, 'sub-price': null, items: [], extras: []},
     expand: false,
     qrOnly: false,
+    showUserData: false,
     async create() {
       this.label = 'Creating...'; 
       url = '/helpers/action_invoice.php?data=' + JSON.stringify(this.data);
+      if (this.showUserData) {
+        url += '&userData=' + JSON.stringify(this.userData);
+      }
       result = await ajax(url);
       if(result) { this.invoice = result; this.content = JSON.stringify(result, null, 2); }
       this.label = 'Create'; 
     },
     render() {
+      if (this.invoice == null) {return;}
       qr = this.qrOnly ? '&qr-only=1' : '';
       window.open('/render.php?invoice=' + this.invoice.invoice + qr, '_blank').focus();
     },
-    toggle() {this.expand = !this.expand;}
+    toggle() {
+      this.expand = !this.expand;
+    },
+    addItem() {
+      this.userData.items.push({name: null, cost: null, qty: null, total:null});
+    },
+    addExtra() {
+      this.userData.extras.push({name: null, price:null});
+    }
   }
 }
 

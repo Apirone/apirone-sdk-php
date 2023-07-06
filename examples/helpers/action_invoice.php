@@ -6,23 +6,31 @@ require_once('../db.php');
 use Apirone\SDK\Invoice;
 use Apirone\SDK\Service\Utils;
 use Apirone\SDK\Model\Settings;
+use Apirone\SDK\Model\UserData;
 
 // Config & DB
 Invoice::db($db_handler, $table_prefix);
 Invoice::settings( Settings::fromFile('/var/www/storage/settings.json') );
 
-$params = json_decode($_GET['data']);
+$invoiceJson = json_decode(Utils::sanitize($_GET['data']));
+$userDataJson = null;
 
-$invoice = Invoice::init($params->currency, $params->amount);
+if(isset($_GET['userData'])) {
+    $userDataJson = json_decode(Utils::sanitize($_GET['userData']));
+}
+$invoice = Invoice::init($invoiceJson->currency, $invoiceJson->amount);
 
-if ($params->lifetime) {
-    $invoice->lifetime($params->lifetime);
+if ($invoiceJson->lifetime) {
+    $invoice->lifetime($invoiceJson->lifetime);
 }
 
-if ($params->callbackUrl) {
-    $invoice->callbackUrl($params->callbackUrl);
+if ($invoiceJson->callbackUrl) {
+    $invoice->callbackUrl($invoiceJson->callbackUrl);
 }
 
+if ($userDataJson) {
+    $invoice->userData(UserData::fromJson($userDataJson));
+}
 $invoice->create();
 
 Utils::send_json($invoice->details->toJson());

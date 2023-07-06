@@ -14,10 +14,11 @@ require_once('helpers/common.php');
         <script>hljs.highlightAll();</script>
         <link rel="icon" href="/helpers/favicon.ico?v=0.0.1">
         <script src="/helpers/script.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body class="flex" x-data>
+    <body class="flex px-4" x-data>
         <div class="container mx-auto max-w-5xl prose prose-base">
-            <h1 class="pt-16">Apirone SDK PHP examples</h1>
+            <h1 class="md:pt-16 pt-8 text-center md:text-left">Apirone SDK PHP examples</h1>
             <div>
                 <h2>Install via composer</h2>
                 <pre><code class="language-bash">composer require apirone-sdk-php</code></pre>
@@ -95,9 +96,9 @@ require_once('helpers/common.php');
                 <div x-show="$store.table && $store.settings" class="pb-10">
                     <div class="my-8">
                         <form x-data="playground" @submit.prevent="create">
-                            <div class="grid grid-cols-2 gap-6">
+                            <div class="grid md:grid-cols-2 gap-6 grid-cols-1">
                                 <label class="block">
-                                    <span class="text-gray-700">Currency</span>
+                                    <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
                                     <select x-model="data.currency" class="block w-full mt-1">
                                         <option value="" class="text-gray-400">Select currency</option>
                                         <template x-if="$store.settings">
@@ -132,11 +133,88 @@ require_once('helpers/common.php');
                                         Your host must be accessible from the internet.
                                     </span>
                                 </label>
-                                <div>
-                                    <button type="submit" :disabled="!data.currency" class="text-white rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2" @click="$event.prevent; create" x-text="label"></button>
-                                    <button type="button" x-show="invoice" class="text-white rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2 ml-2" @click="render">Show invoice</button>
-                                    <label x-show="invoice">QR Only<input class="mx-2" type="checkbox" x-model="qrOnly" /></label>
+                            </div>
+                            <div>
+                                <label _x-show="invoice">Add User Data<input class="mx-2 my-4" type="checkbox" x-model="showUserData" /></label>
+                                <div x-show="showUserData" x-transition class="" >
+                                    <h3>Main section</h3>
+                                    <div class="grid grid-cols-2 gap-6 mb-6">
+                                        <label class="block">
+                                            <span class="text-gray-700">Invoice title</span>
+                                            <input x-model="userData.title" type="text" class="mt-1 block w-full">
+                                            <span class="inline-block mt-2 text-gray-400 text-sm">Custom title for invoice</span>
+                                        </label>
+                                        <label class="block">
+                                            <span class="text-gray-700">Merchant name</span>
+                                            <input x-model="userData.merchant" type="text" class="mt-1 block w-full">
+                                            <span class="inline-block mt-2 text-gray-400 text-sm">For example, the name of your store</span>
+                                        </label>
+                                        <label class="block">
+                                            <span class="text-gray-700">Merchant url</span>
+                                            <input x-model="userData.url" type="text" class="mt-1 block w-full">
+                                            <span class="inline-block mt-2 text-gray-400 text-sm">URL to merchant's site</span>
+                                        </label>
+                                        <label class="block">
+                                            <span class="text-gray-700">Price (total)</span>
+                                            <input x-model="userData.price" type="text" class="mt-1 block w-full">
+                                            <span class="inline-block mt-2 text-gray-400 text-sm">Displays the total price in fiat</span>
+                                        </label>
+                                        <label class="block">
+                                            <span class="text-gray-700">Sub-price (sub total)</span>
+                                            <input x-model="userData['sub-price']" type="text" class="mt-1 block w-full">
+                                            <span class="inline-block mt-2 text-gray-400 text-sm">Displays amount in fiat before adding discount, tax or shipping charges</span>
+                                        </label>
+                                    </div>
+                                    <h3>Items section</h3>
+                                    <template x-for="(item, index) in userData.items">
+                                        <div class="grid md:grid-cols-4 grid-cols-2 gap-6 mb-6">
+                                            <label class="block">
+                                                <span class="text-gray-700">Name</span>
+                                                <input x-model="item.name" type="text" class="mt-1 block w-full">
+                                                <span class="inline-block mt-2 text-gray-400 text-sm">Item name</span>
+                                            </label>
+                                            <label class="block">
+                                                <span class="text-gray-700">Cost</span>
+                                                <input x-model="item.cost" type="text" class="mt-1 block w-full">
+                                                <span class="inline-block mt-2 text-gray-400 text-sm">Item cost</span>
+                                            </label>
+                                            <label class="block">
+                                                <span class="text-gray-700">Qty</span>
+                                                <input x-model="item.qty" type="text" class="mt-1 block w-full">
+                                                <span class="inline-block mt-2 text-gray-400 text-sm">Items quantity</span>
+                                            </label>
+                                            <label class="block">
+                                                <span class="text-gray-700">Total</span>
+                                                <input x-model="item.total" type="text" class="mt-1 block w-full">
+                                                <span class="inline-block mt-2 text-gray-400 text-sm">The total fiat price</span>
+                                            </label>
+                                        </div>
+                                    </template>
+                                    <button type="button" class="text-white rounded-md w-20 bg-green-500 hover:bg-green-600 p-2 mr-2 my-2" @click="addItem">Add</button>
+                                    <button x-show="userData.items.length > 0" type="button" class="text-white rounded-md w-20 bg-gray-400 hover:bg-gray-500 disabled:bg-gray-200 p-2 mr-2 my-2" @click="userData.items=[]">Clear</button>
+                                    <h3>Extras section</h3>
+                                    <template x-for="(item, index) in userData.extras">
+                                        <div class="grid md:grid-cols-2 grid-cols-1 gap-6 mb-6">
+                                            <label class="block">
+                                                <span class="text-gray-700">Name</span>
+                                                <input x-model="item.name" type="text" class="mt-1 block w-full">
+                                                <span class="inline-block mt-2 text-gray-400 text-sm">Item name</span>
+                                            </label>
+                                            <label class="block">
+                                                <span class="text-gray-700">Price</span>
+                                                <input x-model="item.price" type="text" class="mt-1 block w-full">
+                                                <span class="inline-block mt-2 text-gray-400 text-sm">Item price</span>
+                                            </label>
+                                        </div>
+                                    </template>
+                                    <button type="button" class="text-white rounded-md w-20 bg-green-500 hover:bg-green-600 p-2 mr-2 my-2" @click="addExtra">Add</button>
+                                    <button x-show="userData.extras.length > 0" type="button" class="text-white rounded-md w-20 bg-gray-400 hover:bg-gray-500 disabled:bg-gray-200 p-2 mr-2 my-2" @click="userData.extras=[]">Clear</button>
                                 </div>
+                            <div class="border-t-2 mt-6 pt-4">
+                                <span class="block mb-8"><span class="text-red-500">*</span> - Required fields</span>
+                                <button type="submit" :disabled="!data.currency" class="text-white rounded-md md:w-48 w-full bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 disabled:text-gray-600 p-4 mr-2 my-2" @click="$event.prevent; create" x-text="label"></button>
+                                <button type="button" x-show="invoice" class="text-white rounded-md md:w-48 w-full bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-4 my-2" @click="render">Show invoice</button>
+                                <label x-show="invoice">QR Only<input class="mx-2" type="checkbox" x-model="qrOnly" /></label>
                             </div>
                             <h3>Invoice details</h3>
                             <div class="relative">
