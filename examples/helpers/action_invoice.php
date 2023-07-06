@@ -24,8 +24,16 @@ if ($invoiceJson->lifetime) {
     $invoice->lifetime($invoiceJson->lifetime);
 }
 
+if ($invoiceJson->expire) {
+    $invoice->lifetime($invoiceJson->expire);
+}
+
 if ($invoiceJson->callbackUrl) {
     $invoice->callbackUrl($invoiceJson->callbackUrl);
+}
+
+if ($invoiceJson->linkback) {
+    $invoice->linkback($invoiceJson->linkback);
 }
 
 if ($userDataJson) {

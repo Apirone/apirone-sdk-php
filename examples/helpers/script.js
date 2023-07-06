@@ -45,7 +45,7 @@ function playground() {
     label: 'Create invoice',
     invoice: null,
     content: 'Invoice not created yet.',
-    data: {currency: null, amount: null, lifetime: null, callbackUrl: null},
+    data: {currency: null, amount: null, lifetime: null, expire: null, callbackUrl: null, linkback: null},
     userData: {title: null, merchant: null, url:null, price: null, 'sub-price': null, items: [], extras: []},
     expand: false,
     qrOnly: false,

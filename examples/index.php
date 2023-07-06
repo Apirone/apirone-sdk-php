@@ -126,11 +126,26 @@ require_once('helpers/common.php');
                                     </span>
                                 </label>
                                 <label class="block">
+                                    <span class="text-gray-700">Expire</span>
+                                    <input x-model="data.expire" type="text" class="mt-1 block w-full" min="0" value="300">
+                                    <span class="inline-block mt-2 text-gray-400 text-sm no-prose">
+                                        Invoice expiration time in <a href="https://www.iso.org/iso-8601-date-and-time-format.html" target="_blank" class="not-prose text-gray-400 hover:text-gray-500">ISO-8601</a> format, for example, 2022-02-22T09:00:30. 
+                                        If both parameters are specified: lifetime and expire, then the parameter expire will take precedence
+                                    </span>
+                                </label>
+                                <label class="block">
                                     <span class="text-gray-700">Callback URL</span>
                                     <input x-model="data.callbackUrl" type="text" class="mt-1 block w-full placeholder-gray-400" placeholder="https://yourhost.com/callback.php">
                                     <span class="inline-block mt-2 text-gray-400 text-sm">
                                         Enter the protocol and domain name or IP address of your host and add /callback.php for the example to work correctly.
                                         Your host must be accessible from the internet.
+                                    </span>
+                                </label>
+                                <label class="block">
+                                    <span class="text-gray-700">Linkback</span>
+                                    <input x-model="data.callbackUrl" type="text" class="mt-1 block w-full placeholder-gray-400" placeholder="https://linkback.com">
+                                    <span class="inline-block mt-2 text-gray-400 text-sm">
+                                        The customer will be redirected to this URL after the payment is completed
                                     </span>
                                 </label>
                             </div>
