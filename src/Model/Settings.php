@@ -48,11 +48,25 @@ class Settings extends AbstractModel
     private array   $currencies = [];
 
     /**
+     * Invoice title
+     *
+     * @var string
+     */
+    private string  $title = '';
+
+    /**
      * Merchant name
      *
      * @var string
      */
     private string  $merchant = '';
+
+    /**
+     * Merchant Url
+     *
+     * @var string
+     */
+    private string  $merchantUrl = '';
 
     /**
      * Invoice timeout
@@ -273,6 +287,7 @@ class Settings extends AbstractModel
      */
     public function restoreDefaults()
     {
+        $this->merchantUrl = '';
         $this->merchant = '';
         $this->timeout = 1800;
         $this->factor = 1;
@@ -371,6 +386,30 @@ class Settings extends AbstractModel
     }
 
     /**
+     * Get invoice title
+     *
+     * @return  string
+     */ 
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set invoice title
+     *
+     * @param  string  $title  Invoice title
+     *
+     * @return  self
+     */ 
+    public function setTitle(string $title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
      * Get the value of merchant
      */ 
     public function getMerchant()
@@ -386,6 +425,30 @@ class Settings extends AbstractModel
     public function setMerchant($merchant)
     {
         $this->merchant = $merchant;
+
+        return $this;
+    }
+
+    /**
+     * Get merchant Url
+     *
+     * @return  string
+     */ 
+    public function getMerchantUrl()
+    {
+        return $this->merchantUrl;
+    }
+
+    /**
+     * Set merchant Url
+     *
+     * @param  string  $merchantUrl  Merchant Url
+     *
+     * @return  self
+     */ 
+    public function setMerchantUrl(string $merchantUrl)
+    {
+        $this->merchantUrl = $merchantUrl;
 
         return $this;
     }
