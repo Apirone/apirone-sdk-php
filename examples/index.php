@@ -113,21 +113,21 @@ require_once('helpers/common.php');
                                 </label>
                                 <label class="block">
                                     <span class="text-gray-700">Amount</span>
-                                    <input type="number" x-model="data.amount" min="1" class="mt-1 block w-full placeholder-gray-400" placeholder="Enter amount value in minor units">
+                                    <input type="number" x-model="data.amount" class="mt-1 block w-full placeholder-gray-400" placeholder="Enter amount value in minor units">
                                     <span class="inline-block mt-2 text-gray-400 text-sm">
                                         Amount for the checkout in the selected currency of the invoice object. Also you may create invoices without fixed amount. The amount is indicated in minor units	
                                     </span>
                                 </label>
                                 <label class="block">
                                     <span class="text-gray-700">Lifetime</span>
-                                    <input x-model="data.lifetime" type="number" class="mt-1 block w-full" min="0" value="300">
+                                    <input x-model="data.lifetime" type="number" class="mt-1 block w-full">
                                     <span class="inline-block mt-2 text-gray-400 text-sm">
                                         Duration of invoice validity (indicated in seconds)	
                                     </span>
                                 </label>
                                 <label class="block">
                                     <span class="text-gray-700">Expire</span>
-                                    <input x-model="data.expire" type="text" class="mt-1 block w-full" min="0" value="300">
+                                    <input x-model="data.expire" type="text" class="mt-1 block w-full">
                                     <span class="inline-block mt-2 text-gray-400 text-sm no-prose">
                                         Invoice expiration time in <a href="https://www.iso.org/iso-8601-date-and-time-format.html" target="_blank" class="not-prose text-gray-400 hover:text-gray-500">ISO-8601</a> format, for example, 
                                         <a href="#" @click.prevent="data.expire = $el.innerHTML" class="not-prose text-gray-400 hover:text-gray-500"><?php echo date('Y-m-d\TH:i:s', strtotime('1 day')); ?></a>.
