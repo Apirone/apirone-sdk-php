@@ -154,7 +154,7 @@ require_once('helpers/common.php');
                                 <label _x-show="invoice">Add User Data<input class="mx-2 my-4 text-[#5d8ab9] ring-offset-[#5d8ab9]" type="checkbox" x-model="showUserData" /></label>
                                 <div x-show="showUserData" x-transition class="" >
                                     <h3>Main section</h3>
-                                    <div class="grid grid-cols-2 gap-6 mb-6">
+                                    <div class="grid md:grid-cols-2 grid-cols-1 gap-6 mb-6">
                                         <label class="block">
                                             <span class="text-gray-700">Invoice title</span>
                                             <input x-model="userData.title" type="text" class="mt-1 block w-full">
