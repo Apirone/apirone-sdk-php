@@ -25,7 +25,7 @@ if ($invoiceJson->lifetime) {
 }
 
 if ($invoiceJson->expire) {
-    $invoice->lifetime($invoiceJson->expire);
+    $invoice->expire($invoiceJson->expire);
 }
 
 if ($invoiceJson->callbackUrl) {
@@ -39,7 +39,13 @@ if ($invoiceJson->linkback) {
 if ($userDataJson) {
     $invoice->userData(UserData::fromJson($userDataJson));
 }
-$invoice->create();
+try {
+    $invoice->create();
+}
+catch (Exception $e) {
+    echo $e->getMessage();
+    exit;    
+}
 
 Utils::send_json($invoice->details->toJson());
 

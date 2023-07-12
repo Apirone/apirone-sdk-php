@@ -30,7 +30,7 @@ require_once('helpers/common.php');
             <div x-data="table" x-init="load" id="step_2">
                 <h2>Invoice data table</h2>
                 <?php echo load_file_content('table.php'); ?>
-                <button class="text-white rounded-md w-48 bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-2" @click="doAction" x-text="label" :disabled="table"></button>
+                <button class="text-white rounded-md w-48 bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-2" @click="doAction" x-text="label" :disabled="table"></button>
             </div>
             <div id="step_3">
                 <h2>Settings</h2>
@@ -51,7 +51,7 @@ require_once('helpers/common.php');
                         <button x-show="file" class="absolute top-4 right-10 text-gray-200" @click="toggle" x-text="expand ? 'Collapse' : 'Expand'"></button>
                         <pre><code class="language-json" :class="{'' : expand, 'max-h-96' : !expand}" x-text="content"></code></pre>
                     </div>
-                    <button class="text-white rounded-md w-48 bg-sky-500 hover:bg-sky-700 p-2 disabled:bg-gray-300" @click="doAction" x-text="label" :disabled="file"></button>
+                    <button class="text-white rounded-md w-48 bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-2" @click="doAction" x-text="label" :disabled="file"></button>
                 </div>
 
             </div>
@@ -113,7 +113,7 @@ require_once('helpers/common.php');
                                 </label>
                                 <label class="block">
                                     <span class="text-gray-700">Amount</span>
-                                    <input type="number" x-model="data.amount" min="0" class="mt-1 block w-full placeholder-gray-400" placeholder="Enter amount value in minor units">
+                                    <input type="number" x-model="data.amount" min="1" class="mt-1 block w-full placeholder-gray-400" placeholder="Enter amount value in minor units">
                                     <span class="inline-block mt-2 text-gray-400 text-sm">
                                         Amount for the checkout in the selected currency of the invoice object. Also you may create invoices without fixed amount. The amount is indicated in minor units	
                                     </span>
@@ -129,7 +129,8 @@ require_once('helpers/common.php');
                                     <span class="text-gray-700">Expire</span>
                                     <input x-model="data.expire" type="text" class="mt-1 block w-full" min="0" value="300">
                                     <span class="inline-block mt-2 text-gray-400 text-sm no-prose">
-                                        Invoice expiration time in <a href="https://www.iso.org/iso-8601-date-and-time-format.html" target="_blank" class="not-prose text-gray-400 hover:text-gray-500">ISO-8601</a> format, for example, 2022-02-22T09:00:30. 
+                                        Invoice expiration time in <a href="https://www.iso.org/iso-8601-date-and-time-format.html" target="_blank" class="not-prose text-gray-400 hover:text-gray-500">ISO-8601</a> format, for example, 
+                                        <a href="#" @click.prevent="data.expire = $el.innerHTML" class="not-prose text-gray-400 hover:text-gray-500"><?php echo date('Y-m-d\TH:i:s', strtotime('1 day')); ?></a>.
                                         If both parameters are specified: lifetime and expire, then the parameter expire will take precedence
                                     </span>
                                 </label>
@@ -150,7 +151,7 @@ require_once('helpers/common.php');
                                 </label>
                             </div>
                             <div>
-                                <label _x-show="invoice">Add User Data<input class="mx-2 my-4" type="checkbox" x-model="showUserData" /></label>
+                                <label _x-show="invoice">Add User Data<input class="mx-2 my-4 text-[#5d8ab9] ring-offset-[#5d8ab9]" type="checkbox" x-model="showUserData" /></label>
                                 <div x-show="showUserData" x-transition class="" >
                                     <h3>Main section</h3>
                                     <div class="grid grid-cols-2 gap-6 mb-6">
@@ -205,8 +206,8 @@ require_once('helpers/common.php');
                                             </label>
                                         </div>
                                     </template>
-                                    <button type="button" class="text-white rounded-md w-20 bg-green-500 hover:bg-green-600 p-2 mr-2 my-2" @click="addItem">Add</button>
-                                    <button x-show="userData.items.length > 0" type="button" class="text-white rounded-md w-20 bg-gray-400 hover:bg-gray-500 disabled:bg-gray-200 p-2 mr-2 my-2" @click="userData.items=[]">Clear</button>
+                                    <button type="button" class="text-white rounded-md w-20 bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-2 mr-2 my-2" @click="addItem">Add</button>
+                                    <button x-show="userData.items.length > 0" type="button" class="text-white rounded-md min-w-20 bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-2 mr-2 my-2" @click="userData.items=[]">Delete All</button>
                                     <h3>Extras section</h3>
                                     <template x-for="(item, index) in userData.extras">
                                         <div class="grid md:grid-cols-2 grid-cols-1 gap-6 mb-6">
@@ -222,14 +223,14 @@ require_once('helpers/common.php');
                                             </label>
                                         </div>
                                     </template>
-                                    <button type="button" class="text-white rounded-md w-20 bg-green-500 hover:bg-green-600 p-2 mr-2 my-2" @click="addExtra">Add</button>
-                                    <button x-show="userData.extras.length > 0" type="button" class="text-white rounded-md w-20 bg-gray-400 hover:bg-gray-500 disabled:bg-gray-200 p-2 mr-2 my-2" @click="userData.extras=[]">Clear</button>
+                                    <button type="button" class="text-white rounded-md w-20  bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-2 mr-2 my-2" @click="addExtra">Add</button>
+                                    <button x-show="userData.extras.length > 0" type="button" class="text-white rounded-md min-w-20  bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-2 mr-2 my-2" @click="userData.extras=[]">Delete All</button>
                                 </div>
                             <div class="border-t-2 mt-6 pt-4">
                                 <span class="block mb-8"><span class="text-red-500">*</span> - Required fields</span>
-                                <button type="submit" :disabled="!data.currency" class="text-white rounded-md md:w-48 w-full bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 disabled:text-gray-600 p-4 mr-2 my-2" @click="$event.prevent; create" x-text="label"></button>
-                                <button type="button" x-show="invoice" class="text-white rounded-md md:w-48 w-full bg-sky-500 hover:bg-sky-600 disabled:bg-gray-300 p-4 my-2" @click="render">Show invoice</button>
-                                <label x-show="invoice">QR Only<input class="mx-2" type="checkbox" x-model="qrOnly" /></label>
+                                <button type="submit" :disabled="!data.currency" class="text-white rounded-md md:w-48 w-full bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-4 mr-2 my-2" @click="$event.prevent; create" x-text="label"></button>
+                                <button type="button" x-show="invoice && !invoice.message" class="text-white rounded-md md:w-48 w-full bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-4 my-2" @click="render">Show invoice</button>
+                                <label x-show="invoice && !invoice.message">QR Only<input class="mx-2" type="checkbox" x-model="qrOnly" /></label>
                             </div>
                             <h3>Invoice details</h3>
                             <div class="relative">
