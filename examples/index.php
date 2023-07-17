@@ -144,7 +144,7 @@ require_once('helpers/common.php');
                                 </label>
                                 <label class="block">
                                     <span class="text-gray-700">Linkback</span>
-                                    <input x-model="data.callbackUrl" type="text" class="mt-1 block w-full placeholder-gray-400" placeholder="https://linkback.com">
+                                    <input x-model="data.linkback" type="text" class="mt-1 block w-full placeholder-gray-400" placeholder="https://linkback.com">
                                     <span class="inline-block mt-2 text-gray-400 text-sm">
                                         The customer will be redirected to this URL after the payment is completed
                                     </span>
