@@ -14,6 +14,9 @@ $conn->select_db($database);
 // DB MySQL handler example
 $db_handler = static function($query) {
     global $conn;
+
+    // Escape \u for utf8 encoding. mysqli->query remove all single backslashes
+    $query = str_replace('\u', '\\\u', $query);
     $result = $conn->query($query, MYSQLI_STORE_RESULT);
 
     if (!$result) {

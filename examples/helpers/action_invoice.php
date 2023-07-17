@@ -12,11 +12,11 @@ use Apirone\SDK\Model\UserData;
 Invoice::db($db_handler, $table_prefix);
 Invoice::settings( Settings::fromFile('/var/www/storage/settings.json') );
 
-$invoiceJson = json_decode(Utils::sanitize($_GET['data']));
+$invoiceJson = json_decode(Utils::sanitize($_POST['data']));
 $userDataJson = null;
 
-if(isset($_GET['userData'])) {
-    $userDataJson = json_decode(Utils::sanitize($_GET['userData']));
+if(isset($_POST['userData'])) {
+    $userDataJson = json_decode(Utils::sanitize($_POST['userData']));
 }
 $invoice = Invoice::init($invoiceJson->currency, $invoiceJson->amount);
 
@@ -37,7 +37,10 @@ if ($invoiceJson->linkback) {
 }
 
 if ($userDataJson) {
-    $invoice->userData(UserData::fromJson($userDataJson));
+    // $invoice->userData(UserData::fromJson($userDataJson));
+    $userData = UserData::fromJson($userDataJson);
+    $userData->title('Тайтл');
+    $invoice->userData($userData);
 }
 try {
     $invoice->create();

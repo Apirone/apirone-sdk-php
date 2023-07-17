@@ -40,7 +40,7 @@ use Apirone\SDK\Service\Utils;
                     <?php if($userData) : /* userData */ ?>
                     <div>
                         <?php if($userData->title) : ?>
-                        <h1><?php echo $userData->title ?></h1>
+                        <h1><?php echo $userData->title; ?></h1>
                         <?php else : ?>
                         <h1><?php $t("title"); ?> <small><?php echo $invoice->invoice; ?></small></h1>
                         <?php endif; ?>

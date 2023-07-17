@@ -18,9 +18,10 @@ Invoice::dataUrl($invoiceDataUrl);
 ?>
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="/assets/js/script.js" type="text/javascript"></script>
         <link href="/assets/css/styles.css" rel="stylesheet">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body style="margin: 0;">
         <?php

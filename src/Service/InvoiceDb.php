@@ -79,8 +79,8 @@ class InvoiceDb
      */
     public static function install(
         string $prefix = '',
-        string $charset = 'utf8',
-        string $collate = 'utf8_general_ci'
+        string $charset = 'utf8mb4',
+        string $collate = 'utf8mb4_general_ci'
     ) {
         $prefix = static::$prefix !== false ? static::$prefix : $prefix;
         $query = InvoiceQuery::createInvoicesTable($prefix, $charset, $collate);

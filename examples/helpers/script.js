@@ -51,12 +51,14 @@ function playground() {
     qrOnly: false,
     showUserData: false,
     async create() {
-      this.label = 'Creating...'; 
-      url = '/helpers/action_invoice.php?data=' + JSON.stringify(this.data);
+      this.label = 'Creating...';
+      form = new FormData();
+      form.append('data', JSON.stringify(this.data));
+
       if (this.showUserData) {
-        url += '&userData=' + JSON.stringify(this.userData);
+        form.append('userData', JSON.stringify(this.userData));
       }
-      result = await ajax(url);
+      result = await ajax('/helpers/action_invoice.php', form);
       if(result) { this.invoice = result; this.content = JSON.stringify(result, null, 2); }
       this.label = 'Create'; 
     },
@@ -77,13 +79,17 @@ function playground() {
   }
 }
 
-async function ajax(url) {
+async function ajax(url, form=false) {
   data = false;
-  form = new FormData();                                  
+  if (!form) {
+    form = new FormData();                                  
+  }
+  // console.log(JSON.stringify(Object.fromEntries(form)));
   await fetch(url, {
       method: 'POST',
       headers: {
           'X-Requested-With': 'XMLHttpRequest',
+          'charset':'UTF-8',
       }, 
       body: form
   })
