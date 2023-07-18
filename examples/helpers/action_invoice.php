@@ -37,10 +37,7 @@ if ($invoiceJson->linkback) {
 }
 
 if ($userDataJson) {
-    // $invoice->userData(UserData::fromJson($userDataJson));
-    $userData = UserData::fromJson($userDataJson);
-    $userData->title('Тайтл');
-    $invoice->userData($userData);
+    $invoice->userData(UserData::fromJson($userDataJson));
 }
 try {
     $invoice->create();

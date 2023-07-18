@@ -63,16 +63,32 @@ class UserData extends AbstractModel
     }
 
     /**
+     * Get the value of title
+     */ 
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
      * Set the title value
      *
      * @param null|string $title 
      * @return $this 
      */
-    public function title(?string $title = null)
+    public function setTitle(?string $title = null)
     {
         $this->title = $title;
 
         return $this;
+    }
+
+    /**
+     * Get the value of merchant
+     */ 
+    public function getMerchant()
+    {
+        return $this->merchant;
     }
 
     /**
@@ -81,11 +97,19 @@ class UserData extends AbstractModel
      * @param null|string $merchant 
      * @return $this 
      */
-    public function merchant(?string $merchant = null)
+    public function setMerchant(?string $merchant = null)
     {
         $this->merchant = $merchant;
 
         return $this;
+    }
+
+    /**
+     * Get the value of url
+     */ 
+    public function getUrl()
+    {
+        return $this->url;
     }
 
     /**
@@ -94,11 +118,19 @@ class UserData extends AbstractModel
      * @param null|string $url 
      * @return $this 
      */
-    public function url(?string $url = null)
+    public function setUrl(?string $url = null)
     {
         $this->url = $url;
 
         return $this;
+    }
+
+    /**
+     * Get the value of price
+     */ 
+    public function getPrice()
+    {
+        return $this->price;
     }
 
     /**
@@ -107,11 +139,19 @@ class UserData extends AbstractModel
      * @param null|string $value 
      * @return $this 
      */
-    public function price(?string $value = null)
+    public function setPrice(?string $value = null)
     {
         $this->price = $value;
         
         return $this;
+    }
+
+    /**
+     * Get the value of subPrice
+     */ 
+    public function getSubPrice()
+    {
+        return $this->subPrice;
     }
 
     /**
@@ -120,7 +160,7 @@ class UserData extends AbstractModel
      * @param null|string $value 
      * @return $this 
      */
-    public function subPrice(?string $value = null)
+    public function setSubPrice(?string $value = null)
     {
         $this->subPrice = $value;
         
@@ -206,38 +246,6 @@ class UserData extends AbstractModel
             }
         }
         return $json;
-    }
-
-    /**
-     * Get the value of merchant
-     */ 
-    public function getMerchant()
-    {
-        return $this->merchant;
-    }
-
-    /**
-     * Get the value of url
-     */ 
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * Get the value of price
-     */ 
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
-     * Get the value of subPrice
-     */ 
-    public function getSubPrice()
-    {
-        return $this->subPrice;
     }
 
     /**
