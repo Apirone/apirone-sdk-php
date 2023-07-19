@@ -4,6 +4,7 @@ require_once('db.php');
 
 use Apirone\SDK\Invoice;
 use Apirone\SDK\Model\Settings;
+use Apirone\SDK\Service\Render;
 
 // Config & DB
 Invoice::db($db_handler, $table_prefix);
@@ -12,6 +13,7 @@ $invoiceDataUrl = 'render_ajax_response.php';
 
 if (array_key_exists('qr-only', $_GET)) {
     $invoiceDataUrl .= '?qr-only=' . $_GET['qr-only'];
+    Render::$qrOnly = $_GET['qr-only'];
 }
 
 Invoice::dataUrl($invoiceDataUrl);

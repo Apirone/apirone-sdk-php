@@ -24,8 +24,11 @@ require_once('helpers/common.php');
                 <pre><code class="language-bash">composer require apirone-sdk-php</code></pre>
             </div>
             <div>
-                <h2>Create database callback function</h2>
+                <h2>Create database and logging callback functions</h2>
+                <p>Simple example with <i>mysqli</i> usage.</p>
                 <?php echo load_file_content('db.php'); ?>
+                <p>Simple write to file example</p>
+                <?php echo load_file_content('log.php'); ?>
             </div>
             <div x-data="table" x-init="load" id="step_2">
                 <h2>Invoice data table</h2>

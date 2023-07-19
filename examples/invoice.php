@@ -1,15 +1,16 @@
 <?php
 require_once('../vendor/autoload.php');
 require_once('db.php');
+require_once('log.php');
 
 use Apirone\SDK\Invoice;
 use Apirone\SDK\Model\Settings;
 
-// Setup DB and Settinfs into invoice object
+// Setup DB and Settings into invoice object
 Invoice::db($db_handler, $table_prefix);
 Invoice::settings(Settings::fromFile('/var/www/storage/settings.json'));
 
-// For example you neet to pay in btc 25000 satoshi
+// For example you need to pay in btc 25000 satoshi
 $invoice = Invoice::init('btc', 25000);
 
 // Set invoice lifetime 300s

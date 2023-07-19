@@ -2,6 +2,7 @@
 
 require_once('common.php');
 require_once('../db.php');
+require_once('../log.php');
 
 use Apirone\SDK\Service\Utils;
 use Apirone\SDK\Service\InvoiceDb;

@@ -1,6 +1,8 @@
 <?php
 
 require_once('/var/www/vendor/autoload.php'); // Path/to/vender/folder/autoload.php
+require_once('log.php');
+
 use Apirone\SDK\Model\Settings;
 
 // Do not store settings file inside public html directory.

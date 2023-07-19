@@ -1,6 +1,7 @@
 <?php
 require_once('../vendor/autoload.php');
 require_once('db.php');
+require_once('log.php');
 
 use Apirone\SDK\Service\InvoiceDb;
 

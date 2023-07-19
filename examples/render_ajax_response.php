@@ -1,6 +1,7 @@
 <?php
 require_once('helpers/common.php');
 require_once('db.php');
+require_once('log.php');
 
 use Apirone\SDK\Invoice;
 use Apirone\SDK\Model\Settings;
