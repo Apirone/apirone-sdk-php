@@ -25,7 +25,7 @@ use Apirone\API\Exceptions\ForbiddenException;
 use Apirone\API\Exceptions\InternalServerErrorException;
 use Apirone\API\Exceptions\NotFoundException;
 use Apirone\API\Exceptions\MethodNotAllowedException;
-use Apirone\API\Http\ErrorDispatcher;
+use Apirone\API\Log\LoggerWrapper;
 use Apirone\SDK\Model\UserData;
 use Apirone\SDK\Model\Settings;
 use Apirone\SDK\Service\Render;
@@ -101,12 +101,12 @@ class Invoice extends AbstractModel{
     /**
      * Set log handler
      *
-     * @param Closure $handler 
+     * @param mixed $logger
      * @return void 
      */
-    public static function log(\Closure $handler, $debugMode = false): void
+    public static function setLogger($logger): void
     {
-        ErrorDispatcher::setCallback($handler);
+        LoggerWrapper::setLogger($logger);
     }
 
     /**

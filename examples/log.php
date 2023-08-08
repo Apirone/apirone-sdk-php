@@ -4,9 +4,10 @@ require_once('helpers/common.php');
 
 use Apirone\SDK\Invoice;
 
-$log_handler = static function($message) {
+$loggerCallback = static function($level, $message, $context) {
     $log_file ='/var/www/storage/log.txt';
-    file_put_contents($log_file, print_r($message, true) . "\r\n", FILE_APPEND);
+    $data = [$level, $message, $context];
+    file_put_contents($log_file, print_r($data, true) . "\r\n", FILE_APPEND);
 };
 
-Invoice::log($log_handler, true);
+Invoice::setLogger($loggerCallback);

@@ -45,7 +45,7 @@ On the invoice display page you need to add ```css/styles.css``` and ``js/script
 
 ### Database and Logs handlers
 
-To connect library to your database-engine and log-engine you need to create two callback functions and pass them to the library.
+To connect library to your database-engine you need to create two callback functions and pass them to the library.
 
 Db handler example for php MySQLi
 ```php
@@ -70,26 +70,35 @@ $db_handler = static function($query) {
 
 ```
 
-Log handler example:
+For logging you can use a callback function or logger implementation [Psr/Log/LoggerInterface](https://packagist.org/packages/psr/log)
+
+Log callback example:
 
 ```php
-$log_handler = static function($message) {
-    // Handle message with your log engine
-    // Message is an associative array with two keys 'body' and 'details'
-    // For example you have log function to provide logging
-    // log($message['body'], $message['details']);
 
-    print_r($message);
+$logger = static function($level, $message, $context) {
+    print_r([$level, $message, $context]);
 };
+
+```
+
+Psr/Log example:
+
+```php
+
+$logger = new /Psr/Log/LoggerInterface();
+
 ```
 
 Set handlers to the library:
 
 ```php
+
 use Apirone\SDK\Invoice;
 
 Invoice::db($db_handler, 'table_prefix_');
-Invoice::log($log_handler);
+Invoice::setLogger($logger);
+
 ```
 
 Create an invoice table:
