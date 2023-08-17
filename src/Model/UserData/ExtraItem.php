@@ -24,9 +24,9 @@ class ExtraItem extends AbstractModel
     /**
      * Class constructor
      *
-     * @param null|string $name 
-     * @param null|string $price 
-     * @return void 
+     * @param null|string $name
+     * @param null|string $price
+     * @return void
      */
     private function __construct(?string $name = null, ?string $price = null)
     {
@@ -36,10 +36,10 @@ class ExtraItem extends AbstractModel
 
     /**
      * Create instance
-     * 
-     * @param string $name 
-     * @param string $price 
-     * @return static 
+     *
+     * @param string $name
+     * @param string $price
+     * @return static
      */
     public static function init(string $name, string $price)
     {
@@ -47,13 +47,13 @@ class ExtraItem extends AbstractModel
 
         return $class;
     }
-    
+
     /**
      * Restore instance from JSON
-     * 
-     * @param mixed $json 
-     * @return $this 
-     * @throws ReflectionException 
+     *
+     * @param mixed $json
+     * @return $this
+     * @throws ReflectionException
      */
     public static function fromJson($json)
     {
@@ -65,7 +65,7 @@ class ExtraItem extends AbstractModel
     /**
      * Convert instance to string
      *
-     * @return string 
+     * @return string
      */
     public function toString()
     {
@@ -75,7 +75,7 @@ class ExtraItem extends AbstractModel
 
     /**
      * Get the value of name
-     */ 
+     */
     public function getName()
     {
         return $this->name;
@@ -85,7 +85,7 @@ class ExtraItem extends AbstractModel
      * Set the value of name
      *
      * @return  self
-     */ 
+     */
     public function setName($name)
     {
         $this->name = $name;
@@ -95,7 +95,9 @@ class ExtraItem extends AbstractModel
 
     /**
      * Get the value of price
-     */ 
+     *
+     * @return null|string
+     */
     public function getPrice()
     {
         return $this->price;
@@ -105,7 +107,7 @@ class ExtraItem extends AbstractModel
      * Set the value of price
      *
      * @return  self
-     */ 
+     */
     public function setPrice($price)
     {
         $this->price = $price;

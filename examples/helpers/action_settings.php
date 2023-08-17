@@ -18,6 +18,6 @@ switch ($action) {
         break;
 }
 
-$content = file_exists($path) ? load_file_content($path,  false) : false;
+$content = file_exists($path) ? load_file_content($path, false) : false;
 
 Utils::send_json($content);

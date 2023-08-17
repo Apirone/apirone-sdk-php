@@ -12,7 +12,7 @@ $conn = new mysqli($host, $user, $pass, $database);
 $conn->select_db($database);
 
 // DB MySQL handler example
-$db_handler = static function($query) {
+$db_handler = static function ($query) {
     global $conn;
 
     // Escape \u for utf8 encoding. mysqli->query remove all single backslashes

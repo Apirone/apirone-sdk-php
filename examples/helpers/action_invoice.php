@@ -11,7 +11,7 @@ use Apirone\SDK\Model\UserData;
 
 // Config & DB
 Invoice::db($db_handler, $table_prefix);
-Invoice::settings( Settings::fromFile('/var/www/storage/settings.json') );
+Invoice::settings(Settings::fromFile('/var/www/storage/settings.json'));
 
 $invoiceJson = json_decode(Utils::sanitize($_POST['data']));
 $userDataJson = null;
@@ -42,11 +42,9 @@ if ($userDataJson) {
 }
 try {
     $invoice->create();
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     echo $e->getMessage();
-    exit;    
+    exit;
 }
 
 Utils::send_json($invoice->details->toJson());
-

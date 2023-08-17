@@ -1,4 +1,5 @@
 <?php
+
 require_once('../vendor/autoload.php');
 require_once('db.php');
 require_once('log.php');
@@ -9,8 +10,7 @@ use Apirone\SDK\Model\Settings;
 /**
  * Your system Order status handler
  */
-$order_handler = static function($invoice)
-{
+$order_handler = static function ($invoice) {
     $order_id = $invoice->order;
 
     // Process order by order_id

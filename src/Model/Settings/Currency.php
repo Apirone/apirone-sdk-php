@@ -36,7 +36,7 @@ class Currency extends AbstractModel
     private ?int $dustRate = null;
 
     private ?string $address = null;
-    
+
     private string $policy = 'fixed';
 
     private ?string $error = null;
@@ -48,7 +48,7 @@ class Currency extends AbstractModel
     /**
      * Create a currency instance
      *
-     * @return static 
+     * @return static
      */
     public static function init()
     {
@@ -56,13 +56,13 @@ class Currency extends AbstractModel
 
         return $class;
     }
-    
+
     /**
      * Restore currency instance from JSON
-     * 
-     * @param mixed $json 
-     * @return $this 
-     * @throws ReflectionException 
+     *
+     * @param mixed $json
+     * @return $this
+     * @throws ReflectionException
      */
     public static function fromJson($json)
     {
@@ -74,7 +74,7 @@ class Currency extends AbstractModel
     /**
      * Check is a test currency
      *
-     * @return bool 
+     * @return bool
      */
     public function isTestnet()
     {
@@ -84,19 +84,19 @@ class Currency extends AbstractModel
     /**
      * Load currency settings from account
      *
-     * @param mixed $account 
-     * @return $this 
-     * @throws RuntimeException 
-     * @throws ValidationFailedException 
-     * @throws UnauthorizedException 
-     * @throws ForbiddenException 
-     * @throws NotFoundException 
-     * @throws MethodNotAllowedException 
+     * @param mixed $account
+     * @return $this
+     * @throws RuntimeException
+     * @throws ValidationFailedException
+     * @throws UnauthorizedException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws MethodNotAllowedException
      */
     public function loadSettings($account)
     {
         $account = Account::init($account)->info($this->abbr);
-        
+
         if ($account->info[0]->destinations != null) {
             $this->address = $account->info[0]->destinations[0]->address;
         }
@@ -107,10 +107,10 @@ class Currency extends AbstractModel
 
     /**
      * Cave currency settings to account
-     * 
-     * @param mixed $account 
-     * @param mixed $transferKey 
-     * @return $this 
+     *
+     * @param mixed $account
+     * @param mixed $transferKey
+     * @return $this
      */
     public function saveSettings($account, $transferKey)
     {
@@ -121,8 +121,7 @@ class Currency extends AbstractModel
 
         try {
             Account::init($account, $transferKey)->settings($this->abbr, $options);
-        }
-        catch(Exception $e) {
+        } catch(Exception $e) {
             $exception = json_decode($e->getMessage());
             $this->error = $exception->message;
         }
@@ -132,7 +131,9 @@ class Currency extends AbstractModel
 
     /**
      * Get the value of name
-     */ 
+     *
+     * @return null|string
+     */
     public function getName()
     {
         return $this->name;
@@ -140,7 +141,9 @@ class Currency extends AbstractModel
 
     /**
      * Get the value of abbr
-     */ 
+     *
+     * @return null|string
+     */
     public function getAbbr()
     {
         return $this->abbr;
@@ -148,7 +151,9 @@ class Currency extends AbstractModel
 
     /**
      * Get the value of units
-     */ 
+     *
+     * @return null|string
+     */
     public function getUnits()
     {
         return $this->units;
@@ -156,7 +161,9 @@ class Currency extends AbstractModel
 
     /**
      * Get the value of unitsFactor
-     */ 
+     *
+     * @return null|float
+     */
     public function getUnitsFactor()
     {
         return $this->unitsFactor;
@@ -164,7 +171,9 @@ class Currency extends AbstractModel
 
     /**
      * Get the value of dustRate
-     */ 
+     *
+     * @return null|int
+     */
     public function getDustRate()
     {
         return $this->dustRate;
@@ -172,7 +181,9 @@ class Currency extends AbstractModel
 
     /**
      * Get the currency destination address
-     */ 
+     *
+     * @return null|string
+     */
     public function getAddress()
     {
         return $this->address;
@@ -181,8 +192,8 @@ class Currency extends AbstractModel
     /**
      * Set currency destination address
      *
-     * @param null|string $address 
-     * @return $this 
+     * @param null|string $address
+     * @return $this
      */
     public function setAddress(?string $address = null)
     {
@@ -193,7 +204,9 @@ class Currency extends AbstractModel
 
     /**
      * Get the value of policy
-     */ 
+     *
+     * @return string
+     */
     public function getPolicy()
     {
         return $this->policy;
@@ -202,8 +215,8 @@ class Currency extends AbstractModel
     /**
      * Set the value of policy
      *
-     * @param null|string $policy 
-     * @return $this 
+     * @param null|string $policy
+     * @return $this
      */
     public function setPolicy(?string $policy = null)
     {
@@ -214,16 +227,16 @@ class Currency extends AbstractModel
 
     /**
      * Get the value of error
-     * 
+     *
      * @return null|string
-     */ 
+     */
     public function getError()
     {
         return $this->error;
     }
 
     /**
-     * Is currency have an error
+     * Is currency has an error
      *
      * @return bool
      */

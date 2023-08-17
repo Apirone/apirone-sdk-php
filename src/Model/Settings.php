@@ -34,7 +34,7 @@ class Settings extends AbstractModel
     private ?string $account = null;
 
     /**
-     * Account trasfer key
+     * Account transfer key
      *
      * @var null|string
      */
@@ -84,28 +84,28 @@ class Settings extends AbstractModel
 
     /**
      * Backlink
-     * 
+     *
      * @var string
      */
     private string  $backlink = '';
 
     /**
      * QR Template
-     * 
+     *
      * @var bool
      */
     private bool    $qrOnly = false;
 
     /**
      * Logo
-     * 
+     *
      * @var bool
      */
     private bool    $logo = true;
 
     /**
      * Debug
-     * 
+     *
      * @var bool
      */
     private bool    $debug = false;
@@ -120,24 +120,24 @@ class Settings extends AbstractModel
     /**
      * Class constructor
      *
-     * @return void 
+     * @return void
      */
     private function __construct()
     {
-        $this->extra = new \stdClass;
+        $this->extra = new \stdClass();
     }
 
     /**
      * Create instance
      *
-     * @return static 
-     * @throws RuntimeException 
-     * @throws ValidationFailedException 
-     * @throws UnauthorizedException 
-     * @throws ForbiddenException 
-     * @throws NotFoundException 
-     * @throws MethodNotAllowedException 
-     * @throws ReflectionException 
+     * @return static
+     * @throws RuntimeException
+     * @throws ValidationFailedException
+     * @throws UnauthorizedException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws MethodNotAllowedException
+     * @throws ReflectionException
      */
     public static function init()
     {
@@ -149,16 +149,16 @@ class Settings extends AbstractModel
 
     /**
      * Restore settings from JSON
-     * 
-     * @param mixed $json 
-     * @return static 
-     * @throws ReflectionException 
-     * @throws RuntimeException 
-     * @throws ValidationFailedException 
-     * @throws UnauthorizedException 
-     * @throws ForbiddenException 
-     * @throws NotFoundException 
-     * @throws MethodNotAllowedException 
+     *
+     * @param mixed $json
+     * @return static
+     * @throws ReflectionException
+     * @throws RuntimeException
+     * @throws ValidationFailedException
+     * @throws UnauthorizedException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws MethodNotAllowedException
      */
     public static function fromJson($json)
     {
@@ -175,15 +175,15 @@ class Settings extends AbstractModel
     /**
      * Restore settings from file
      *
-     * @param mixed $abspath 
-     * @return static|null 
-     * @throws ReflectionException 
-     * @throws RuntimeException 
-     * @throws ValidationFailedException 
-     * @throws UnauthorizedException 
-     * @throws ForbiddenException 
-     * @throws NotFoundException 
-     * @throws MethodNotAllowedException 
+     * @param mixed $abspath
+     * @return static|null
+     * @throws ReflectionException
+     * @throws RuntimeException
+     * @throws ValidationFailedException
+     * @throws UnauthorizedException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws MethodNotAllowedException
      */
     public static function fromFile($abspath)
     {
@@ -199,18 +199,19 @@ class Settings extends AbstractModel
     /**
      * Create instance for existing apirone account
      *
-     * @param mixed $account 
-     * @param mixed $transferKey 
-     * @return static 
-     * @throws RuntimeException 
-     * @throws ValidationFailedException 
-     * @throws UnauthorizedException 
-     * @throws ForbiddenException 
-     * @throws NotFoundException 
-     * @throws MethodNotAllowedException 
-     * @throws ReflectionException 
+     * @param mixed $account
+     * @param mixed $transferKey
+     * @return static
+     * @throws RuntimeException
+     * @throws ValidationFailedException
+     * @throws UnauthorizedException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws MethodNotAllowedException
+     * @throws ReflectionException
      */
-    public static function fromExistingAccount($account, $transferKey) {
+    public static function fromExistingAccount($account, $transferKey)
+    {
         $class = new static();
 
         $class->account = $account;
@@ -224,8 +225,8 @@ class Settings extends AbstractModel
      * Save settings to file
      *
      * @param string $abspath
-     * @param string $filename 
-     * @return bool 
+     * @param string $filename
+     * @return bool
      */
     public function toFile($abspath)
     {
@@ -238,13 +239,14 @@ class Settings extends AbstractModel
     /**
      * Convert instance to array
      *
-     * @return array 
+     * @return array
      */
-    public function toArray(): array {
+    public function toArray(): array
+    {
         $data = parent::toArray();
 
         if(empty($data['extra']) && gettype($data['extra']) == 'array') {
-            $data['extra'] = new \stdClass;
+            $data['extra'] = new \stdClass();
         }
 
         return $data;
@@ -252,15 +254,15 @@ class Settings extends AbstractModel
 
     /**
      * Create a new apirone account
-     * 
-     * @param bool $renew 
-     * @return $this 
-     * @throws RuntimeException 
-     * @throws ValidationFailedException 
-     * @throws UnauthorizedException 
-     * @throws ForbiddenException 
-     * @throws NotFoundException 
-     * @throws MethodNotAllowedException 
+     *
+     * @param bool $renew
+     * @return $this
+     * @throws RuntimeException
+     * @throws ValidationFailedException
+     * @throws UnauthorizedException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws MethodNotAllowedException
      */
     public function createAccount($renew = false)
     {
@@ -283,7 +285,7 @@ class Settings extends AbstractModel
     /**
      * Reset settings to default values
      *
-     * @return $this 
+     * @return $this
      */
     public function restoreDefaults()
     {
@@ -300,14 +302,14 @@ class Settings extends AbstractModel
     /**
      * Load currencies from an apirone service
      *
-     * @return array 
-     * @throws RuntimeException 
-     * @throws ValidationFailedException 
-     * @throws UnauthorizedException 
-     * @throws ForbiddenException 
-     * @throws NotFoundException 
-     * @throws MethodNotAllowedException 
-     * @throws ReflectionException 
+     * @return array
+     * @throws RuntimeException
+     * @throws ValidationFailedException
+     * @throws UnauthorizedException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws MethodNotAllowedException
+     * @throws ReflectionException
      */
     public function loadCurrencies()
     {
@@ -334,7 +336,7 @@ class Settings extends AbstractModel
     /**
      * Save currencies into apirone account
      *
-     * @return $this 
+     * @return $this
      */
     public function saveCurrencies()
     {
@@ -347,8 +349,8 @@ class Settings extends AbstractModel
 
     /**
      * Get currency object by it abbreviation
-     * 
-     * @param mixed $abbr 
+     *
+     * @param mixed $abbr
      * @return Currency | false
      */
     public function getCurrency($abbr)
@@ -363,7 +365,7 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of account
-     */ 
+     */
     public function getAccount()
     {
         return $this->account;
@@ -371,7 +373,7 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of transferKey
-     */ 
+     */
     public function getTransferKey()
     {
         return $this->transferKey;
@@ -379,7 +381,7 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of currencies
-     */ 
+     */
     public function getCurrencies()
     {
         return $this->currencies;
@@ -389,7 +391,7 @@ class Settings extends AbstractModel
      * Get invoice title
      *
      * @return  string
-     */ 
+     */
     public function getTitle()
     {
         return $this->title;
@@ -401,7 +403,7 @@ class Settings extends AbstractModel
      * @param  string  $title  Invoice title
      *
      * @return  self
-     */ 
+     */
     public function setTitle(string $title)
     {
         $this->title = $title;
@@ -411,7 +413,7 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of merchant
-     */ 
+     */
     public function getMerchant()
     {
         return $this->merchant;
@@ -421,7 +423,7 @@ class Settings extends AbstractModel
      * Set the value of merchant
      *
      * @return  self
-     */ 
+     */
     public function setMerchant($merchant)
     {
         $this->merchant = $merchant;
@@ -433,7 +435,7 @@ class Settings extends AbstractModel
      * Get merchant Url
      *
      * @return  string
-     */ 
+     */
     public function getMerchantUrl()
     {
         return $this->merchantUrl;
@@ -445,7 +447,7 @@ class Settings extends AbstractModel
      * @param  string  $merchantUrl  Merchant Url
      *
      * @return  self
-     */ 
+     */
     public function setMerchantUrl(string $merchantUrl)
     {
         $this->merchantUrl = $merchantUrl;
@@ -455,7 +457,7 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of timeout
-     */ 
+     */
     public function getTimeout()
     {
         return $this->timeout;
@@ -465,7 +467,7 @@ class Settings extends AbstractModel
      * Set the value of timeout
      *
      * @return  self
-     */ 
+     */
     public function setTimeout($timeout)
     {
         $this->timeout = $timeout;
@@ -475,7 +477,7 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of factor
-     */ 
+     */
     public function getFactor()
     {
         return $this->factor;
@@ -484,13 +486,13 @@ class Settings extends AbstractModel
     /**
      * Set the value of factor
 
-     * If you want to add/substract percent to/from the payment amount, use the following  price adjustment factor 
-     * multiplied by the amount. 
-     * For example: 
+     * If you want to add/subtract percent to/from the payment amount, use the following  price adjustment factor
+     * multiplied by the amount.
+     * For example:
      * 100% * 0.99 = 99%
      * 100% * 1.01 = 101%
      * @return  self
-     */ 
+     */
     public function setFactor($factor)
     {
         $this->factor = $factor;
@@ -500,7 +502,7 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of backlink
-     */ 
+     */
     public function getBacklink()
     {
         return $this->backlink;
@@ -510,7 +512,7 @@ class Settings extends AbstractModel
      * Set the value of backlink
      *
      * @return  self
-     */ 
+     */
     public function setBacklink($backlink)
     {
         $this->backlink = $backlink;
@@ -520,7 +522,7 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of logo
-     */ 
+     */
     public function getLogo(): bool
     {
         return $this->logo;
@@ -530,7 +532,7 @@ class Settings extends AbstractModel
      * Set the value of logo
      *
      * @return  self
-     */ 
+     */
     public function setLogo(bool $logo)
     {
         $this->logo = $logo;
@@ -542,7 +544,7 @@ class Settings extends AbstractModel
      * Get qR Template
      *
      * @return  bool
-     */ 
+     */
     public function getQrOnly()
     {
         return $this->qrOnly;
@@ -554,7 +556,7 @@ class Settings extends AbstractModel
      * @param  bool  $qrOnly  QR Template
      *
      * @return  self
-     */ 
+     */
     public function setQrOnly(bool $qrOnly)
     {
         $this->qrOnly = $qrOnly;
@@ -566,7 +568,7 @@ class Settings extends AbstractModel
      * Get debug
      *
      * @return  bool
-     */ 
+     */
     public function getDebug()
     {
         return $this->debug;
@@ -578,7 +580,7 @@ class Settings extends AbstractModel
      * @param  bool  $debug  Debug
      *
      * @return  self
-     */ 
+     */
     public function setDebug(bool $debug)
     {
         $this->debug = $debug;
@@ -589,15 +591,15 @@ class Settings extends AbstractModel
     /**
      * Get the value of extra
      *
-     * @param string|null $key 
-     * @return mixed 
+     * @param string|null $key
+     * @return mixed
      */
     public function getExtra(string $key = null)
     {
         if ($key == null) {
             return $this->extra;
         }
-        if (property_exists($this->extra, $key)){
+        if (property_exists($this->extra, $key)) {
             return $this->extra->{$key};
         }
         return null;
@@ -607,7 +609,7 @@ class Settings extends AbstractModel
      * Set the value of extra
      *
      * @return  self
-     */ 
+     */
     public function setExtra(string $key, string $value)
     {
         $this->extra->{$key} = $value;
@@ -619,7 +621,7 @@ class Settings extends AbstractModel
      * Set the value of extra
      *
      * @return  self
-     */ 
+     */
     public function setExtraObj(\stdClass $obj)
     {
         $this->extra = $obj;
@@ -630,9 +632,9 @@ class Settings extends AbstractModel
     /**
      * Currencies list parser
      *
-     * @param mixed $json 
-     * @return array 
-     * @throws ReflectionException 
+     * @param mixed $json
+     * @return array
+     * @throws ReflectionException
      */
     public function parseCurrencies($json)
     {

@@ -27,21 +27,23 @@ class UserData extends AbstractModel
     private ?string $url = null;
 
     private ?string $price = null;
-    
+
     private ?string $subPrice = null;
-    
+
     private ?array $items = null;
-    
+
     private ?array $extras = null;
 
-    private function __construct() { }
+    private function __construct()
+    {
+    }
 
     /**
      * Create instance
-     * 
-     * @return static 
+     *
+     * @return static
      */
-    public static function init() 
+    public static function init()
     {
         $class = new static();
 
@@ -50,10 +52,10 @@ class UserData extends AbstractModel
 
     /**
      * Restore instance from JSON
-     * 
-     * @param mixed $json 
-     * @return $this 
-     * @throws ReflectionException 
+     *
+     * @param mixed $json
+     * @return $this
+     * @throws ReflectionException
      */
     public static function fromJson($json)
     {
@@ -64,7 +66,7 @@ class UserData extends AbstractModel
 
     /**
      * Get the value of title
-     */ 
+     */
     public function getTitle()
     {
         return $this->title;
@@ -73,8 +75,8 @@ class UserData extends AbstractModel
     /**
      * Set the title value
      *
-     * @param null|string $title 
-     * @return $this 
+     * @param null|string $title
+     * @return $this
      */
     public function setTitle(?string $title = null)
     {
@@ -85,7 +87,7 @@ class UserData extends AbstractModel
 
     /**
      * Get the value of merchant
-     */ 
+     */
     public function getMerchant()
     {
         return $this->merchant;
@@ -94,8 +96,8 @@ class UserData extends AbstractModel
     /**
      * Set the merchant value
      *
-     * @param null|string $merchant 
-     * @return $this 
+     * @param null|string $merchant
+     * @return $this
      */
     public function setMerchant(?string $merchant = null)
     {
@@ -106,7 +108,7 @@ class UserData extends AbstractModel
 
     /**
      * Get the value of url
-     */ 
+     */
     public function getUrl()
     {
         return $this->url;
@@ -114,9 +116,9 @@ class UserData extends AbstractModel
 
     /**
      * Set the url value
-     * 
-     * @param null|string $url 
-     * @return $this 
+     *
+     * @param null|string $url
+     * @return $this
      */
     public function setUrl(?string $url = null)
     {
@@ -127,7 +129,7 @@ class UserData extends AbstractModel
 
     /**
      * Get the value of price
-     */ 
+     */
     public function getPrice()
     {
         return $this->price;
@@ -135,20 +137,20 @@ class UserData extends AbstractModel
 
     /**
      * Set the price value
-     * 
-     * @param null|string $value 
-     * @return $this 
+     *
+     * @param null|string $value
+     * @return $this
      */
     public function setPrice(?string $value = null)
     {
         $this->price = $value;
-        
+
         return $this;
     }
 
     /**
      * Get the value of subPrice
-     */ 
+     */
     public function getSubPrice()
     {
         return $this->subPrice;
@@ -156,25 +158,25 @@ class UserData extends AbstractModel
 
     /**
      * Set the subPrice value
-     * 
-     * @param null|string $value 
-     * @return $this 
+     *
+     * @param null|string $value
+     * @return $this
      */
     public function setSubPrice(?string $value = null)
     {
         $this->subPrice = $value;
-        
+
         return $this;
     }
 
     /**
      * Add order item
-     * 
-     * @param string $item 
-     * @param string $cost 
-     * @param int $qty 
-     * @param string $total 
-     * @return $this 
+     *
+     * @param string $item
+     * @param string $cost
+     * @param int $qty
+     * @param string $total
+     * @return $this
      */
     public function addOrderItem(string $item, string $cost, int $qty, string $total)
     {
@@ -186,9 +188,9 @@ class UserData extends AbstractModel
     /**
      * Add extra item
      *
-     * @param string $name 
-     * @param string $price 
-     * @return $this 
+     * @param string $name
+     * @param string $price
+     * @return $this
      */
     public function addExtraItem(string $name, string $price)
     {
@@ -200,9 +202,9 @@ class UserData extends AbstractModel
     /**
      * Extras parser
      *
-     * @param mixed $data 
-     * @return array 
-     * @throws ReflectionException 
+     * @param mixed $data
+     * @return array
+     * @throws ReflectionException
      */
     public function parseExtras($data)
     {
@@ -216,10 +218,10 @@ class UserData extends AbstractModel
 
     /**
      * Items parser
-     * 
-     * @param mixed $data 
-     * @return array 
-     * @throws ReflectionException 
+     *
+     * @param mixed $data
+     * @return array
+     * @throws ReflectionException
      */
     public function parseItems($data)
     {
@@ -233,8 +235,8 @@ class UserData extends AbstractModel
 
     /**
      * Convert instance to JSON
-     * 
-     * @return Apirone\SDK\Model\stdClass 
+     *
+     * @return stdClass
      */
     public function toJson(): stdClass
     {
@@ -250,7 +252,9 @@ class UserData extends AbstractModel
 
     /**
      * Get the value of items
-     */ 
+     *
+     * @return null|array
+     */
     public function getItems()
     {
         return $this->items;
@@ -258,7 +262,9 @@ class UserData extends AbstractModel
 
     /**
      * Get the value of extras
-     */ 
+     *
+     * @return null|array
+     */
     public function getExtras()
     {
         return $this->extras;

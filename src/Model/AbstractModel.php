@@ -52,9 +52,9 @@ abstract class AbstractModel
     /**
      * Load class from json data
      *
-     * @param json|stdClass 
-     * @return $this 
-     * @throws ReflectionException 
+     * @param json|stdClass
+     * @return $this
+     * @throws ReflectionException
      */
     protected function classLoader($json)
     {
@@ -71,12 +71,10 @@ abstract class AbstractModel
                     $parser = 'parse' . ucfirst($name);
                     if ($class->hasMethod($parser)) {
                         $property->setValue($this, $this->$parser($value));
-                    }
-                    else {
+                    } else {
                         $property->setValue($this, $value);
                     }
-                }
-                else {
+                } else {
                     $property->setValue($this, $value);
                 }
             }
@@ -112,8 +110,7 @@ abstract class AbstractModel
                 foreach($this->{$prop} as $key => $item) {
                     if(gettype($item) == 'object') {
                         $items[] = (get_class($item) !== 'stdClass') ? $item->toArray() : json_decode(json_encode($item), true);
-                    }
-                    else{
+                    } else {
                         $items[$key] = $item;
                     }
                 }
@@ -126,8 +123,8 @@ abstract class AbstractModel
 
     /**
      * Convert class data to stdClass
-     * 
-     * @return stdClass 
+     *
+     * @return stdClass
      */
     public function toJson(): \stdClass
     {
@@ -139,10 +136,10 @@ abstract class AbstractModel
      * Convert class data to json string
      *
      * @param int $flag - second param for json_encode. For example - JSON_PRETTY_PRINT or 128
-     * @return string 
+     * @return string
      */
     public function toJsonString($flag = 0): string
-    {        
+    {
         return json_encode($this->toArray(), $flag);
     }
 

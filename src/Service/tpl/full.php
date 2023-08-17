@@ -14,7 +14,8 @@ use Apirone\SDK\Service\Utils;
 ?>
 
 <div id="__apn-invoice" class="invoice-wrapper">
-    <div class="invoice<?php echo $loading ? ' loading' : ''; echo $status->title == 'Expired' ? ' invoice-expired' : ''; ?>">
+    <div class="invoice<?php echo $loading ? ' loading' : '';
+echo $status->title == 'Expired' ? ' invoice-expired' : ''; ?>">
         <div class="invoice__body">
             <div class="invoice__info">
                 <div class="qr__wrapper">
@@ -76,7 +77,7 @@ use Apirone\SDK\Service\Utils;
                 <a id="statusUrl" href="<?php echo $statusLink; ?>" style="display: none"></a>
             </div>
             <div>
-                <?php if( $status->title == 'Refresh' ) : ?>
+                <?php if($status->title == 'Refresh') : ?>
                 <div class="address">
                     <div class="address__title"><?php $t("paymentAddress"); ?></div>
                     <p class="skeleton__box">
@@ -92,10 +93,10 @@ use Apirone\SDK\Service\Utils;
                 
                 <?php if(!$loading && $userData) : ?>
                 <?php
-                    $items = $userData->getItems();
+                $items = $userData->getItems();
                     $extras = $userData->getExtras();
                     $itemsCount = count($items);
-                ?>
+                    ?>
                 <div class="invoice-table">
                     <table>
                         <?php if($items) : ?>
@@ -169,7 +170,7 @@ use Apirone\SDK\Service\Utils;
                                 <li>
                                     <?php if ($item->getAmount()) : ?>
                                     <a class="history__item" href="<?php echo Utils::getTransactionLink($currency, $item->getTxid()); ?>" target="_blank">
-                                        <span><?php $d($item->getDate()); ?> <span>(<?php echo Utils::exp2dec($item->getAmount() * $currency->getUnitsFactor() ) ?>)</span></span>
+                                        <span><?php $d($item->getDate()); ?> <span>(<?php echo Utils::exp2dec($item->getAmount() * $currency->getUnitsFactor()) ?>)</span></span>
                                         <span style="text-align: right;"><?php $t($item->getStatus()); ?></span>
                                     </a>
                                     <?php else : ?>

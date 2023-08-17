@@ -1,4 +1,5 @@
 <?php
+
 require_once('helpers/common.php');
 require_once('db.php');
 
@@ -8,7 +9,7 @@ use Apirone\SDK\Service\Render;
 
 // Config & DB
 Invoice::db($db_handler, $table_prefix);
-Invoice::settings( Settings::fromFile('/var/www/storage/settings.json') );
+Invoice::settings(Settings::fromFile('/var/www/storage/settings.json'));
 $invoiceDataUrl = 'render_ajax_response.php';
 
 if (array_key_exists('qr-only', $_GET)) {
@@ -28,6 +29,6 @@ Invoice::dataUrl($invoiceDataUrl);
     <body style="margin: 0;">
         <?php
             echo Invoice::renderLoader();
-        ?>
+?>
     </body>
 </html>

@@ -21,20 +21,20 @@ class InvoiceDb
      *
      * @var false
      */
-    static $handler = false;
-    
+    public static $handler = false;
+
     /**
      * Database table prefix
      *
      * @var false
      */
-    static $prefix = false;
+    public static $prefix = false;
 
     /**
-     * Set database callback function 
+     * Set database callback function
      *
-     * @param mixed $callback 
-     * @return void 
+     * @param mixed $callback
+     * @return void
      */
     public static function setCallback($callback)
     {
@@ -45,8 +45,8 @@ class InvoiceDb
     /**
      * Set database table prefix
      *
-     * @param mixed $prefix 
-     * @return void 
+     * @param mixed $prefix
+     * @return void
      */
     public static function setPrefix($prefix)
     {
@@ -56,9 +56,9 @@ class InvoiceDb
 
     /**
      * Database exec function
-     * 
-     * @param mixed $query 
-     * @return mixed 
+     *
+     * @param mixed $query
+     * @return mixed
      */
     public static function execute($query)
     {
@@ -72,10 +72,10 @@ class InvoiceDb
     /**
      * Install invoice table into database
      *
-     * @param string $prefix 
-     * @param string $charset 
-     * @param string $collate 
-     * @return mixed 
+     * @param string $prefix
+     * @param string $charset
+     * @param string $collate
+     * @return mixed
      */
     public static function install(
         string $prefix = '',
@@ -91,14 +91,14 @@ class InvoiceDb
     /**
      * Uninstall invoice table from database
      *
-     * @param string $prefix 
-     * @return mixed 
+     * @param string $prefix
+     * @return mixed
      */
     public static function uninstall(string $prefix = '')
     {
         $prefix = static::$prefix !== false ? static::$prefix : $prefix;
         $query = InvoiceQuery::dropInvoicesTable($prefix);
-        
+
         return InvoiceDb::execute($query);
     }
 }

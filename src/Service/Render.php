@@ -48,7 +48,7 @@ class Render
      * @var bool
      */
     public static bool $qrOnly = false;
-    
+
     /**
      * Show apirone logo on invoice template
      *
@@ -59,11 +59,11 @@ class Render
     /**
      * Set render options
      *
-     * @param string $dataUrl 
-     * @param bool $qrOnly 
-     * @param bool $logo 
-     * @param string $backlink 
-     * @return void 
+     * @param string $dataUrl
+     * @param bool $qrOnly
+     * @param bool $logo
+     * @param string $backlink
+     * @return void
      */
     public static function init($dataUrl = '', $qrOnly = false, $logo = true, $backlink = '')
     {
@@ -76,29 +76,28 @@ class Render
     /**
      * Set timezone by local timezone to UTC offset
      *
-     * @param int $offset 
-     * @return void 
-     * @throws DivisionByZeroError 
-     * @throws ArithmeticError 
+     * @param int $offset
+     * @return void
+     * @throws DivisionByZeroError
+     * @throws ArithmeticError
      */
     public static function setTimeZoneByOffset(int $offset = 0)
     {
         if ($offset == 0 || abs($offset >= 1140)) {
             $tz = 'UTC';
-        }
-        else {
+        } else {
             $abs = abs($offset);
             $t = sprintf('%02d:%02d', intdiv($abs, 60), fmod($abs, 60));
             $tz = 'GMT' . (($offset < 0) ? '+' : '-') . $t;
         }
         self::$timeZone = $tz;
     }
-    
+
     /**
      * Render invoice html
-     * 
-     * @param Invoice $invoice 
-     * @return string|false 
+     *
+     * @param Invoice $invoice
+     * @return string|false
      */
     public static function show(Invoice $invoice)
     {
@@ -134,12 +133,10 @@ class Render
                     $note = 'notePayment';
                 }
                 $note = ($overpaid) ? 'noteOverpaid' : $note;
-            }
-            else {
+            } else {
                 $amount = null;
             }
-        }
-        else {
+        } else {
             $invoice = $userData = $currency = null;
             $loading = true;
         }
@@ -155,23 +152,23 @@ class Render
     /**
      * Check request headers
      *
-     * @return bool 
+     * @return bool
      */
     public static function isAjaxRequest(): bool
     {
-        return (array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) 
+        return (array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER)
             && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') ? true : false;
     }
 
     /**
      * Return status description by invoice status
      *
-     * @param Invoice $invoice 
-     * @return stdClass 
+     * @param Invoice $invoice
+     * @return stdClass
      */
     private function statusDescription(Invoice $invoice): \stdClass
     {
-        $status = new \stdClass;
+        $status = new \stdClass();
 
         switch ($invoice->status) {
             case 'created':
@@ -181,8 +178,7 @@ class Render
                     $status->title = 'Expired';
                     $status->description = 'paymentExpired';
                     // $status->description = 'statusUpdating';
-                }
-                else {
+                } else {
                     $status->description = 'waitingForPayment';
                 }
                 break;
@@ -215,13 +211,13 @@ class Render
      * @return (
         Closure(mixed $key, bool $echo = true): string|void|
         Closure(mixed $date, bool $echo = true): string|false|void|
-        Closure(mixed $value, string $style = '', bool $echo = true): string|void)[] 
+        Closure(mixed $value, string $style = '', bool $echo = true): string|void)[]
      */
     private static function helpers()
     {
         // Localize callback
         $locales = self::locales();
-        $t = static function($key, $echo = true) use ($locales) {
+        $t = static function ($key, $echo = true) use ($locales) {
             $locale = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
             $locale = array_key_exists($locale, $locales) ? $locale : 'en';
 
@@ -234,8 +230,8 @@ class Render
         };
 
         // Locale date formatter callback
-        $fmt = datefmt_create( substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2), 3, 2, self::$timeZone, 1);
-        $d = static function($date, $echo = true) use ($fmt) {
+        $fmt = datefmt_create(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2), 3, 2, self::$timeZone, 1);
+        $d = static function ($date, $echo = true) use ($fmt) {
             $result = datefmt_format($fmt, new \DateTime($date));
 
             if (!$echo) {
@@ -245,29 +241,29 @@ class Render
         };
 
         // Copy button
-        $c = static function($value, $style = '', $echo = true) {
+        $c = static function ($value, $style = '', $echo = true) {
             $style = ($style) ? 'style="' . $style . '"' : '';
             $tpl = '<button class="btn__copy hovered"%s><input type="hidden" readonly value="%s"></button>';
             $result = sprintf($tpl, $style, $value);
-            
+
             if(!$echo) {
                 return $result;
             }
             echo $result;
         };
 
-        return [$t, $d, $c];    
+        return [$t, $d, $c];
     }
 
     /**
      * Return locales for template
      *
-     * @return string[][] 
+     * @return string[][]
      */
     private static function locales()
     {
         require(__DIR__ . '/tpl/locales.php');
 
-        return $locales;    
+        return $locales;
     }
 }

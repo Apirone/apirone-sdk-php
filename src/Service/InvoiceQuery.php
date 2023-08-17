@@ -16,17 +16,17 @@ use Apirone\SDK\Invoice;
 
 class InvoiceQuery
 {
-    const TABLE_INVOICE = 'apirone_invoice';
+    public const TABLE_INVOICE = 'apirone_invoice';
 
     /**
      * Return create invoice table SQL query
-     * 
-     * @param string $prefix 
-     * @param string $charset 
-     * @param string $collate 
-     * @return string 
+     *
+     * @param string $prefix
+     * @param string $charset
+     * @param string $collate
+     * @return string
      */
-    public static function createInvoicesTable (
+    public static function createInvoicesTable(
         string $prefix = '',
         string $charset = 'utf8',
         string $collate = 'utf8_general_ci'
@@ -34,11 +34,11 @@ class InvoiceQuery
         $table = $prefix . self::TABLE_INVOICE;
 
         $charset_collate = '';
-        if ( ! empty( $charset ) ) {
+        if (! empty($charset)) {
             $charset_collate = "DEFAULT CHARACTER SET $charset";
         }
-        if ( ! empty( $collate ) ) {
-                $charset_collate .= " COLLATE $collate";
+        if (! empty($collate)) {
+            $charset_collate .= " COLLATE $collate";
         }
 
         $query = "CREATE TABLE IF NOT EXISTS `$table` (
@@ -60,10 +60,10 @@ class InvoiceQuery
     /**
      * Return drop invoices table SQL query
      *
-     * @param string $prefix 
-     * @return string 
+     * @param string $prefix
+     * @return string
      */
-    public static function dropInvoicesTable (string $prefix = '')
+    public static function dropInvoicesTable(string $prefix = '')
     {
         $table = $prefix . self::TABLE_INVOICE;
 
@@ -75,11 +75,11 @@ class InvoiceQuery
     /**
      * Return select invoice query by invoice id
      *
-     * @param null|string $invoice 
-     * @param string $prefix 
-     * @return string 
+     * @param null|string $invoice
+     * @param string $prefix
+     * @return string
      */
-    public static function selectInvoice (?string $invoice, string $prefix = '')
+    public static function selectInvoice(?string $invoice, string $prefix = '')
     {
         $table = $prefix . self::TABLE_INVOICE;
 
@@ -89,11 +89,11 @@ class InvoiceQuery
     /**
      * Return select invoices query by order id
      *
-     * @param string $order 
-     * @param string $prefix 
-     * @return string 
+     * @param string $order
+     * @param string $prefix
+     * @return string
      */
-    public static function selectOrder (string $order, string $prefix = '')
+    public static function selectOrder(string $order, string $prefix = '')
     {
         $table = $prefix . self::TABLE_INVOICE;
 
@@ -103,9 +103,9 @@ class InvoiceQuery
     /**
      * Return create invoice query
      *
-     * @param Invoice $invoice 
-     * @param string $prefix 
-     * @return string 
+     * @param Invoice $invoice
+     * @param string $prefix
+     * @return string
      */
     public static function createInvoice(Invoice $invoice, string $prefix = '')
     {
@@ -113,8 +113,8 @@ class InvoiceQuery
 
         $invoice = $invoice->toJson();
 
-        $query = "INSERT INTO `" . $table . "` " . 
-            "SET " . 
+        $query = "INSERT INTO `" . $table . "` " .
+            "SET " .
             "`order` = " . (int) $invoice->order . "," .
             "`invoice` = '" . $invoice->invoice . "', " .
             "`status` = '" . $invoice->status . "', " .
@@ -126,10 +126,10 @@ class InvoiceQuery
 
     /**
      * Return update invoice query
-     * 
-     * @param Invoice $invoice 
-     * @param string $prefix 
-     * @return string 
+     *
+     * @param Invoice $invoice
+     * @param string $prefix
+     * @return string
      */
     public static function updateInvoice(Invoice $invoice, string $prefix = '')
     {
@@ -137,7 +137,7 @@ class InvoiceQuery
 
         $invoice = $invoice->toJson();
 
-        $query = "UPDATE `" . $table . "` " . 
+        $query = "UPDATE `" . $table . "` " .
             "SET " .
             "`status` = '" . $invoice->status . "', " .
             "`details` = '" . json_encode($invoice->details) . "', " .

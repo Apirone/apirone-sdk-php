@@ -1,4 +1,5 @@
 <?php
+
 require_once('../vendor/autoload.php');
 require_once('db.php');
 require_once('log.php');
@@ -11,7 +12,7 @@ InvoiceDb::setPrefix($table_prefix);
 
 
 // Call install method to create table
-InvoiceDb::install(); 
+InvoiceDb::install();
 
 // Call uninstall method to drop table
 // WARNING! All table data will be lost

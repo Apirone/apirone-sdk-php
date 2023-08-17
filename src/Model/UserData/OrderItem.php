@@ -28,11 +28,11 @@ class OrderItem extends AbstractModel
     /**
      * Class constructor
      *
-     * @param null|string $name 
-     * @param null|string $cost 
-     * @param null|int $qty 
-     * @param null|string $total 
-     * @return void 
+     * @param null|string $name
+     * @param null|string $cost
+     * @param null|int $qty
+     * @param null|string $total
+     * @return void
      */
     private function __construct(
         ?string $name = null,
@@ -49,11 +49,11 @@ class OrderItem extends AbstractModel
     /**
      * Create instance
      *
-     * @param string $name 
-     * @param string $cost 
-     * @param int $qty 
-     * @param string $total 
-     * @return static 
+     * @param string $name
+     * @param string $cost
+     * @param int $qty
+     * @param string $total
+     * @return static
      */
     public static function init(string $name, string $cost, int $qty, string $total)
     {
@@ -64,10 +64,10 @@ class OrderItem extends AbstractModel
 
     /**
      * Restore instance from JSON
-     * 
-     * @param mixed $json 
-     * @return $this 
-     * @throws ReflectionException 
+     *
+     * @param mixed $json
+     * @return $this
+     * @throws ReflectionException
      */
     public static function fromJson($json)
     {
@@ -79,7 +79,7 @@ class OrderItem extends AbstractModel
     /**
      * Convert instance to string
      *
-     * @return string 
+     * @return string
      */
     public function toString()
     {
@@ -88,7 +88,7 @@ class OrderItem extends AbstractModel
 
     /**
      * Get the value of name
-     */ 
+     */
     public function getName()
     {
         return $this->name;
@@ -98,7 +98,7 @@ class OrderItem extends AbstractModel
      * Set the value of name
      *
      * @return  self
-     */ 
+     */
     public function setName($name)
     {
         $this->name = $name;
@@ -108,7 +108,7 @@ class OrderItem extends AbstractModel
 
     /**
      * Get the value of cost
-     */ 
+     */
     public function getCost()
     {
         return $this->cost;
@@ -118,7 +118,7 @@ class OrderItem extends AbstractModel
      * Set the value of cost
      *
      * @return  self
-     */ 
+     */
     public function setCost($cost)
     {
         $this->cost = $cost;
@@ -128,7 +128,9 @@ class OrderItem extends AbstractModel
 
     /**
      * Get the value of qty
-     */ 
+     *
+     * @return null|int
+     */
     public function getQty()
     {
         return $this->qty;
@@ -138,7 +140,7 @@ class OrderItem extends AbstractModel
      * Set the value of qty
      *
      * @return  self
-     */ 
+     */
     public function setQty($qty)
     {
         $this->qty = $qty;
@@ -148,7 +150,9 @@ class OrderItem extends AbstractModel
 
     /**
      * Get the value of total
-     */ 
+     *
+     * @return null|string
+     */
     public function getTotal()
     {
         return $this->total;
@@ -158,7 +162,7 @@ class OrderItem extends AbstractModel
      * Set the value of total
      *
      * @return  self
-     */ 
+     */
     public function setTotal($total)
     {
         $this->total = $total;

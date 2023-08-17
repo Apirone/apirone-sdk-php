@@ -1,4 +1,5 @@
 <?php
+
 require_once('/var/www/vendor/autoload.php');
 
 /**
@@ -13,8 +14,7 @@ if (!function_exists('pa')) {
         echo '<pre>';
         if (gettype($mixed) == 'boolean') {
             print_r($mixed ? 'true' : 'false');
-        }
-        else {
+        } else {
             print_r(!is_null($mixed) ? $mixed : 'NULL');
         }
         echo '</pre>';

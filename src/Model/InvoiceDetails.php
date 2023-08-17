@@ -29,48 +29,72 @@ use ReflectionException;
 
 class InvoiceDetails extends AbstractModel
 {
-
     /**
      * @var null|string Account Identifier
      */
     private ?string $account;
 
-    // invoice	string	Invoice Identifier
+    /**
+     * @var	null|string	Invoice Identifier
+     */
     private ?string $invoice;
 
-    // created	string	Invoice creation date. Contains the full date in ISO-8601 format, for example, 2022-02-22T09:00:30
+    /**
+     *
+     * @var null|string Invoice creation date. Contains the full date in ISO-8601 format, for example, 2022-02-22T09:00:30
+     */
     private ?string $created;
 
-    // currency	string	Currency type
+    /**
+     * @var null|string Currency type
+     */
     private ?string $currency;
 
-    // address	string	The generated cryptocurrency address to receive a payment from a customer
+    /**
+     * @var null|string The generated cryptocurrency address to receive a payment from a customer
+     */
     private ?string $address;
 
-    // expire	string	Invoice expiration time in ISO-8601 format, for example, 2022-02-22T09:00:30
+    /**
+     * @var null|string Invoice expiration time in ISO-8601 format, for example, 2022-02-22T09:00:30
+     */
     private ?string $expire;
 
-    // amount	integer	Amount in the selected currency
+    /**
+     * @var null|int Amount in the selected currency
+     */
     private ?int $amount;
 
-    // user-data	object	Some additional information about the invoice
+    /**
+     * @var null|UserData Some additional information about the invoice
+     */
     private ?UserData $userData = null;
 
-    // status	string	Invoice status. More information see here
+    /**
+     * @var null|string Invoice status
+     */
     private ?string $status;
 
-    // history	array	Invoice status change history
+    /**
+     * @var null|array Invoice status change history
+     */
     private ?array $history = null;
 
-    // linkback	string	The customer will be redirected to this URL after the payment is completed
+    /**
+     * @var null|string The customer will be redirected to this URL after the payment is completed
+     */
     private ?string $linkback = null;
 
-    // callback-url	string	Callback URL to receive data about the payment
+    /**
+     * @var null|string Callback URL to receive data about the payment
+     */
     private ?string $callbackUrl = null;
 
-    // invoice-url	string	Link to the invoice web view
+    /**
+     * @var null|string Link to the invoice web view
+     */
     private ?string $invoiceUrl = null;
-    
+
     private function __construct()
     {
     }
@@ -78,9 +102,9 @@ class InvoiceDetails extends AbstractModel
     /**
      * Create a new instance
      *
-     * @return static 
+     * @return static
      */
-    public static function init() 
+    public static function init()
     {
         $class = new static();
 
@@ -90,9 +114,9 @@ class InvoiceDetails extends AbstractModel
     /**
      * Restore instance from JSON
      *
-     * @param mixed $json 
-     * @return $this 
-     * @throws ReflectionException 
+     * @param mixed $json
+     * @return $this
+     * @throws ReflectionException
      */
     public static function fromJson($json)
     {
@@ -104,28 +128,28 @@ class InvoiceDetails extends AbstractModel
     /**
      * Get invoice info from apirone and create instance from it
      *
-     * @return $this 
-     * @throws RuntimeException 
-     * @throws ValidationFailedException 
-     * @throws UnauthorizedException 
-     * @throws ForbiddenException 
-     * @throws NotFoundException 
-     * @throws MethodNotAllowedException 
-     * @throws ReflectionException 
+     * @return $this
+     * @throws RuntimeException
+     * @throws ValidationFailedException
+     * @throws UnauthorizedException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws MethodNotAllowedException
+     * @throws ReflectionException
      */
     public function update()
     {
         $json = Account::init($this->account)->invoiceInfo($this->invoice);
-        
+
         return $this->classLoader($json);
     }
 
     /**
      * Invoice UserData parser
      *
-     * @param mixed $data 
-     * @return UserData 
-     * @throws ReflectionException 
+     * @param mixed $data
+     * @return UserData
+     * @throws ReflectionException
      */
     protected function parseUserData($data)
     {
@@ -137,9 +161,9 @@ class InvoiceDetails extends AbstractModel
     /**
      * Invoice history data parser
      *
-     * @param mixed $data 
-     * @return array 
-     * @throws ReflectionException 
+     * @param mixed $data
+     * @return array
+     * @throws ReflectionException
      */
     protected function parseHistory($data)
     {
@@ -154,8 +178,8 @@ class InvoiceDetails extends AbstractModel
     /**
      * Return invoice public or private invoice info
      *
-     * @param bool $private 
-     * @return Apirone\SDK\Model\stdClass 
+     * @param bool $private
+     * @return Apirone\SDK\Model\stdClass
      */
     public function info($private = false)
     {
@@ -175,17 +199,9 @@ class InvoiceDetails extends AbstractModel
         return $info;
     }
 
-    // /**
-    //  * Get the value of created
-    //  */ 
-    // public function getCreated()
-    // {
-    //     return $this->created;
-    // }
-
     /**
      * Get the value of currency
-     */ 
+     */
     public function getCurrency()
     {
         return $this->currency;
@@ -193,7 +209,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of address
-     */ 
+     */
     public function getAddress()
     {
         return $this->address;
@@ -201,7 +217,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of expire
-     */ 
+     */
     public function getExpire()
     {
         return $this->expire;
@@ -209,7 +225,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of amount
-     */ 
+     */
     public function getAmount()
     {
         return $this->amount;
@@ -217,7 +233,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of userData
-     */ 
+     */
     public function getUserData()
     {
         return $this->userData;
@@ -225,7 +241,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of status
-     */ 
+     */
     public function getStatus()
     {
         return $this->status;
@@ -233,7 +249,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of history
-     */ 
+     */
     public function getHistory()
     {
         return $this->history;
@@ -241,7 +257,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of linkback
-     */ 
+     */
     public function getLinkback()
     {
         return $this->linkback;
@@ -249,7 +265,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of callbackUrl
-     */ 
+     */
     public function getCallbackUrl()
     {
         return $this->callbackUrl;
@@ -257,7 +273,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of invoiceUrl
-     */ 
+     */
     public function getInvoiceUrl()
     {
         return $this->invoiceUrl;
@@ -266,19 +282,17 @@ class InvoiceDetails extends AbstractModel
     /**
      * Is invoice expired
      *
-     * @return bool 
+     * @return bool
      */
     public function isExpired(): bool
     {
-        // if ($this->expire == null) {
-        //     return false;
-        // }
         if ($this->expire == null || strtotime($this->expire) > time()) {
             return false;
         }
 
         return true;
     }
+
     /**
      * Returns the number of seconds until an invoice expires
      * If the invoice is expired returns -1
@@ -292,19 +306,20 @@ class InvoiceDetails extends AbstractModel
         }
         $expire = strtotime($this->expire);
         $now = time();
-        
+
         return ($expire > $now) ? $expire - $now : -1;
     }
 
     /**
      * Show linkback if set and invoice status is success
      *
-     * @return bool 
+     * @return bool
      */
     public function showLinkback()
     {
-        if ($this->linkback && $this->status == 'success')
+        if ($this->linkback && $this->status == 'success') {
             return true;
+        }
 
         return false;
     }
@@ -313,9 +328,10 @@ class InvoiceDetails extends AbstractModel
      * Return count of history items.
      * In case when invoice completed or expired return zero value
      *
-     * @return int|int<0, max> 
+     * @return int|int<0, max>
      */
-    public function statusNum() {
+    public function statusNum()
+    {
         switch ($this->status) {
             case 'completed':
             case 'expired':

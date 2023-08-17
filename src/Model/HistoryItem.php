@@ -32,13 +32,13 @@ class HistoryItem extends AbstractModel
     private function __construct()
     {
     }
-    
+
     /**
      * Restore object from JSON
      *
-     * @param mixed $json 
-     * @return $this 
-     * @throws ReflectionException 
+     * @param mixed $json
+     * @return $this
+     * @throws ReflectionException
      */
     public static function fromJson($json)
     {
@@ -50,7 +50,7 @@ class HistoryItem extends AbstractModel
     /**
      * Convert object to array
      *
-     * @return array 
+     * @return array
      */
     public function toArray(): array
     {
@@ -66,7 +66,7 @@ class HistoryItem extends AbstractModel
 
     /**
      * Get the value of date
-     */ 
+     */
     public function getDate()
     {
         return $this->date;
@@ -74,7 +74,7 @@ class HistoryItem extends AbstractModel
 
     /**
      * Get the value of status
-     */ 
+     */
     public function getStatus()
     {
         return $this->status;
@@ -82,7 +82,7 @@ class HistoryItem extends AbstractModel
 
     /**
      * Get the value of txid
-     */ 
+     */
     public function getTxid()
     {
         return $this->txid;
@@ -90,7 +90,7 @@ class HistoryItem extends AbstractModel
 
     /**
      * Get the value of amount
-     */ 
+     */
     public function getAmount()
     {
         return $this->amount;
