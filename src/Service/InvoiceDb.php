@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Apirone\SDK\Service;
 
+use Apirone\API\Log\LoggerWrapper;
 use Apirone\SDK\Service\InvoiceQuery;
 
 class InvoiceDb
@@ -66,7 +67,12 @@ class InvoiceDb
             return false;
         }
 
-        return call_user_func(self::$handler, $query);
+        $result = call_user_func(self::$handler, $query);
+        if (LoggerWrapper::$handler) {
+            LoggerWrapper::debug("InvoiceDB::execute", ['query' => $query, 'result' => $result]);
+        }
+
+        return $result;
     }
 
     /**
