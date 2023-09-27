@@ -19,6 +19,7 @@ use Apirone\API\Exceptions\UnauthorizedException;
 use Apirone\API\Exceptions\ForbiddenException;
 use Apirone\API\Exceptions\NotFoundException;
 use Apirone\API\Exceptions\MethodNotAllowedException;
+use Apirone\API\Log\LoggerWrapper;
 use Apirone\SDK\Model\AbstractModel;
 use Exception;
 use ReflectionException;
@@ -119,11 +120,11 @@ class Currency extends AbstractModel
         $options['destinations'] = ($this->address !== null) ? [['address' => $this->address]] : null;
         $options['processing-fee-policy'] = $this->policy;
 
+        $this->error = null;
         try {
             Account::init($account, $transferKey)->settings($this->abbr, $options);
         } catch(Exception $e) {
-            $exception = json_decode($e->getMessage());
-            $this->error = $exception->message;
+            $this->error = $e->getMessage();
         }
 
         return $this;
@@ -197,7 +198,7 @@ class Currency extends AbstractModel
      */
     public function setAddress(?string $address = null)
     {
-        $this->address = $address;
+        $this->address = empty($address) ? null : trim($address);
 
         return $this;
     }

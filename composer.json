@@ -14,6 +14,11 @@
             "email": "alex.zaytseff@gmail.com"
         }
     ],
+    "config": {
+        "preferred-install": {
+            "apirone/apirone-api-php": "dist"
+        }
+    },
     "minimum-stability": "RC",
     "require": {
         "apirone/apirone-api-php": "^1.0@RC"

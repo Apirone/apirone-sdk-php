@@ -22,6 +22,13 @@ use stdClass;
 class Render
 {
     /**
+     * Invoice id param name
+     *
+     * @var string
+     */
+    public static string $idParam = 'invoice';
+
+    /**
      * Invoice data url for ajax request
      *
      * @var string
@@ -83,7 +90,7 @@ class Render
      */
     public static function setTimeZoneByOffset(int $offset = 0)
     {
-        if ($offset == 0 || abs($offset >= 1140)) {
+        if ($offset == 0 || abs($offset) >= 1140) {
             $tz = 'UTC';
         } else {
             $abs = abs($offset);
@@ -107,6 +114,7 @@ class Render
         $status = self::statusDescription($invoice);
         $statusLink = self::$dataUrl ? self::$dataUrl : '/';
         $backlink = Invoice::$settings->getBacklink();
+        $logo = Invoice::$settings->getLogo();
         $template = !self::$qrOnly ? 'full' : 'qr-only';
         $note = null;
 
@@ -166,7 +174,7 @@ class Render
      * @param Invoice $invoice
      * @return stdClass
      */
-    private function statusDescription(Invoice $invoice): \stdClass
+    private static function statusDescription(Invoice $invoice): \stdClass
     {
         $status = new \stdClass();
 

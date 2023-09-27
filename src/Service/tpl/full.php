@@ -14,8 +14,7 @@ use Apirone\SDK\Service\Utils;
 ?>
 
 <div id="__apn-invoice" class="invoice-wrapper">
-    <div class="invoice<?php echo $loading ? ' loading' : '';
-echo $status->title == 'Expired' ? ' invoice-expired' : ''; ?>">
+    <div class="invoice<?php echo $loading ? ' loading' : ''; echo $status->title == 'Expired' ? ' invoice-expired' : ''; ?>">
         <div class="invoice__body">
             <div class="invoice__info">
                 <div class="qr__wrapper">
@@ -65,8 +64,9 @@ echo $status->title == 'Expired' ? ' invoice-expired' : ''; ?>">
                     <?php if ($invoice->status == 'partpaid') : ?>
                         <small><?php $t("remainsToPay"); ?> <br></small>
                     <?php endif; ?>
-                    <?php if($invoice && $amount && $invoice->status !== 'expired') : ?>
-                        <?php $c($amount, 'margin-right: .5rem;'); ?>
+                    <?php // if($invoice && $amount && $invoice->status !== 'expired') : ?>
+                    <?php if($invoice && $amount) : ?>
+                        <?php $amount = ($invoice->status !== 'expired')? $c($amount, 'margin-right: .5rem;') : $amount; ?>
                         <span><?php echo $amount . ' ' . strtoupper($invoice->currency); ?></span>
                     <?php endif; ?>
                     </p>
@@ -95,11 +95,11 @@ echo $status->title == 'Expired' ? ' invoice-expired' : ''; ?>">
                 <?php
                 $items = $userData->getItems();
                     $extras = $userData->getExtras();
-                    $itemsCount = count($items);
+                    // $itemsCount = count($items);
                     ?>
                 <div class="invoice-table">
                     <table>
-                        <?php if($items) : ?>
+                        <?php if($items && $items !== null) : ?>
                         <thead>
                         <tr>
                             <th>#</th>
@@ -129,20 +129,22 @@ echo $status->title == 'Expired' ? ' invoice-expired' : ''; ?>">
                         <span><?php echo $userData->subPrice ?></span>
                     </div>
                 <?php endif; ?>
-                <?php foreach($extras as $item) : ?>
+                <?php if ($extras) : ?>
+                    <?php foreach($extras as $item) : ?>
                     <div>
                         <strong><?php echo $item->name ?? '' ;?></strong>
                         <span><?php echo $item->price ?? '' ;?></span>
                     </div>
-                <?php endforeach; ?>
-                    <?php if ($userData->price) : ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <?php if ($userData->price) : ?>
                     <div>
                         <strong><?php $t('total') ?>:</strong>
                         <span>
                         <strong><?php echo $userData->price ?? '' ;?></strong>
                         </span>
                     </div>
-                    <?php endif; ?>
+                <?php endif; ?>
                 </div>
                 <?php endif; ?>
                 <div class="status-data__wrapper">
@@ -205,7 +207,7 @@ echo $status->title == 'Expired' ? ' invoice-expired' : ''; ?>">
                         <?php echo sprintf($t('backlink', false), $backlink); ?>
                     </p>
                     <?php endif; ?>
-                    <?php if (self::$logo) : ?>
+                    <?php if ($logo) : ?>
                     <p> Powered by <a href="https://apirone.com/" title="Apirone" class="link hovered logo"></a></p>
                     <?php endif; ?>
                 </div>

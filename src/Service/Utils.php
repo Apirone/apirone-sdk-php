@@ -22,6 +22,8 @@ use Apirone\API\Exceptions\MethodNotAllowedException;
 
 class Utils
 {
+    const FROM = '?from=apirone';
+
     /**
      * Get apirone currency by abbreviation
      *
@@ -54,10 +56,10 @@ class Utils
     public static function getTransactionLink($currency, $transaction = '')
     {
         if ($currency->abbr == 'tbtc') {
-            return 'https://blockchair.com/bitcoin/testnet/transaction/' . $transaction;
+            return 'https://blockchair.com/bitcoin/testnet/transaction/' . $transaction . static::FROM;
         }
 
-        return sprintf('https://blockchair.com/%s/transactions/', strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $currency->name))) . $transaction;
+        return sprintf('https://blockchair.com/%s/transactions/', strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $currency->name))) . $transaction . static::FROM;
     }
 
     /**
@@ -69,10 +71,10 @@ class Utils
     public static function getAddressLink($currency, $address = '')
     {
         if ($currency->abbr == 'tbtc') {
-            return 'https://blockchair.com/bitcoin/testnet/address/' . $address;
+            return 'https://blockchair.com/bitcoin/testnet/address/' . $address . static::FROM;
         }
 
-        return sprintf('https://blockchair.com/%s/address/', strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $currency->name))) . $address;
+        return sprintf('https://blockchair.com/%s/address/', strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $currency->name))) . $address . static::FROM;
     }
 
     /**
@@ -152,25 +154,7 @@ class Utils
      */
     public static function fiat2crypto($value, $from, $to)
     {
-        $from = trim(strtolower($from));
-        $to = trim(strtolower($to));
-        if ($from == $to) {
-            return $value;
-        }
-
-        $endpoint = '/v1/to' . $to;
-        $params = array(
-            'currency' => $from,
-            'value' => $value
-        );
-        $result = Request::execute('get', $endpoint, $params);
-
-        if (Request::isResponseError($result)) {
-            Log::debug($result);
-            return false;
-        } else {
-            return (float) $result;
-        }
+        return Service::fiat2crypto($value, $from, $to);
     }
 
     /**
