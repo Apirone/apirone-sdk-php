@@ -508,16 +508,12 @@ class Invoice extends AbstractModel
      * @throws NotFoundException
      * @throws MethodNotAllowedException
      */
-    public static function renderLoader(?string $invoice_id = null)
+    public static function renderLoader(?Invoice $invoice = null)
     {
         if(Render::isAjaxRequest()) {
-            Invoice::renderLoader();
-            return;
+            return Invoice::renderAjax();
         }
 
-        $id = ($invoice_id === null && array_key_exists('invoice', $_GET)) ? Utils::sanitize($_GET['invoice']) : $invoice_id;
-        $invoice = Invoice::getInvoice($id);
-        $invoice->update();
         return Render::show($invoice);
     }
 
@@ -543,7 +539,7 @@ class Invoice extends AbstractModel
                     Render::setTimeZoneByOffset($offset);
                     echo $invoice->render();
                 } else {
-                    echo $invoice->details->statusNum();
+                    echo $invoice->id ? $invoice->details->statusNum() : 0;
                 }
             }
             exit;

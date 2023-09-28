@@ -106,11 +106,18 @@ class Render
      * @param Invoice $invoice
      * @return string|false
      */
-    public static function show(Invoice $invoice)
+    public static function show(?Invoice $invoice = null)
     {
-        $show = ($invoice->invoice) ? true : false;
+        if($invoice instanceof Invoice && $invoice->id !== null) {
+            $show = true;
+            $id = $invoice->invoice;
+        }
+        else {
+            $show = false;
+            $id = array_key_exists(Render::$idParam, $_GET) ? Utils::sanitize($_GET[Render::$idParam]) : '';
+        }
         $loading  = !$show;
-        $id = $invoice->invoice;
+
         $status = self::statusDescription($invoice);
         $statusLink = self::$dataUrl ? self::$dataUrl : '/';
         $backlink = Invoice::$settings->getBacklink();
@@ -174,9 +181,15 @@ class Render
      * @param Invoice $invoice
      * @return stdClass
      */
-    private static function statusDescription(Invoice $invoice): \stdClass
+    private static function statusDescription(?Invoice $invoice = null): \stdClass
     {
         $status = new \stdClass();
+        $status->title = 'Loading';
+        $status->description = '';
+
+        if ($invoice == null) {
+            return $status;
+        }
 
         switch ($invoice->status) {
             case 'created':
@@ -185,7 +198,6 @@ class Render
                 if ($invoice->details->expire !== null && strtotime($invoice->details->expire) <= time()) {
                     $status->title = 'Expired';
                     $status->description = 'paymentExpired';
-                    // $status->description = 'statusUpdating';
                 } else {
                     $status->description = 'waitingForPayment';
                 }
@@ -200,13 +212,9 @@ class Render
                 $status->title = 'Expired';
                 $status->description = 'paymentExpired';
                 break;
-            case null:
+            default:
                 $status->title = 'Warning';
                 $status->description = 'invalidInvoiceId';
-                break;
-            default:
-                $status->title = 'Loading';
-                $status->description = '';
                 break;
         }
 

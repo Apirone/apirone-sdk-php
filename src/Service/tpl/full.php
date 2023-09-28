@@ -77,7 +77,7 @@ use Apirone\SDK\Service\Utils;
                 <a id="statusUrl" href="<?php echo $statusLink; ?>" style="display: none"></a>
             </div>
             <div>
-                <?php if($status->title == 'Refresh') : ?>
+                <?php if($status->title == 'Refresh' || $status->title == 'Warning') : ?>
                 <div class="address">
                     <div class="address__title"><?php $t("paymentAddress"); ?></div>
                     <p class="skeleton__box">
