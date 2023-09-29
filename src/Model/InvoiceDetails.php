@@ -139,6 +139,9 @@ class InvoiceDetails extends AbstractModel
      */
     public function update()
     {
+        if ($this->isExpired() && $this->status == 'expired') {
+            return $this;
+        }
         $json = Account::init($this->account)->invoiceInfo($this->invoice);
 
         return $this->classLoader($json);
@@ -286,6 +289,9 @@ class InvoiceDetails extends AbstractModel
      */
     public function isExpired(): bool
     {
+        if ($this->status == 'expired') {
+            return true;
+        }
         if ($this->expire == null || strtotime($this->expire) > time()) {
             return false;
         }

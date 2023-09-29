@@ -10,7 +10,6 @@
  */
 
 use Apirone\SDK\Service\Utils;
-
 ?>
 
 <div id="__apn-invoice" class="invoice-wrapper">
@@ -64,9 +63,8 @@ use Apirone\SDK\Service\Utils;
                     <?php if ($invoice->status == 'partpaid') : ?>
                         <small><?php $t("remainsToPay"); ?> <br></small>
                     <?php endif; ?>
-                    <?php // if($invoice && $amount && $invoice->status !== 'expired') : ?>
                     <?php if($invoice && $amount) : ?>
-                        <?php $amount = ($invoice->status !== 'expired')? $c($amount, 'margin-right: .5rem;') : $amount; ?>
+                        <?php $amount = (!$invoice->isExpired())? $c($amount, 'margin-right: .5rem;') : $amount; ?>
                         <span><?php echo $amount . ' ' . strtoupper($invoice->currency); ?></span>
                     <?php endif; ?>
                     </p>
@@ -157,7 +155,9 @@ use Apirone\SDK\Service\Utils;
                                 <?php endif; ?>
                             </div>
                             <div class="status__text">
+                                <?php if($status->description) : ?>
                                 <p><?php $t($status->description); ?></p>
+                                <?php endif; ?>
                                 <?php if($invoice && $invoice->countdown() > 0) : ?>
                                 <input type="hidden" id = "expire" value="<?php echo $invoice->countdown(); ?>">
                                 <p id="countdown" class="countdown"></p>

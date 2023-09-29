@@ -92,7 +92,8 @@ class Render
     {
         if ($offset == 0 || abs($offset) >= 1140) {
             $tz = 'UTC';
-        } else {
+        }
+        else {
             $abs = abs($offset);
             $t = sprintf('%02d:%02d', intdiv($abs, 60), fmod($abs, 60));
             $tz = 'GMT' . (($offset < 0) ? '+' : '-') . $t;
@@ -111,6 +112,7 @@ class Render
         if($invoice instanceof Invoice && $invoice->id !== null) {
             $show = true;
             $id = $invoice->invoice;
+            $invoice->update();
         }
         else {
             $show = false;
@@ -124,6 +126,7 @@ class Render
         $logo = Invoice::$settings->getLogo();
         $template = !self::$qrOnly ? 'full' : 'qr-only';
         $note = null;
+        $amount = null;
 
         if ($show) {
             $invoice = $invoice->details;
@@ -144,14 +147,13 @@ class Render
                 $amount = ($remains <= 0) ? $invoice->amount : $remains;
                 $amount = Utils::exp2dec($amount * $currency->getUnitsFactor());
 
-                if ($invoice->status == 'created' || $invoice->status == 'partpaid') {
+                if (($invoice->status == 'created' || $invoice->status == 'partpaid') && !$invoice->isExpired()) {
                     $note = 'notePayment';
                 }
                 $note = ($overpaid) ? 'noteOverpaid' : $note;
-            } else {
-                $amount = null;
             }
-        } else {
+        } 
+        else {
             $invoice = $userData = $currency = null;
             $loading = true;
         }
@@ -198,7 +200,8 @@ class Render
                 if ($invoice->details->expire !== null && strtotime($invoice->details->expire) <= time()) {
                     $status->title = 'Expired';
                     $status->description = 'paymentExpired';
-                } else {
+                } 
+                else {
                     $status->description = 'waitingForPayment';
                 }
                 break;
@@ -234,10 +237,15 @@ class Render
         // Localize callback
         $locales = self::locales();
         $t = static function ($key, $echo = true) use ($locales) {
-            $locale = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
-            $locale = array_key_exists($locale, $locales) ? $locale : 'en';
+            if(empty($key)) {
+                $result = '';
+            }
+            else {
+                $locale = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+                $locale = array_key_exists($locale, $locales) ? $locale : 'en';
 
-            $result = array_key_exists($key, $locales[$locale]) ? $locales[$locale][$key] : $locales['en'][$key];
+                $result = array_key_exists($key, $locales[$locale]) ? $locales[$locale][$key] : $locales['en'][$key];
+            }
 
             if (!$echo) {
                 return $result;
