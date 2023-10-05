@@ -282,9 +282,10 @@ class Invoice extends AbstractModel
             return;
         }
 
-        $invoice->update();
-        if($order_handler !== null) {
-            $order_handler($invoice);
+        if ($invoice->update()) {
+            if ($order_handler !== null) {
+                $order_handler($invoice);
+            }
         }
         exit;
     }
