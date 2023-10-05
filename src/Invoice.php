@@ -257,26 +257,31 @@ class Invoice extends AbstractModel
         $params = ($data) ? json_decode(Utils::sanitize($data)) : null;
 
         if (!$params) {
+            $message = 'Data not received';
+            LoggerWrapper::debug($message);
             Utils::send_json('Data not received', 400);
             return;
         }
 
         if (!property_exists($params, 'invoice') || !property_exists($params, 'status')) {
+            $message = 'Wrong params received: ' . json_encode($params);
+            LoggerWrapper::debug($message);
             Utils::send_json('Wrong params received: ' . json_encode($params), 400);
             return;
         }
 
         $invoice = Invoice::getInvoice($params->invoice);
 
-        if (!$invoice) {
-            Utils::send_json("Invoice not found: " . $params->invoice, 404);
+        if (!$invoice->invoice) {
+            $message = "Invoice not found: " . $params->invoice;
+            LoggerWrapper::debug($message);
+            Utils::send_json($message, 404);
             return;
         }
 
-        if($invoice->update()) {
-            if($order_handler !== null) {
-                $order_handler($invoice);
-            }
+        $invoice->update();
+        if($order_handler !== null) {
+            $order_handler($invoice);
         }
         exit;
     }

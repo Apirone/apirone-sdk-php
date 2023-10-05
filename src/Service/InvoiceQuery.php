@@ -93,7 +93,7 @@ class InvoiceQuery
      * @param string $prefix
      * @return string
      */
-    public static function selectOrder(string $order, string $prefix = '')
+    public static function selectOrder(int $order, string $prefix = '')
     {
         $table = $prefix . self::TABLE_INVOICE;
 

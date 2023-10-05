@@ -11,3 +11,4 @@ src/*.json
 !src/Utils.php
 !src/Render.php
 examples/assets
+.php-cs-fixer.cache
