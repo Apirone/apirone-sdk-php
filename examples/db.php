@@ -1,6 +1,14 @@
 <?php
 
-// DB settings
+/**
+ * This file is part of the Apirone SDK.
+ *
+ * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 $host         = 'db';
 $user         = 'root';
 $pass         = 'apirone';
@@ -25,5 +33,6 @@ $db_handler = static function ($query) {
     if (gettype($result) == 'boolean') {
         return $result;
     }
+
     return $result->fetch_all(MYSQLI_ASSOC);
 };

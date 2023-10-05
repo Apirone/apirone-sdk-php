@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Apirone SDK.
  *
@@ -34,9 +35,7 @@ class UserData extends AbstractModel
 
     private ?array $extras = null;
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * Create instance
@@ -247,6 +246,7 @@ class UserData extends AbstractModel
                 unset($json->$key);
             }
         }
+
         return $json;
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Apirone SDK.
  *
@@ -22,7 +23,7 @@ use Apirone\API\Exceptions\MethodNotAllowedException;
 
 class Utils
 {
-    const FROM = '?from=apirone';
+    public const FROM = '?from=apirone';
 
     /**
      * Get apirone currency by abbreviation
@@ -200,6 +201,7 @@ class Utils
         if ($found) {
             $string = trim(preg_replace('/ +/', ' ', $string));
         }
+
         return $string;
     }
 

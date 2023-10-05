@@ -27,8 +27,6 @@ Invoice::dataUrl($invoiceDataUrl);
         <link href="/assets/css/styles.css" rel="stylesheet">
     </head>
     <body style="margin: 0;">
-        <?php
-            echo Invoice::renderLoader();
-        ?>
+        <?php echo Invoice::renderLoader(); ?>
     </body>
 </html>

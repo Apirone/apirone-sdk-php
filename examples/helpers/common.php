@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the Apirone SDK.
+ *
+ * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 require_once('/var/www/vendor/autoload.php');
 
 /**
@@ -14,7 +23,8 @@ if (!function_exists('pa')) {
         echo '<pre>';
         if (gettype($mixed) == 'boolean') {
             print_r($mixed ? 'true' : 'false');
-        } else {
+        }
+        else {
             print_r(!is_null($mixed) ? $mixed : 'NULL');
         }
         echo '</pre>';

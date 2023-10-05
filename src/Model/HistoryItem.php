@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Apirone SDK.
  *
@@ -29,9 +30,7 @@ class HistoryItem extends AbstractModel
     // amount	integer	Paid amount
     private ?int $amount = null;
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * Restore object from JSON

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Apirone SDK.
  *
@@ -152,14 +153,14 @@ class Render
                 }
                 $note = ($overpaid) ? 'noteOverpaid' : $note;
             }
-        } 
+        }
         else {
             $invoice = $userData = $currency = null;
             $loading = true;
         }
 
         // Draw output:
-        list($t, $d, $c) = self::helpers(); // translate, date, copy
+        [$t, $d, $c] = self::helpers(); // translate, date, copy
         ob_start();
         include(__DIR__ . '/tpl/' . $template . '.php');
 
@@ -200,24 +201,28 @@ class Render
                 if ($invoice->details->expire !== null && strtotime($invoice->details->expire) <= time()) {
                     $status->title = 'Expired';
                     $status->description = 'paymentExpired';
-                } 
+                }
                 else {
                     $status->description = 'waitingForPayment';
                 }
+
                 break;
             case 'paid':
             case 'overpaid':
             case 'completed':
                 $status->title = 'Success';
                 $status->description = 'paymentAccepted';
+
                 break;
             case 'expired':
                 $status->title = 'Expired';
                 $status->description = 'paymentExpired';
+
                 break;
             default:
                 $status->title = 'Warning';
                 $status->description = 'invalidInvoiceId';
+
                 break;
         }
 

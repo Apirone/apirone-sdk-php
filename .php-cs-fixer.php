@@ -1,11 +1,12 @@
 <?php
 
 $header = <<<TXT
-Package: Prestashop Apirone Payment gateway
-
-Another header line 1
-Another header line 2
-
+This file is part of the Apirone SDK.
+ 
+(c) Alex Zaytseff <alex.zaytseff@gmail.com>
+ 
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
 TXT;
 
 $finder = PhpCsFixer\Finder::create()

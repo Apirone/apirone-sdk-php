@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the Apirone SDK.
+ *
+ * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 require_once('common.php');
 require_once('../db.php');
 require_once('../log.php');
@@ -42,7 +51,8 @@ if ($userDataJson) {
 }
 try {
     $invoice->create();
-} catch (Exception $e) {
+}
+catch (Exception $e) {
     echo $e->getMessage();
     exit;
 }

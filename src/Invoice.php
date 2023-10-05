@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Apirone SDK.
  *
@@ -57,9 +58,7 @@ class Invoice extends AbstractModel
 
     private ?array $createParams;
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * Set settings to Invoice object
@@ -233,6 +232,7 @@ class Invoice extends AbstractModel
 
             $invoices[] = Invoice::fromJson($json);
         }
+
         return $invoices;
     }
 
@@ -260,6 +260,7 @@ class Invoice extends AbstractModel
             $message = 'Data not received';
             LoggerWrapper::debug($message);
             Utils::send_json('Data not received', 400);
+
             return;
         }
 
@@ -267,6 +268,7 @@ class Invoice extends AbstractModel
             $message = 'Wrong params received: ' . json_encode($params);
             LoggerWrapper::debug($message);
             Utils::send_json('Wrong params received: ' . json_encode($params), 400);
+
             return;
         }
 
@@ -276,6 +278,7 @@ class Invoice extends AbstractModel
             $message = "Invoice not found: " . $params->invoice;
             LoggerWrapper::debug($message);
             Utils::send_json($message, 404);
+
             return;
         }
 
@@ -445,7 +448,8 @@ class Invoice extends AbstractModel
             $this->invoice = $this->details->invoice;
             $this->status = $this->details->status;
             unset($this->createParams);
-        } catch(Exception $e) {
+        }
+        catch(Exception $e) {
             throw $e;
         }
         $this->save();
@@ -494,6 +498,7 @@ class Invoice extends AbstractModel
 
             if ($this->status !== $this->details->status) {
                 $this->status = $this->details->status;
+
                 return $this->save();
             }
         }
@@ -543,7 +548,8 @@ class Invoice extends AbstractModel
                 if ($offset) {
                     Render::setTimeZoneByOffset($offset);
                     echo $invoice->render();
-                } else {
+                }
+                else {
                     echo $invoice->id ? $invoice->details->statusNum() : 0;
                 }
             }

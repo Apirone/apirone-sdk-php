@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Apirone SDK.
  *
@@ -233,6 +234,7 @@ class Settings extends AbstractModel
         if (file_put_contents($abspath, json_encode($this->toJson(), JSON_PRETTY_PRINT))) {
             return true;
         }
+
         return false;
     }
 
@@ -360,6 +362,7 @@ class Settings extends AbstractModel
                 return $currency;
             }
         }
+
         return false;
     }
 
@@ -602,6 +605,7 @@ class Settings extends AbstractModel
         if (property_exists($this->extra, $key)) {
             return $this->extra->{$key};
         }
+
         return null;
     }
 

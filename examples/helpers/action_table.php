@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the Apirone SDK.
+ *
+ * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 require_once('common.php');
 require_once('../db.php');
 require_once('../log.php');
@@ -17,9 +26,11 @@ $action = $_GET['action'] ?? false;
 switch ($action) {
     case 'create':
         Utils::send_json(InvoiceDb::install($table_prefix));
+
         break;
     case 'delete':
         Utils::send_json(!InvoiceDb::uninstall($table_prefix));
+
         break;
     default:
         Utils::send_json($table_exists);

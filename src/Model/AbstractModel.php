@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Apirone SDK.
  *
@@ -40,9 +41,9 @@ abstract class AbstractModel
 
         $trace = \debug_backtrace();
         \trigger_error(
-            'Undefined property '.$name.
-            ' in '.$trace[0]['file'].
-            ' on line '.$trace[0]['line'],
+            'Undefined property ' . $name .
+            ' in ' . $trace[0]['file'] .
+            ' on line ' . $trace[0]['line'],
             \E_USER_NOTICE
         );
 
@@ -71,10 +72,12 @@ abstract class AbstractModel
                     $parser = 'parse' . ucfirst($name);
                     if ($class->hasMethod($parser)) {
                         $property->setValue($this, $this->$parser($value));
-                    } else {
+                    }
+                    else {
                         $property->setValue($this, $value);
                     }
-                } else {
+                }
+                else {
                     $property->setValue($this, $value);
                 }
             }
@@ -103,6 +106,7 @@ abstract class AbstractModel
 
             if ($type == 'object') {
                 $settings[self::convertToSnakeCase($prop)] = (get_class($this->{$prop}) !== 'stdClass') ? $this->{$prop}->toArray() : json_decode(json_encode($this->{$prop}), true);
+
                 continue;
             }
             if ($type == 'array') {
@@ -110,7 +114,8 @@ abstract class AbstractModel
                 foreach($this->{$prop} as $key => $item) {
                     if(gettype($item) == 'object') {
                         $items[] = (get_class($item) !== 'stdClass') ? $item->toArray() : json_decode(json_encode($item), true);
-                    } else {
+                    }
+                    else {
                         $items[$key] = $item;
                     }
                 }
@@ -160,6 +165,7 @@ abstract class AbstractModel
         if (null === $replaced) {
             throw new RuntimeException(sprintf('preg_replace_callback error: %s', \preg_last_error_msg()));
         }
+
         return lcfirst($replaced);
     }
 

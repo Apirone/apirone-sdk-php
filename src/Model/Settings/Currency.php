@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Apirone SDK.
  *
@@ -42,9 +43,7 @@ class Currency extends AbstractModel
 
     private ?string $error = null;
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * Create a currency instance
@@ -123,7 +122,8 @@ class Currency extends AbstractModel
         $this->error = null;
         try {
             Account::init($account, $transferKey)->settings($this->abbr, $options);
-        } catch(Exception $e) {
+        }
+        catch(Exception $e) {
             $this->error = $e->getMessage();
         }
 

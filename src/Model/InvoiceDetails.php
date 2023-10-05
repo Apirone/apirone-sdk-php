@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Apirone SDK.
  *
@@ -95,9 +96,7 @@ class InvoiceDetails extends AbstractModel
      */
     private ?string $invoiceUrl = null;
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * Create a new instance
@@ -199,6 +198,7 @@ class InvoiceDetails extends AbstractModel
                 }
             }
         }
+
         return $info;
     }
 
