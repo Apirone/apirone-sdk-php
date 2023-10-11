@@ -122,8 +122,9 @@ class Render
         $loading  = !$show;
 
         $status = self::statusDescription($invoice);
+
         $statusLink = self::$dataUrl ? self::$dataUrl : '/';
-        $backlink = Invoice::$settings->getBacklink();
+        $backlink = !empty(self::$backlink) ? self::$backlink : Invoice::$settings->getBacklink();
         $logo = Invoice::$settings->getLogo();
         $template = !self::$qrOnly ? 'full' : 'qr-only';
         $note = null;
@@ -193,16 +194,16 @@ class Render
         if ($invoice == null) {
             return $status;
         }
-
+        
         switch ($invoice->status) {
             case 'created':
             case 'partpaid':
-                $status->title = 'Refresh';
-                if ($invoice->details->expire !== null && strtotime($invoice->details->expire) <= time()) {
+                if ($invoice->details->isExpired()) {
                     $status->title = 'Expired';
                     $status->description = 'paymentExpired';
                 }
                 else {
+                    $status->title = 'Refresh';
                     $status->description = 'waitingForPayment';
                 }
 

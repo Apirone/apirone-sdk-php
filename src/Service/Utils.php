@@ -142,7 +142,7 @@ class Utils
      */
     public static function cur2min($value, $unitsFactor)
     {
-        return $value / $unitsFactor;
+        return (int) ($value / $unitsFactor);
     }
 
     /**

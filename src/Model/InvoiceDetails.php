@@ -292,7 +292,9 @@ class InvoiceDetails extends AbstractModel
         if ($this->status == 'expired') {
             return true;
         }
-        if ($this->expire == null || strtotime($this->expire) > time()) {
+        $tz = date_default_timezone_get();
+
+        if ($this->expire == null || strtotime($this->expire . ' UTC') > time()) {
             return false;
         }
 
@@ -305,12 +307,12 @@ class InvoiceDetails extends AbstractModel
      *
      * @return int
      */
-    public function countdown()
+    public function timeToExpire()
     {
         if ($this->expire == null) {
             return -1;
         }
-        $expire = strtotime($this->expire);
+        $expire = strtotime($this->expire . ' UTC');
         $now = time();
 
         return ($expire > $now) ? $expire - $now : -1;

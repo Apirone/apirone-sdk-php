@@ -158,8 +158,8 @@ use Apirone\SDK\Service\Utils;
                                 <?php if($status->description) : ?>
                                 <p><?php $t($status->description); ?></p>
                                 <?php endif; ?>
-                                <?php if($invoice && $invoice->countdown() > 0) : ?>
-                                <input type="hidden" id = "expire" value="<?php echo $invoice->countdown(); ?>">
+                                <?php if($invoice && $invoice->timeToExpire() > 0) : ?>
+                                <input type="hidden" id = "expire" value="<?php echo $invoice->timeToExpire(); ?>">
                                 <p id="countdown" class="countdown"></p>
                                 <?php endif; ?>
                             </div>
