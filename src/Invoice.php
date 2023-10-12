@@ -598,7 +598,11 @@ class Invoice extends AbstractModel
      */
     public function getMeta($key)
     {
-        return array_key_exists('$key', $this->meta) ? $this->meta[$key] : null;
+        if ($this->meta == null) {
+            return null;
+        }
+
+        return array_key_exists($key, $this->meta) ? $this->meta[$key] : null;
     }
 
     /**
