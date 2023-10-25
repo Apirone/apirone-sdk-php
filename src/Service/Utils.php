@@ -138,11 +138,11 @@ class Utils
      *
      * @param mixed $value
      * @param mixed $unitsFactor
-     * @return int|float
+     * @return int
      */
     public static function cur2min($value, $unitsFactor)
     {
-        return (int) ($value / $unitsFactor);
+        return (int) round($value / $unitsFactor);
     }
 
     /**
