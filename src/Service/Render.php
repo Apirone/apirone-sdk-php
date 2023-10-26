@@ -127,6 +127,7 @@ class Render
         $backlink = !empty(self::$backlink) ? self::$backlink : Invoice::$settings->getBacklink();
         $logo = Invoice::$settings->getLogo();
         $template = !self::$qrOnly ? 'full' : 'qr-only';
+        // $template = 'qr-only';
         $note = null;
         $amount = null;
 
@@ -134,7 +135,7 @@ class Render
             $details = $invoice->details;
             $userData = $details->getUserData();
             $currency = Invoice::$settings->getCurrency($details->getCurrency());
-            $statusNum = $details->statusNum();
+
             if ($details->amount !== null) {
                 $overpaid = false;
                 $remains = $details->amount;
