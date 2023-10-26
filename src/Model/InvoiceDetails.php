@@ -292,7 +292,10 @@ class InvoiceDetails extends AbstractModel
         if ($this->status == 'expired') {
             return true;
         }
-        $tz = date_default_timezone_get();
+        
+        if (in_array($this->status, ['paid', 'overpaid', 'completed'])) {
+            return false;
+        }
 
         if ($this->expire == null || strtotime($this->expire . ' UTC') > time()) {
             return false;
