@@ -306,15 +306,16 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Returns the number of seconds until an invoice expires
-     * If the invoice is expired returns -1
+     * If the invoice has status paid, overpaid,completed or expired - returns -1
      *
      * @return int
      */
     public function timeToExpire()
     {
-        if ($this->expire == null) {
+        if ($this->expire == null || !in_array($this->status, ['created', 'partpaid'])) {
             return -1;
         }
+
         $expire = strtotime($this->expire . ' UTC');
         $now = time();
 
