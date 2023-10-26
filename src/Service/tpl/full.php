@@ -64,7 +64,7 @@ use Apirone\SDK\Service\Utils;
                         <small><?php $t("remainsToPay"); ?> <br></small>
                     <?php endif; ?>
                     <?php if($details && $amount) : ?>
-                        <?php $amountCopy = (!$details->isExpired()) ? $c($amount, 'margin-right: .5rem;') : ''; ?>
+                        <?php $amountCopy = ($status->title == 'Refresh') ? $c($amount, 'margin-right: .5rem;') : ''; ?>
                         <span><?php echo $amountCopy . $amount . ' ' . strtoupper($details->currency); ?></span>
                     <?php endif; ?>
                     </p>
@@ -83,7 +83,7 @@ use Apirone\SDK\Service\Utils;
                         <a href="<?php echo Utils::getAddressLink($currency, $details->address); ?>" target="_blank"><?php echo $details->address; ?></a>
                         <?php endif; ?>
                     </p>
-                    <?php if (!$loading && $status->title !== 'Expired') : ?>
+                    <?php if (!$loading && $status->title == 'Refresh') : ?>
                         <?php $c($details->address); ?>
                     <?php endif; ?>
                 </div>
