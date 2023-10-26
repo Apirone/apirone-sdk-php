@@ -9,7 +9,6 @@
  */
 
 use Apirone\SDK\Service\Utils;
-
 ?>
 <div id="__apn-invoice" class="invoice-wrapper">
     <div  class="invoice<?php echo $loading ? ' loading' : ''; ?> invoice__qr-only">
@@ -17,15 +16,15 @@ use Apirone\SDK\Service\Utils;
             <div  class="invoice__info">
                 <div class="qr__wrapper">
                     <div class="skeleton__box">
-                    <?php if ($invoice) : ?>
-                        <input type="hidden" id="statusNum" value="<?php echo $invoice->statusNum(); ?>">
-                        <?php if ($invoice->status !== 'expired' && $invoice->status !== 'success' && $invoice->isExpired() == false) : ?>
+                    <?php if ($details) : ?>
+                        <input type="hidden" id="statusNum" value="<?php echo $details->statusNum; ?>">
+                        <?php if ($status->title == 'Refresh') : ?>
                         <figure class="qr">
-                            <img src="<?php echo Utils::getQrLink($currency, $invoice->address, $amount); ?>" />
-                            <span class="qr__logo <?php echo str_replace('@', '-', $invoice->currency); ?>" title="<?php echo $currency->name; ?>"></span>
+                            <img src="<?php echo Utils::getQrLink($currency, $details->address, $amount); ?>" />
+                            <span class="qr__logo <?php echo str_replace('@', '-', $details->currency); ?>" title="<?php echo $currency->name; ?>"></span>
                         </figure>
                         <?php else : ?>
-                        <div class="qr__<?php echo ($invoice->isExpired()) ? 'expired' : $invoice->status; ?>"></div>
+                        <div class="qr__<?php echo strtolower($status->title); ?>"></div>
                         <?php endif; ?>
                     <?php endif; ?>
                     </div>

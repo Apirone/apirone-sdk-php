@@ -18,14 +18,14 @@ use Apirone\SDK\Service\Utils;
             <div class="invoice__info">
                 <div class="qr__wrapper">
                     <div class="skeleton__box">
-                    <?php if ($invoice) : ?>
-                        <?php if ($invoice->status !== 'expired' && $invoice->status !== 'success' && $invoice->isExpired() == false) : ?>
+                    <?php if ($details) : ?>
+                        <?php if ($status->title == 'Refresh') : ?>
                         <figure class="qr">
-                            <img src="<?php echo Utils::getQrLink($currency, $invoice->address, $amount); ?>" />
-                            <span class="qr__logo <?php echo str_replace('@', '-', $invoice->currency); ?>" title="<?php echo $currency->name; ?>"></span>
+                            <img src="<?php echo Utils::getQrLink($currency, $details->address, $amount); ?>" />
+                            <span class="qr__logo <?php echo str_replace('@', '-', $details->currency); ?>" title="<?php echo $currency->name; ?>"></span>
                         </figure>
                         <?php else : ?>
-                        <div class="qr__<?php echo ($invoice->isExpired()) ? 'expired' : $invoice->status; ?>"></div>
+                        <div class="qr__<?php echo strtolower($status->title); ?>"></div>
                         <?php endif; ?>
                     <?php endif; ?>
                     </div>
@@ -41,7 +41,7 @@ use Apirone\SDK\Service\Utils;
                         <?php if($userData->title) : ?>
                         <h1><?php echo $userData->title; ?></h1>
                         <?php else : ?>
-                        <h1><?php $t("title"); ?> <small><?php echo $invoice->invoice; ?></small></h1>
+                        <h1><?php $t("title"); ?> <small><?php echo $details->invoice; ?></small></h1>
                         <?php endif; ?>
                         <?php if($userData->merchant) : ?>
                         <p class="merchant">
@@ -55,17 +55,17 @@ use Apirone\SDK\Service\Utils;
                         <?php endif ?>
                     <?php else : /* No userData */ ?>
                     <h1>
-                        <?php $t("title"); ?> <small><?php echo $invoice->invoice; ?></small>
+                        <?php $t("title"); ?> <small><?php echo $details->invoice; ?></small>
                     </h1>
                     <?php endif; /* UserData end */ ?>
-                    <p class="skeleton__box info__date"><span><?php $d($invoice->created); ?></span></p>
+                    <p class="skeleton__box info__date"><span><?php $d($details->created); ?></span></p>
                     <p class="skeleton__box info__amount">
-                    <?php if ($invoice->status == 'partpaid') : ?>
+                    <?php if ($details->status == 'partpaid') : ?>
                         <small><?php $t("remainsToPay"); ?> <br></small>
                     <?php endif; ?>
-                    <?php if($invoice && $amount) : ?>
-                        <?php $amount = (!$invoice->isExpired())? $c($amount, 'margin-right: .5rem;') : $amount; ?>
-                        <span><?php echo $amount . ' ' . strtoupper($invoice->currency); ?></span>
+                    <?php if($details && $amount) : ?>
+                        <?php $amountCopy = (!$details->isExpired()) ? $c($amount, 'margin-right: .5rem;') : ''; ?>
+                        <span><?php echo $amountCopy . $amount . ' ' . strtoupper($details->currency); ?></span>
                     <?php endif; ?>
                     </p>
                     </div>
@@ -79,22 +79,21 @@ use Apirone\SDK\Service\Utils;
                 <div class="address">
                     <div class="address__title"><?php $t("paymentAddress"); ?></div>
                     <p class="skeleton__box">
-                        <?php if (!$loading && $invoice) : ?>
-                        <a href="<?php echo Utils::getAddressLink($currency, $invoice->address); ?>" target="_blank"><?php echo $invoice->address; ?></a>
+                        <?php if (!$loading && $details) : ?>
+                        <a href="<?php echo Utils::getAddressLink($currency, $details->address); ?>" target="_blank"><?php echo $details->address; ?></a>
                         <?php endif; ?>
                     </p>
                     <?php if (!$loading && $status->title !== 'Expired') : ?>
-                        <?php $c($invoice->address); ?>
+                        <?php $c($details->address); ?>
                     <?php endif; ?>
                 </div>
                 <?php endif; ?>
                 
                 <?php if(!$loading && $userData) : ?>
                 <?php
-                $items = $userData->getItems();
+                    $items = $userData->getItems();
                     $extras = $userData->getExtras();
-                    // $itemsCount = count($items);
-                    ?>
+                ?>
                 <div class="invoice-table">
                     <table>
                         <?php if($items && $items !== null) : ?>
@@ -158,17 +157,17 @@ use Apirone\SDK\Service\Utils;
                                 <?php if($status->description) : ?>
                                 <p><?php $t($status->description); ?></p>
                                 <?php endif; ?>
-                                <?php if($invoice && $invoice->timeToExpire() > 0) : ?>
-                                <input type="hidden" id = "expire" value="<?php echo $invoice->timeToExpire(); ?>">
+                                <?php if($details && $details->timeToExpire() > 0) : ?>
+                                <input type="hidden" id = "expire" value="<?php echo $details->timeToExpire(); ?>">
                                 <p id="countdown" class="countdown"></p>
                                 <?php endif; ?>
                             </div>
                         </div>
-                        <?php if ($invoice && $invoice->history) : ?>
+                        <?php if ($details && $details->history) : ?>
                         <div class="history">
-                            <input type="hidden" id="statusNum" value="<?php echo $invoice->statusNum(); ?>">
+                            <input type="hidden" id="statusNum" value="<?php echo $details->statusNum(); ?>">
                             <ul>
-                                <?php foreach ($invoice->history as $item) : ?>
+                                <?php foreach ($details->history as $item) : ?>
                                 <li>
                                     <?php if ($item->getAmount()) : ?>
                                     <a class="history__item" href="<?php echo Utils::getTransactionLink($currency, $item->getTxid()); ?>" target="_blank">
@@ -194,9 +193,9 @@ use Apirone\SDK\Service\Utils;
                     </div>
                     <?php endif; ?>
                 </div>
-                <?php if($invoice && @$invoice->showLinkback()) : ?> 
+                <?php if($details && @$details->showLinkback()) : ?> 
                 <p class="countdown" style="text-align: center;">
-                    <?php echo sprintf($t('getBack', false), 15, $invoice->linkback); ?>
+                    <?php echo sprintf($t('getBack', false), 15, $details->linkback); ?>
                 </p>
                 <?php endif; ?>
                 

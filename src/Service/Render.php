@@ -127,18 +127,19 @@ class Render
         $backlink = !empty(self::$backlink) ? self::$backlink : Invoice::$settings->getBacklink();
         $logo = Invoice::$settings->getLogo();
         $template = !self::$qrOnly ? 'full' : 'qr-only';
+        // $template = 'qr-only';
         $note = null;
         $amount = null;
 
         if ($show) {
-            $invoice = $invoice->details;
-            $userData = $invoice->getUserData();
-            $currency = Invoice::$settings->getCurrency($invoice->getCurrency());
-            $statusNum = $invoice->statusNum();
-            if ($invoice->amount !== null) {
+            $details = $invoice->details;
+            $userData = $details->getUserData();
+            $currency = Invoice::$settings->getCurrency($details->getCurrency());
+
+            if ($details->amount !== null) {
                 $overpaid = false;
-                $remains = $invoice->amount;
-                foreach ($invoice->history as $item) {
+                $remains = $details->amount;
+                foreach ($details->history as $item) {
                     if (property_exists($item, 'amount')) {
                         $remains = $remains - $item->amount;
                     }
@@ -146,17 +147,17 @@ class Render
                         $overpaid = true;
                     }
                 }
-                $amount = ($remains <= 0) ? $invoice->amount : $remains;
+                $amount = ($remains <= 0) ? $details->amount : $remains;
                 $amount = Utils::exp2dec($amount * $currency->getUnitsFactor());
 
-                if (($invoice->status == 'created' || $invoice->status == 'partpaid') && !$invoice->isExpired()) {
+                if (($details->status == 'created' || $details->status == 'partpaid') && !$details->isExpired()) {
                     $note = 'notePayment';
                 }
                 $note = ($overpaid) ? 'noteOverpaid' : $note;
             }
         }
         else {
-            $invoice = $userData = $currency = null;
+            $details = $userData = $currency = null;
             $loading = true;
         }
 
