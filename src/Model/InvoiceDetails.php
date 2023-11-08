@@ -323,13 +323,13 @@ class InvoiceDetails extends AbstractModel
     }
 
     /**
-     * Show linkback if set and invoice status is success
+     * Show linkback if set and invoice status is paid or overpaid
      *
      * @return bool
      */
     public function showLinkback()
     {
-        if ($this->linkback && $this->status == 'success') {
+        if ($this->linkback && in_array($this->status, ['paid', 'overpaid'])) {
             return true;
         }
 

@@ -64,8 +64,8 @@ use Apirone\SDK\Service\Utils;
                         <small><?php $t("remainsToPay"); ?> <br></small>
                     <?php endif; ?>
                     <?php if($details && $amount) : ?>
-                        <?php $amountCopy = ($status->title == 'Refresh') ? $c($amount, 'margin-right: .5rem;') : ''; ?>
-                        <span><?php echo $amountCopy . $amount . ' ' . strtoupper($details->currency); ?></span>
+                        <?php $amountCopy = ($status->title == 'Refresh') ? $c($amount, 'margin-left: .5rem;') : ''; ?>
+                        <span><?php echo $amount . ' ' . strtoupper($details->currency) . $amountCopy; ?></span>
                     <?php endif; ?>
                     </p>
                     </div>
@@ -195,7 +195,7 @@ use Apirone\SDK\Service\Utils;
                 </div>
                 <?php if($details && @$details->showLinkback()) : ?> 
                 <p class="countdown" style="text-align: center;">
-                    <?php echo sprintf($t('getBack', false), 15, $details->linkback); ?>
+                    <?php echo sprintf($t('getBack', false), 15, $l($details->linkback)); ?>
                 </p>
                 <?php endif; ?>
                 
@@ -203,7 +203,7 @@ use Apirone\SDK\Service\Utils;
                 <div class="invoice__footer">
                     <?php if ($backlink) : ?>
                     <p>
-                        <?php echo sprintf($t('backlink', false), $backlink); ?>
+                        <?php echo sprintf($t('backlink', false), $l($backlink)); ?>
                     </p>
                     <?php endif; ?>
                     <?php if ($logo) : ?>
