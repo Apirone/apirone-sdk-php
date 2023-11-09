@@ -285,6 +285,9 @@ class Render
 
         // Add invoice id to linkback URL
         $l = static function ($url, $id) {
+            if (empty($id)) {
+                return $url;
+            }
             $glue = (parse_url($url, PHP_URL_QUERY)) ? '&' : '?';
 
             return $url . $glue . 'invoice=' . $id;

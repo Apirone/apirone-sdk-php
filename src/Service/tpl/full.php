@@ -203,7 +203,7 @@ use Apirone\SDK\Service\Utils;
                 <div class="invoice__footer">
                     <?php if ($backlink) : ?>
                     <p>
-                        <?php echo sprintf($t('backlink', false), $l($backlink,  $details->invoice)); ?>
+                        <?php echo sprintf($t('backlink', false), $l($backlink, $details ? $details->invoice : '')); ?>
                     </p>
                     <?php endif; ?>
                     <?php if ($logo) : ?>
