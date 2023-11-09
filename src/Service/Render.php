@@ -119,7 +119,7 @@ class Render
                 $invoice->update();
             }
             catch (Exception $e) {
-                LoggerWrapper::error($e->getMessage, [$invoice->invoice]);
+                LoggerWrapper::error($e->getMessage(), [$invoice->invoice]);
             }
         }
         else {
