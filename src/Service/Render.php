@@ -263,7 +263,7 @@ class Render
         // Locale date formatter callback
         $fmt = datefmt_create(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2), 3, 2, self::$timeZone, 1);
         $d = static function ($date, $echo = true) use ($fmt) {
-            $result = datefmt_format($fmt, new \DateTime($date));
+            $result = datefmt_format($fmt, new \DateTime($date . 'Z'));
 
             if (!$echo) {
                 return $result;
