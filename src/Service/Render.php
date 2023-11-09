@@ -162,7 +162,7 @@ class Render
         }
 
         // Draw output:
-        [$t, $d, $c] = self::helpers(); // translate, date, copy
+        [$t, $d, $c, $l] = self::helpers(); // translate, date, copy, link
         ob_start();
         include(__DIR__ . '/tpl/' . $template . '.php');
 
@@ -263,7 +263,7 @@ class Render
         // Locale date formatter callback
         $fmt = datefmt_create(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2), 3, 2, self::$timeZone, 1);
         $d = static function ($date, $echo = true) use ($fmt) {
-            $result = datefmt_format($fmt, new \DateTime($date));
+            $result = datefmt_format($fmt, new \DateTime($date . 'Z'));
 
             if (!$echo) {
                 return $result;
@@ -283,7 +283,14 @@ class Render
             echo $result;
         };
 
-        return [$t, $d, $c];
+        // Add invoice id to linkback URL
+        $l = static function ($url, $id) {
+            $glue = (parse_url($url, PHP_URL_QUERY)) ? '&' : '?';
+
+            return $url . $glue . 'invoice=' . $id;
+        };
+
+        return [$t, $d, $c, $l];
     }
 
     /**
