@@ -15,9 +15,11 @@ namespace Apirone\SDK\Service;
 
 use Apirone\SDK\Invoice;
 use Apirone\SDK\Service\Utils;
+use Apirone\API\Log\LoggerWrapper;
 use DivisionByZeroError;
 use ArithmeticError;
 use Closure;
+use Exception;
 use stdClass;
 
 class Render
@@ -113,7 +115,12 @@ class Render
         if($invoice instanceof Invoice && $invoice->id !== null) {
             $show = true;
             $id = $invoice->invoice;
-            $invoice->update();
+            try {
+                $invoice->update();
+            }
+            catch (Exception $e) {
+                LoggerWrapper::error($e->getMessage, [$invoice->invoice]);
+            }
         }
         else {
             $show = false;
@@ -127,7 +134,6 @@ class Render
         $backlink = !empty(self::$backlink) ? self::$backlink : Invoice::$settings->getBacklink();
         $logo = Invoice::$settings->getLogo();
         $template = !self::$qrOnly ? 'full' : 'qr-only';
-        // $template = 'qr-only';
         $note = null;
         $amount = null;
 

@@ -141,6 +141,9 @@ class InvoiceDetails extends AbstractModel
         if ($this->isExpired() && $this->status == 'expired') {
             return $this;
         }
+        if ($this->status == 'completed') {
+            return $this;
+        }
         $json = Account::init($this->account)->invoiceInfo($this->invoice);
 
         return $this->classLoader($json);
