@@ -34,6 +34,6 @@
     },
     "minimum-stability": "RC",
     "require": {
-        "apirone/apirone-api-php": "^v1.0.0"
+        "apirone/apirone-api-php": "^1.0.0"
     }
 }
