@@ -20,6 +20,7 @@ use Apirone\API\Exceptions\UnauthorizedException;
 use Apirone\API\Exceptions\ForbiddenException;
 use Apirone\API\Exceptions\NotFoundException;
 use Apirone\API\Exceptions\MethodNotAllowedException;
+use Apirone\SDK\Model\Settings\Currency;
 
 class Utils
 {
@@ -48,19 +49,30 @@ class Utils
 
         return null;
     }
+
     /**
-     * Return transaction link to blockchair.com
+     * Return explorer href
      *
-     * @param mixed $currency
-     * @return string
+     * @return void 
      */
-    public static function getTransactionLink($currency, $transaction = '')
+    public static function getExplorerHref(Currency $currency, $type, $hash = '')
     {
-        if ($currency->abbr == 'tbtc') {
-            return 'https://blockchair.com/bitcoin/testnet/transaction/' . $transaction . static::FROM;
+        $explorer = 'blockchair.com';
+        $currencyName = strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $currency->name));
+        $from = '?from=apirone';
+        if ($currency->abbr = 'tbtc') {
+            $currencyName . '/testnet';
+            $from = '';
         }
 
-        return sprintf('https://blockchair.com/%s/transactions/', strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $currency->name))) . $transaction . static::FROM;
+        if (substr_count($currency->abbr, 'trx') > 0 ){
+            $explorer = $currency->isTestnet() ? 'shasta.tronscan.org' : 'tronscan.org';
+            $currencyName = '#';
+        }
+
+        $href = sprintf('https://%s/%s/%s/%s', ...[$explorer, $currencyName, $type, $hash . $from]);
+
+        return $href;
     }
 
     /**
@@ -69,13 +81,20 @@ class Utils
      * @param mixed $currency
      * @return string
      */
-    public static function getAddressLink($currency, $address = '')
+    public static function getTransactionLink($currency, $hash = '')
     {
-        if ($currency->abbr == 'tbtc') {
-            return 'https://blockchair.com/bitcoin/testnet/address/' . $address . static::FROM;
-        }
+        return self::getExplorerHref($currency, 'transaction', $hash);
+    }
 
-        return sprintf('https://blockchair.com/%s/address/', strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $currency->name))) . $address . static::FROM;
+    /**
+     * Return transaction link to blockchair.com
+     *
+     * @param mixed $currency
+     * @return string
+     */
+    public static function getAddressLink($currency, $hash = '')
+    {
+        return self::getExplorerHref($currency, 'address', $hash);
     }
 
     /**
