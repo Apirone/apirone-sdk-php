@@ -50,22 +50,17 @@ class Utils
         return null;
     }
 
-    /**
-     * Return explorer href
-     *
-     * @return void 
-     */
     public static function getExplorerHref(Currency $currency, $type, $hash = '')
     {
         $explorer = 'blockchair.com';
-        $currencyName = strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $currency->name));
+        $currencyName = strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $currency->getName()));
         $from = '?from=apirone';
-        if ($currency->abbr = 'tbtc') {
-            $currencyName . '/testnet';
+        if ($currency->getAbbr() == 'tbtc') {
+            $currencyName = 'bitcoin/testnet';
             $from = '';
         }
 
-        if (substr_count($currency->abbr, 'trx') > 0 ){
+        if (substr_count($currency->getAbbr(), 'trx') > 0 ){
             $explorer = $currency->isTestnet() ? 'shasta.tronscan.org' : 'tronscan.org';
             $currencyName = '#';
         }
