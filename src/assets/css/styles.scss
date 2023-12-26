@@ -107,30 +107,29 @@
         top: 50%;
         transform: translate(-50%, -50%);
         width: 15%;
-        background-image: url('icons/crypto/placeholder.svg');
         &.bch, 
         &.tbch {
-            background-image: url('icons/crypto/bch.svg');
+            background-image: url('icons/crypto/bch.svg'), url('icons/crypto/placeholder.svg');
         }
         &.btc, 
         &.tbtc {
-            background-image: url('icons/crypto/btc.svg');
+            background-image: url('icons/crypto/btc.svg'), url('icons/crypto/placeholder.svg');
         }
         &.doge,
         &.tdoge {
-            background-image: url('icons/crypto/doge.svg');
+            background-image: url('icons/crypto/doge.svg'), url('icons/crypto/placeholder.svg');
         }
         &.ltc, 
         &.tltc {
-            background-image: url('icons/crypto/ltc.svg');
+            background-image: url('icons/crypto/ltc.svg'), url('icons/crypto/placeholder.svg');
         }
         &.trx,
         &.ttrx {
-            background-image: url('icons/crypto/trx.svg');
+            background-image: url('icons/crypto/trx.svg'), url('icons/crypto/placeholder.svg');
         }
         &.usdc-trx,
         &.usdc-ttrx {
-            background-image: url('icons/crypto/usdc_trx.svg');
+            background-image: url('icons/crypto/usdc_trx.svg'), url('icons/crypto/placeholder.svg');
         }
         &.tbch, &.tbtc, &.tdoge, &.tltc, &.ttrx, &.usdc-ttrx {
             filter:grayscale(1);
