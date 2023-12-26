@@ -106,25 +106,24 @@
   top: 50%;
   transform: translate(-50%, -50%);
   width: 15%;
-  background-image: url("icons/crypto/placeholder.svg");
 }
 .qr__wrapper .qr__logo.bch, .qr__wrapper .qr__logo.tbch {
-  background-image: url("icons/crypto/bch.svg");
+  background-image: url("icons/crypto/bch.svg"), url("icons/crypto/placeholder.svg");
 }
 .qr__wrapper .qr__logo.btc, .qr__wrapper .qr__logo.tbtc {
-  background-image: url("icons/crypto/btc.svg");
+  background-image: url("icons/crypto/btc.svg"), url("icons/crypto/placeholder.svg");
 }
 .qr__wrapper .qr__logo.doge, .qr__wrapper .qr__logo.tdoge {
-  background-image: url("icons/crypto/doge.svg");
+  background-image: url("icons/crypto/doge.svg"), url("icons/crypto/placeholder.svg");
 }
 .qr__wrapper .qr__logo.ltc, .qr__wrapper .qr__logo.tltc {
-  background-image: url("icons/crypto/ltc.svg");
+  background-image: url("icons/crypto/ltc.svg"), url("icons/crypto/placeholder.svg");
 }
 .qr__wrapper .qr__logo.trx, .qr__wrapper .qr__logo.ttrx {
-  background-image: url("icons/crypto/trx.svg");
+  background-image: url("icons/crypto/trx.svg"), url("icons/crypto/placeholder.svg");
 }
 .qr__wrapper .qr__logo.usdc-trx, .qr__wrapper .qr__logo.usdc-ttrx {
-  background-image: url("icons/crypto/usdc_trx.svg");
+  background-image: url("icons/crypto/usdc_trx.svg"), url("icons/crypto/placeholder.svg");
 }
 .qr__wrapper .qr__logo.tbch, .qr__wrapper .qr__logo.tbtc, .qr__wrapper .qr__logo.tdoge, .qr__wrapper .qr__logo.tltc, .qr__wrapper .qr__logo.ttrx, .qr__wrapper .qr__logo.usdc-ttrx {
   filter: grayscale(1);
