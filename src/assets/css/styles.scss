@@ -107,6 +107,7 @@
         top: 50%;
         transform: translate(-50%, -50%);
         width: 15%;
+        background-image: url('icons/crypto/placeholder.svg');
         &.bch, 
         &.tbch {
             background-image: url('icons/crypto/bch.svg');
@@ -115,7 +116,8 @@
         &.tbtc {
             background-image: url('icons/crypto/btc.svg');
         }
-        &.doge {
+        &.doge,
+        &.tdoge {
             background-image: url('icons/crypto/doge.svg');
         }
         &.ltc, 
@@ -128,9 +130,9 @@
         }
         &.usdc-trx,
         &.usdc-ttrx {
-            background-image: url('icons/crypto/usdc@trx.svg');
+            background-image: url('icons/crypto/usdc_trx.svg');
         }
-        &.tbch, &.tbtc, &.tltc, &.ttrx, &.usdt-ttrx {
+        &.tbch, &.tbtc, &.tdoge, &.tltc, &.ttrx, &.usdc-ttrx {
             filter:grayscale(1);
         }
     }
