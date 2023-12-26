@@ -109,27 +109,27 @@
         width: 15%;
         &.bch, 
         &.tbch {
-            background-image: url('icons/crypto/bch.svg'), url('icons/crypto/placeholder.svg');
+            background-image: url('icons/crypto/bch.svg'), url('icons/crypto/aprn.svg');
         }
         &.btc, 
         &.tbtc {
-            background-image: url('icons/crypto/btc.svg'), url('icons/crypto/placeholder.svg');
+            background-image: url('icons/crypto/btc.svg'), url('icons/crypto/aprn.svg');
         }
         &.doge,
         &.tdoge {
-            background-image: url('icons/crypto/doge.svg'), url('icons/crypto/placeholder.svg');
+            background-image: url('icons/crypto/doge.svg'), url('icons/crypto/aprn.svg');
         }
         &.ltc, 
         &.tltc {
-            background-image: url('icons/crypto/ltc.svg'), url('icons/crypto/placeholder.svg');
+            background-image: url('icons/crypto/ltc.svg'), url('icons/crypto/aprn.svg');
         }
         &.trx,
         &.ttrx {
-            background-image: url('icons/crypto/trx.svg'), url('icons/crypto/placeholder.svg');
+            background-image: url('icons/crypto/trx.svg'), url('icons/crypto/aprn.svg');
         }
         &.usdc-trx,
         &.usdc-ttrx {
-            background-image: url('icons/crypto/usdc_trx.svg'), url('icons/crypto/placeholder.svg');
+            background-image: url('icons/crypto/usdc_trx.svg'), url('icons/crypto/aprn.svg');
         }
         &.tbch, &.tbtc, &.tdoge, &.tltc, &.ttrx, &.usdc-ttrx {
             filter:grayscale(1);
@@ -142,8 +142,6 @@
     margin: 0;
     position: relative;
 }
-
-// .qr__wrapper
 
 .address {
     box-sizing: border-box;
