@@ -76,10 +76,10 @@ document.addEventListener("DOMContentLoaded", function(e) {
     }
     let distance = expire.value;
     const interval = setInterval(() => {
-      const days = Math.floor(distance / (60 * 60 * 24));
-      const hours = Math.floor((distance % (60 * 60 * 24)) / (60 * 60));
-      const minutes = Math.floor((distance % (60 * 60)) / 60);
-      const seconds = Math.floor((distance % (60)));
+      const days = f2i(Math.floor(distance / (60 * 60 * 24))) ;
+      const hours = f2i(Math.floor((distance % (60 * 60 * 24)) / (60 * 60)));
+      const minutes = f2i(Math.floor((distance % (60 * 60)) / 60));
+      const seconds = f2i(Math.floor((distance % (60))));
       counter.innerHTML = (days > 0 ? `${days}d `: '')
         + (hours > 0 ? `${hours}h `: '')
         + (minutes > 0 ? `${minutes}m `: '')
@@ -91,6 +91,9 @@ document.addEventListener("DOMContentLoaded", function(e) {
         document.location.reload();
       }
     }, 1000);
+  }
+  function f2i (value) {
+    return value | 0;
   }
   function linkback() {
     let linkback = d.getElementById('linkback');
