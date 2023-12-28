@@ -51,6 +51,8 @@
     font-weight: 600;
     margin-bottom: 0;
     & small {
+        width: 100%;
+        margin-bottom: 0.5rem;
         opacity: .7;
     }
 }
@@ -169,6 +171,16 @@
         color: #a5a5a5;
     }
     & a {
+        &::before {
+            display: inline-block;
+            content: "";
+            width: 16px;
+            height: 14px;
+            background: url(icons/external-link.svg) no-repeat;
+            background-size: cover;
+            margin-right: 5px;
+            opacity: .5;
+        }
         color: inherit;
         text-decoration: none;
         &:hover {
