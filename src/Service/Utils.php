@@ -20,6 +20,7 @@ use Apirone\API\Exceptions\UnauthorizedException;
 use Apirone\API\Exceptions\ForbiddenException;
 use Apirone\API\Exceptions\NotFoundException;
 use Apirone\API\Exceptions\MethodNotAllowedException;
+use Apirone\Lib\PhpQRCode\QRCode;
 use Apirone\SDK\Model\Settings\Currency;
 
 class Utils
@@ -93,12 +94,12 @@ class Utils
     }
 
     /**
-     * Return img tag with QR-code link
+     * Return chart.googleapis.com QR-code link
      *
      * @param mixed $currency
      * @param mixed $input_address
      * @param mixed $amount
-     * @return void
+     * @return string
      */
     public static function getQrLink($currency, $input_address, $amount = null)
     {
@@ -106,6 +107,22 @@ class Utils
         $amount = ($amount !== null && $amount > 0) ? '?amount=' . $amount : '';
 
         return 'https://chart.googleapis.com/chart?chs=256x256&cht=qr&chld=H|0&chl=' . urlencode($prefix . $input_address . $amount);
+    }
+
+    /**
+     * Return base64 encoded QR png
+     *
+     * @param mixed $currency
+     * @param mixed $input_address
+     * @param mixed $amount
+     * @return string
+     */
+    public static function renderQr($currency, $input_address, $amount = null)
+    {
+        $prefix = (substr_count($input_address, ':') > 0) ? '' : strtolower(str_replace([' ', '(', ')'], ['-', '', ''], $currency->name)) . ':';
+        $amount = ($amount !== null && $amount > 0) ? '?amount=' . $amount : '';
+
+        return QRCode::init()->data($prefix . $input_address . $amount)->levelHigh()->quietZone(0)->base64();
     }
 
     /**

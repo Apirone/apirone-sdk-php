@@ -17,10 +17,10 @@ use Apirone\SDK\Service\Utils;
                 <div class="qr__wrapper">
                     <div class="skeleton__box">
                     <?php if ($details) : ?>
-                        <input type="hidden" id="statusNum" value="<?php echo $details->statusNum; ?>">
+                        <input type="hidden" id="statusNum" value="<?php echo $details->statusNum(); ?>">
                         <?php if ($status->title == 'Refresh') : ?>
                         <figure class="qr">
-                            <img src="<?php echo Utils::getQrLink($currency, $details->address, $amount); ?>" />
+                            <img src="<?php echo Utils::renderQr($currency, $details->address, $amount); ?>" />
                             <span class="qr__logo <?php echo str_replace('@', '-', $details->currency); ?>" title="<?php echo $currency->name; ?>"></span>
                         </figure>
                         <?php else : ?>

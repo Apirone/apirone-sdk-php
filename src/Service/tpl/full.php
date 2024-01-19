@@ -10,6 +10,7 @@
  */
 
 use Apirone\SDK\Service\Utils;
+pa($details);
 ?>
 
 <div id="__apn-invoice" class="invoice-wrapper">
@@ -21,7 +22,7 @@ use Apirone\SDK\Service\Utils;
                     <?php if ($details) : ?>
                         <?php if ($status->title == 'Refresh') : ?>
                         <figure class="qr">
-                            <img src="<?php echo Utils::getQrLink($currency, $details->address, $amount); ?>" />
+                            <img src="<?php echo Utils::renderQr($currency, $details->address, $amount); ?>" />
                             <span class="qr__logo <?php echo str_replace('@', '-', $details->currency); ?>" title="<?php echo $currency->name; ?>"></span>
                         </figure>
                         <?php else : ?>
