@@ -165,16 +165,18 @@
   color: #a5a5a5;
 }
 .address a {
+  display: flex;
+  align-items: center;
   color: inherit;
   text-decoration: none;
 }
 .address a::before {
   display: inline-block;
   content: "";
-  width: 16px;
+  width: 14px;
   height: 14px;
   background: url(icons/external-link.svg) no-repeat;
-  background-size: cover;
+  background-size: contain;
   margin-right: 5px;
   opacity: 0.5;
 }
