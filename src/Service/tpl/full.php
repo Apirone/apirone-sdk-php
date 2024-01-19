@@ -10,7 +10,6 @@
  */
 
 use Apirone\SDK\Service\Utils;
-pa($details);
 ?>
 
 <div id="__apn-invoice" class="invoice-wrapper">
