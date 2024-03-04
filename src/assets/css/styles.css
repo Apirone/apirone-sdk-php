@@ -127,7 +127,10 @@
 .qr__wrapper .qr__logo.usdc-trx, .qr__wrapper .qr__logo.usdc-ttrx {
   background-image: url("icons/crypto/usdc_trx.svg"), url("icons/crypto/aprn.svg");
 }
-.qr__wrapper .qr__logo.tbch, .qr__wrapper .qr__logo.tbtc, .qr__wrapper .qr__logo.tdoge, .qr__wrapper .qr__logo.tltc, .qr__wrapper .qr__logo.ttrx, .qr__wrapper .qr__logo.usdc-ttrx {
+.qr__wrapper .qr__logo.usdt-trx, .qr__wrapper .qr__logo.usdt-ttrx {
+  background-image: url("icons/crypto/usdt_trx.svg"), url("icons/crypto/aprn.svg");
+}
+.qr__wrapper .qr__logo.tbch, .qr__wrapper .qr__logo.tbtc, .qr__wrapper .qr__logo.tdoge, .qr__wrapper .qr__logo.tltc, .qr__wrapper .qr__logo.ttrx, .qr__wrapper .qr__logo.usdc-ttrx, .qr__wrapper .qr__logo.usdt-ttrx {
   filter: grayscale(1);
 }
 
