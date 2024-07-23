@@ -260,7 +260,7 @@ In the ```examples``` folder, you can find a ready-made implementation of the li
 You can also run the playground.
 To run the playground, you need Docker and Docker Compose installed.
 
-To do this, you need to copy the ```docker-compose.yml``` file from the ```dev-docker``` folder to the library root folder and run the command:
+To do this, you need to copy the ```docker-compose.yml``` file from the ```docker``` folder to the library root folder and run the command:
 
     docker-compose up -d --build
 
