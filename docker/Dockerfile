@@ -1,6 +1,8 @@
 ARG VERSION=8.1
 FROM php:${VERSION}-apache-buster
 
+ARG UID=13344
+ARG GID=13344
 
 RUN apt-get update && apt-get install -y \
         libfreetype6-dev \
@@ -58,10 +60,12 @@ RUN pecl install xdebug-3.1.4 && \
     docker-php-ext-enable xdebug && \
     mkdir /var/log/xdebug
 
-COPY dev-docker/composer_init.sh /usr/bin/composer_init.sh
+COPY docker/composer_init.sh /usr/bin/composer_init.sh
 RUN cd /usr/bin && chmod +x composer_init.sh
 
 CMD ["/usr/bin/composer_init.sh"]
+
+RUN usermod -u ${UID} www-data && groupmod -g ${GID} www-data
 
 # Mod rewrite
 RUN a2enmod rewrite

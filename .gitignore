@@ -1,10 +1,9 @@
 .vscode
 vendor
-dev-docker/data
-dev-docker/storage
+docker/data
+docker/storage
 composer.lock
 docker-compose.yml
-!dev-docker/docker-compose.yml
 src/*.php
 src/*.json
 !src/Invoice.php
