@@ -106,12 +106,22 @@ require_once('helpers/common.php');
                                         <option value="" class="text-gray-400">Select currency</option>
                                         <template x-if="$store.settings">
                                             <template x-for="currency in $store.settings.currencies">
-                                                <option x-text="currency.abbr"></option>
+                                                <template x-if="currency.address">
+                                                    <option x-text="currency.abbr"></option>
+                                                </template>
+                                            </template>
+                                        </template>
+                                        <template x-if="$store.settings">
+                                            <template x-for="currency in $store.settings.currencies">
+                                                <template x-if="!currency.address">
+                                                    <option x-text="currency.abbr" disabled></option>
+                                                </template>
                                             </template>
                                         </template>
                                     </select>
                                     <span class="inline-block mt-2 text-gray-400 text-sm">
-                                        Currency type (any cryptocurrency supported by service). Required	
+                                        Currency type - any cryptocurrency supported by service.
+                                        If no destination is set, currency is disabled. See settings.json above. Required	
                                     </span>
                                 </label>
                                 <label class="block">
