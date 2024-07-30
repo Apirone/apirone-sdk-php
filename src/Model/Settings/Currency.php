@@ -20,7 +20,6 @@ use Apirone\API\Exceptions\UnauthorizedException;
 use Apirone\API\Exceptions\ForbiddenException;
 use Apirone\API\Exceptions\NotFoundException;
 use Apirone\API\Exceptions\MethodNotAllowedException;
-use Apirone\API\Log\LoggerWrapper;
 use Apirone\SDK\Model\AbstractModel;
 use Exception;
 use ReflectionException;
@@ -40,6 +39,10 @@ class Currency extends AbstractModel
     private ?string $address = null;
 
     private string $policy = 'fixed';
+
+    private ?string $network = null;
+    
+    private ?string $token = null;
 
     private ?string $error = null;
 
@@ -121,7 +124,7 @@ class Currency extends AbstractModel
 
         $this->error = null;
         try {
-            Account::init($account, $transferKey)->settings($this->abbr, $options);
+            Account::init($account, $transferKey)->settings($this->network, $options);
         }
         catch(Exception $e) {
             $this->error = $e->getMessage();
@@ -244,5 +247,67 @@ class Currency extends AbstractModel
     public function hasError(): bool
     {
         return $this->error ? true : false;
+    }
+
+    /**
+     * Return network abbr if currency a network
+     * 
+     * @return null|string 
+     */
+    public function isNetwork()
+    {
+        return ($this->token == null) ? $this->network : null;
+    }
+
+    /**
+     * Return network abbr if currency a token
+     * 
+     * @return null|string 
+     */
+    public function isToken()
+    {
+        return ($this->token !== null ) ? $this->network : null;
+    }
+
+    /**
+     * Return array of currencies
+     * @return array
+     */
+    public function getTokens(array $currencies)
+    {
+        if ($this->isToken()) {
+            return [];
+        }
+        $tokens = [];
+        
+        foreach ($currencies as $currency) {
+            if ($currency instanceof Currency && $currency->isToken() == $this->network) {
+                $tokens[] = $currency;
+            }
+        }
+
+        return $tokens;
+    }
+
+    /**
+     * Parse currency abbr to set network & token
+     *
+     * @return self
+     */
+    public function parseAbbr()
+    {
+        $parts = explode('@', $this->abbr);
+        switch (count($parts)) {
+            case 1:
+                $this->network = $parts[0];
+                $this->token = null;
+                break;
+            case 2:
+                $this->network = $parts[1];
+                $this->token = $parts[0];
+                break;
+        }
+
+        return $this;
     }
 }
