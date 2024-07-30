@@ -131,7 +131,7 @@ class Settings extends AbstractModel
     /**
      * Create instance
      *
-     * @return static
+     * @return self
      * @throws RuntimeException
      * @throws ValidationFailedException
      * @throws UnauthorizedException
@@ -143,16 +143,16 @@ class Settings extends AbstractModel
     public static function init()
     {
         $class = new static();
-        $class->currencies = $class->loadCurrencies();
 
-        return $class;
+        return $class->loadCurrencies();
     }
 
     /**
      * Restore settings from JSON
      *
      * @param mixed $json
-     * @return static
+     * Get the value of transferKey
+     * @return self
      * @throws ReflectionException
      * @throws RuntimeException
      * @throws ValidationFailedException
@@ -167,7 +167,7 @@ class Settings extends AbstractModel
         $class->classLoader($json);
 
         if (empty($class->currencies)) {
-            $class->currencies = $class->loadCurrencies();
+            $class->loadCurrencies();
         }
 
         return $class;
@@ -177,7 +177,7 @@ class Settings extends AbstractModel
      * Restore settings from file
      *
      * @param mixed $abspath
-     * @return static|null
+     * @return self|null
      * @throws ReflectionException
      * @throws RuntimeException
      * @throws ValidationFailedException
@@ -202,7 +202,7 @@ class Settings extends AbstractModel
      *
      * @param mixed $account
      * @param mixed $transferKey
-     * @return static
+     * @return self
      * @throws RuntimeException
      * @throws ValidationFailedException
      * @throws UnauthorizedException
@@ -258,7 +258,7 @@ class Settings extends AbstractModel
      * Create a new apirone account
      *
      * @param bool $renew
-     * @return $this
+     * @return self
      * @throws RuntimeException
      * @throws ValidationFailedException
      * @throws UnauthorizedException
@@ -287,7 +287,7 @@ class Settings extends AbstractModel
     /**
      * Reset settings to default values
      *
-     * @return $this
+     * @return self
      */
     public function restoreDefaults()
     {
@@ -304,7 +304,7 @@ class Settings extends AbstractModel
     /**
      * Load currencies from an apirone service
      *
-     * @return array
+     * @return self
      * @throws RuntimeException
      * @throws ValidationFailedException
      * @throws UnauthorizedException
@@ -318,7 +318,7 @@ class Settings extends AbstractModel
         $serviceInfo = Service::account();
         $accountInfo = ($this->account) ? Account::init($this->account)->info()->info : [];
 
-        $currencies = [];
+        $this->currencies = [];
         foreach($serviceInfo->currencies as $serviceItem) {
             $currency = Currency::fromJson($serviceItem);
             foreach ($accountInfo as $accountItem) {
@@ -329,16 +329,16 @@ class Settings extends AbstractModel
                 $currency->setAddress($address);
                 $currency->setPolicy($accountItem->{'processing-fee-policy'});
             }
-            $currencies[] = $currency;
+            $this->currencies[] = $currency;
         }
 
-        return $currencies;
+        return $this;
     }
 
     /**
      * Save currencies into apirone account
      *
-     * @return $this
+     * @return self
      */
     public function saveCurrencies()
     {
@@ -368,6 +368,8 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of account
+     * 
+     * @return null|string 
      */
     public function getAccount()
     {
@@ -376,7 +378,9 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of transferKey
-     */
+     * 
+     * @return null|string 
+     */ 
     public function getTransferKey()
     {
         return $this->transferKey;
@@ -384,10 +388,28 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of currencies
+     * 
+     * @return array 
      */
     public function getCurrencies()
     {
         return $this->currencies;
+    }
+
+    /**
+     * Get the networks only
+     * 
+     * @return array 
+     */
+    public function getNetworks()
+    {
+        $networks = [];
+        foreach ($this->currencies as $currency) {
+            if (!$currency->isToken()) {
+                $networks[] = $currency;
+            }
+        }
+        return $networks;
     }
 
     /**
@@ -416,6 +438,8 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of merchant
+     * 
+     * @return string 
      */
     public function getMerchant()
     {
@@ -448,7 +472,6 @@ class Settings extends AbstractModel
      * Set merchant Url
      *
      * @param  string  $merchantUrl  Merchant Url
-     *
      * @return  self
      */
     public function setMerchantUrl(string $merchantUrl)
@@ -460,6 +483,8 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of timeout
+     * 
+     * @return int 
      */
     public function getTimeout()
     {
@@ -480,6 +505,8 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of factor
+     * 
+     * @return float 
      */
     public function getFactor()
     {

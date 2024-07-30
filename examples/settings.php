@@ -29,11 +29,12 @@ else {
     $settings = Settings::fromFile($path);
 }
 
-// Set destination & fee policy for btc curency (for example)
-$destination = '3KM9d68fLzSiukUFcx5vbiMHoLc6RvsRLy';
+// Set destination & fee policy for tbtc currency (for example)
+$destination = '2N186GvYp1gctUXMT4RXzAv3N5MB7wLncq7';
 $fee = 'percentage';
 
-$settings->getCurrency('btc')->setAddress($destination)->setPolicy($fee);
+$settings->getCurrency('btc')->setAddress();
+$settings->getCurrency('tbtc')->setAddress($destination)->setPolicy($fee);
 
 // Save currencies settings into account
 $settings->saveCurrencies();
