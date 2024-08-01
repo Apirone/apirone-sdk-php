@@ -13,38 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install composer dependencies
-        run: composer update --no-dev --prefer-dist
-
-      - name: Build artifact
-        run: make build
-
       - id: release_info
         uses: release-drafter/release-drafter@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      #- name: Create ZIP
-        #run: zip -r apirone-v${{ github.ref_name }}.zip ./apirone
-
-      #- name: Clean existing assets
-        #shell: bash
-        #run: |
-          #curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
-          #assets=`bin/hub api -t repos/${{ github.repository }}/releases/${{ steps.release_info.outputs.id }}/assets | awk '/\].url/ { print $2 }'`
-          #for asset in $assets
-          #do
-            #bin/hub api -X DELETE $asset
-          #done
-        #env:
-          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      #- name: Publish to GitHub Release
-        #uses: actions/upload-release-asset@v1
-        #env:
-          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        #with:
-          #upload_url: ${{ steps.release_info.outputs.upload_url }}
-          #asset_path: apirone-v${{ github.ref_name }}.zip
-          #asset_name: apirone-v${{ github.ref_name }}.zip
-          #asset_content_type: application/zip
