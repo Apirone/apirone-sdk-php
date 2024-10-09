@@ -3,7 +3,7 @@ services:
   apache:
     build:
       context: ./
-      dockerfile: ./dev-docker/Dockerfile
+      dockerfile: ./docker/Dockerfile
       args:
         VERSION: 7.4
         GID: 1000
