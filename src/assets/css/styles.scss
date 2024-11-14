@@ -7,6 +7,15 @@
     color: #5d8ab9;
 }
 
+.invoice-wrapper {
+    & >.invoice * {
+        box-sizing: content-box;
+    }
+    p {
+    margin: 0;
+    }
+}
+
 .invoice {
     width: 95%;
     max-width: 35rem;
@@ -28,6 +37,22 @@
             font-size: 50%;
             opacity: .6;
         }
+    }
+    .btn,
+    .btn:hover,
+    .btn:focus,
+    .btn:active,
+    .btn__copy,
+    .btn__copy:hover,
+    .btn__copy:focus,
+    .btn__copy:active {
+        outline: none;
+        border: none;
+        border-color: unset;
+        color: unset;
+    }
+    .btn__copy:hover {
+        background-color: unset;
     }
 }
 
@@ -394,6 +419,7 @@
         }
     }
     p.skeleton__box {
+        margin-bottom: 21px;
         width: 100%;
         height: 2rem;
     }

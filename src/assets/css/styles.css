@@ -7,6 +7,13 @@
   color: #5d8ab9;
 }
 
+.invoice-wrapper > .invoice * {
+  box-sizing: content-box;
+}
+.invoice-wrapper p {
+  margin: 0;
+}
+
 .invoice {
   width: 95%;
   max-width: 35rem;
@@ -28,6 +35,22 @@
 .invoice h1 small {
   font-size: 50%;
   opacity: 0.6;
+}
+.invoice .btn,
+.invoice .btn:hover,
+.invoice .btn:focus,
+.invoice .btn:active,
+.invoice .btn__copy,
+.invoice .btn__copy:hover,
+.invoice .btn__copy:focus,
+.invoice .btn__copy:active {
+  outline: none;
+  border: none;
+  border-color: unset;
+  color: unset;
+}
+.invoice .btn__copy:hover {
+  background-color: unset;
 }
 
 .invoice-expired {
@@ -379,6 +402,7 @@
   animation: shimmer 2s infinite;
 }
 .loading p.skeleton__box {
+  margin-bottom: 21px;
   width: 100%;
   height: 2rem;
 }

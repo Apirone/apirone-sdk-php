@@ -171,7 +171,7 @@ use Apirone\SDK\Service\Utils;
                                 <li>
                                     <?php if ($item->getAmount()) : ?>
                                     <a class="history__item" href="<?php echo Utils::getTransactionLink($currency, $item->getTxid()); ?>" target="_blank">
-                                        <span><?php $d($item->getDate()); ?> <span>(<?php echo Utils::exp2dec($item->getAmount() * $currency->getUnitsFactor()) ?>)</span></span>
+                                        <span><?php $d($item->getDate()); ?> <span>(<?php echo Utils::humanizeAmount($item->getAmount(), $currency) ?>)</span></span>
                                         <span style="text-align: right;"><?php $t($item->getStatus()); ?></span>
                                     </a>
                                     <?php else : ?>

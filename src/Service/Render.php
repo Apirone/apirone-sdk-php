@@ -154,7 +154,7 @@ class Render
                     }
                 }
                 $amount = ($remains <= 0) ? $details->amount : $remains;
-                $amount = Utils::exp2dec($amount * $currency->getUnitsFactor());
+                $amount = Utils::humanizeAmount($amount, $currency);
 
                 if (($details->status == 'created' || $details->status == 'partpaid') && !$details->isExpired()) {
                     $note = 'notePayment';
