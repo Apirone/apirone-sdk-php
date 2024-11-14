@@ -156,14 +156,14 @@ class Utils
     public static function humanizeAmount($amount, $currency, $zeroTrim = false)
     {
         $amount = $amount * $currency->unitsFactor;
-        $digits = $currency->isToken() ? '2' : strlen((string)(1 / $currency->unitsFactor) - 1);
-        $digits = '%.' . $digits . 'f';
+        $decimals = $currency->isToken() ? '2' : strlen((string)((1 / $currency->unitsFactor) - 1));
+        $format = '%.' . $decimals . 'f';
 
         if ($zeroTrim) {
-            return rtrim(rtrim(sprintf($digits, floatval($amount)), 0), '.');
+            return rtrim(rtrim(sprintf($format, floatval($amount)), 0), '.');
         }
 
-        return sprintf($digits, floatval($amount));
+        return sprintf($format, floatval($amount));
     }
 
     /**
