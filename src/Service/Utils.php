@@ -142,6 +142,7 @@ class Utils
      * @param mixed $value
      * @param bool $zeroTrim (optional)
      * @return string
+     * @deprecated Use humanizeAmount()
      */
     public static function exp2dec($value, $zeroTrim = false)
     {
@@ -150,6 +151,19 @@ class Utils
         }
 
         return sprintf('%.8f', floatval($value));
+    }
+
+    public static function humanizeAmount($amount, $currency, $zeroTrim = false)
+    {
+        $amount = $amount * $currency->unitsFactor;
+        $digits = $currency->isToken() ? '2' : strlen((string)(1 / $currency->unitsFactor) - 1);
+        $digits = '%.' . $digits . 'f';
+
+        if ($zeroTrim) {
+            return rtrim(rtrim(sprintf($digits, floatval($amount)), 0), '.');
+        }
+
+        return sprintf($digits, floatval($amount));
     }
 
     /**

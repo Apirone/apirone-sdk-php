@@ -154,7 +154,7 @@ class Render
                     }
                 }
                 $amount = ($remains <= 0) ? $details->amount : $remains;
-                $amount = Utils::exp2dec($amount * $currency->getUnitsFactor());
+                $amount = Utils::humanizeAmount($amount, $currency);
 
                 if (($details->status == 'created' || $details->status == 'partpaid') && !$details->isExpired()) {
                     $note = 'notePayment';
@@ -254,7 +254,7 @@ class Render
                 $result = '';
             }
             else {
-                $locale = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', 0, 2);
+                $locale = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
                 $locale = array_key_exists($locale, $locales) ? $locale : 'en';
 
                 $result = array_key_exists($key, $locales[$locale]) ? $locales[$locale][$key] : $locales['en'][$key];
@@ -267,7 +267,7 @@ class Render
         };
 
         // Locale date formatter callback
-        $fmt = datefmt_create(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', 0, 2), 3, 2, self::$timeZone, 1);
+        $fmt = datefmt_create(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2), 3, 2, self::$timeZone, 1);
         $d = static function ($date, $echo = true) use ($fmt) {
             $result = datefmt_format($fmt, new \DateTime($date . 'Z'));
 
