@@ -543,16 +543,15 @@ class Invoice extends AbstractModel
 
             if ($params) {
                 $id = property_exists($params, 'invoice') ? (string) $params->invoice : '';
-                $offset = property_exists($params, 'offset') ? (int) $params->offset : 0;
+                $offset = property_exists($params, 'offset') ? (int) $params->offset : null;
                 header("Content-Type: text/plain");
                 $invoice = Invoice::getInvoice($id);
-                if ($offset) {
-                    Render::setTimeZoneByOffset($offset);
-                    echo $invoice->render();
-                }
-                else {
+                if ($offset === null) {
                     echo $invoice->id ? $invoice->details->statusNum() : 0;
+                    exit;
                 }
+                Render::setTimeZoneByOffset($offset);
+                echo $invoice->render();
             }
             exit;
         }
