@@ -304,7 +304,7 @@ class Invoice extends AbstractModel
     }
 
     /**
-     * Set currency for neww invoice
+     * Set currency for new invoice
      *
      * @param string $currency
      * @return static
