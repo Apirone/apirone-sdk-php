@@ -1,12 +1,14 @@
 document.addEventListener("DOMContentLoaded", function(e) {
   const d = document;
   const offset = new Date().getTimezoneOffset();
-  const loading = d.querySelector('.loading');
+  // const loading = d.querySelector('.loading');
   const _id = d.getElementById('invoice_id');  
   const id = _id ? _id.value : null;
   const link = (ln = d.getElementById('statusUrl')) ? ln.attributes.href.value : null;
   const url = link;
   let statusNum = null;
+  let shorterFlag = false;
+  let address = null;
 
   const params = {method:'POST',headers:{'X-Requested-With':'XMLHttpRequest'}};
   async function getStat() {
@@ -39,6 +41,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
     setToggler();
     countdown();
     linkback();
+    setShorter();
     stat = await getStat();
 
     async function refresh() {
@@ -112,6 +115,26 @@ document.addEventListener("DOMContentLoaded", function(e) {
       }
     }, 1000);
   }
+  function getShorter(value) {
+    return `${value.slice(0, 10)}...${value.slice(-10)}`;
+  }
+  function setShorter() {
+        address = (addr = d.querySelector('.address a')) ? addr.innerHTML : null;
+        if (address && window.innerWidth < 450) {
+          d.querySelector('.address a').innerHTML = getShorter(address);
+        }
+        shorterFlag = window.innerWidth < 450;
+        window.addEventListener('resize', () => {
+            shorterFlag = window.innerWidth < 450;
+            if (shorterFlag && address !== null) {
+              d.querySelector('.address a').innerHTML = getShorter(address);
+            }
+            else {
+              d.querySelector('.address a').innerHTML = address;
+            }
+        });
+    }
+
   load();
 
 });
