@@ -23,6 +23,7 @@ Easy integration of cryptocurrency payments.
 - [Examples and playground](#examples-and-playground)
 - [Support](#support)
 - [License](#license)
+- [Changelog](#changelog)
 
 ---
 
@@ -295,3 +296,61 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## Changelog
+
+### Version 1.1.5 | 20/11/2024 <!-- omit in toc -->
+
+- Fixed render ajax response when offset exists and is zero
+- Added mobile view for address strings & mobile styles improved
+- Added changelog, code cleanup & fixed misprints
+
+### Version 1.1.4 | 14/11/2024 <!-- omit in toc -->
+
+- Fixed strlen fatal error
+
+### Version 1.1.3 | 14/11/2024 <!-- omit in toc -->
+
+- Updated render & docker-compose
+- Styles updated
+- Added humanizeAmount method
+
+### Version 1.1.2 | 02/08/2024 <!-- omit in toc -->
+
+- Workflows updated
+- Added release-drafter workflow
+- One address for network and its tokens
+- Folder structure refactored. Added local UID/GID to Dockerfile
+
+### Version 1.1.1 | 05/03/2024 <!-- omit in toc -->
+
+- Added USDT icon
+
+### Version 1.1.0 | 19/01/2024 <!-- omit in toc -->
+
+- Added internal QR code generator
+- Updated styles
+- Minor fixes
+
+### Version 1.0.4 | 28/12/2023 <!-- omit in toc -->
+
+- Added external link icon
+- Updated script.min.js
+
+### Version 1.0.3 | 26/12/2023 <!-- omit in toc -->
+
+- Optimized styles assets
+- Added currency default placeholder icon
+
+### Version 1.0.2 | 26/12/2023 <!-- omit in toc -->
+
+- Added icons
+- Updated styles & js
+
+### Version 1.0.1 | 30/11/2023 <!-- omit in toc -->
+
+- Updated getter for explorer links
+
+### Version 1.0.0 | 14/11/2023 <!-- omit in toc -->
+
+- First release of the library
