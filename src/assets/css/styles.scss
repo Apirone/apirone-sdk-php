@@ -75,6 +75,7 @@
     font-size: 1.3rem;
     font-weight: 600;
     margin-bottom: 0;
+    padding-top: 1em;
     & small {
         width: 100%;
         margin-bottom: 0.5rem;
@@ -180,7 +181,6 @@
     align-items: center;
     justify-content: space-between;
     position: relative;
-    width: 100%;
     min-height: 4rem;
     margin: 1rem 0;
     padding: 0 1rem;
@@ -237,7 +237,7 @@
 }
 
 .status-note {
-  padding-top: 6rem;
+  padding-top: 7rem;
   font-size: 0.8rem;
   margin: 0 4rem;
   color: #a5a5a5;
@@ -377,6 +377,7 @@
     color: #a5a5a5;
     & p {
         text-align: center;
+        margin: 1em 0;
     }
     & .logo {
         display: inline-block;
@@ -466,6 +467,14 @@
     .info {
         order: -1;
         margin-left: 0;
+    }
+    .qr__wrapper {
+        margin-top: 1rem;
+        width: 10rem;
+        min-width: auto;
+    }
+    .status-note {
+        margin: 0;
     }
 }
 

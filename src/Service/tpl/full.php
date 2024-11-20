@@ -37,7 +37,6 @@ use Apirone\SDK\Service\Utils;
                     <p class="skeleton__box info__amount"></p>
                 <?php else : /* Invoice data */?>
                     <?php if($userData) : /* userData */ ?>
-                    <div>
                         <?php if($userData->title) : ?>
                         <h1><?php echo $userData->title; ?></h1>
                         <?php else : ?>
@@ -68,7 +67,6 @@ use Apirone\SDK\Service\Utils;
                         <?php echo ($status->title == 'Refresh') ? $c($amount, 'margin-left: .5rem;', false) : ''; ?>
                     <?php endif; ?>
                     </p>
-                    </div>
                 <?php endif; /* Loading/Invoice end */ ?>
                 </div>
                 <input id="invoice_id" type="hidden" value="<?php echo $id; ?>">

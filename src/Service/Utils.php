@@ -153,6 +153,14 @@ class Utils
         return sprintf('%.8f', floatval($value));
     }
 
+    /**
+     * Convert to decimal and trim trailing zeros if $zeroTrim set true
+     *
+     * @param int $amount
+     * @param Currency $currency
+     * @param bool $zeroTrim (optional)
+     * @return string
+     */
     public static function humanizeAmount($amount, $currency, $zeroTrim = false)
     {
         $amount = $amount * $currency->unitsFactor;
