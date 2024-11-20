@@ -119,21 +119,18 @@ document.addEventListener("DOMContentLoaded", function(e) {
     return `${value.slice(0, 10)}...${value.slice(-10)}`;
   }
   function setShorter() {
-        address = (addr = d.querySelector('.address a')) ? addr.innerHTML : null;
-        if (address && window.innerWidth < 450) {
-          d.querySelector('.address a').innerHTML = getShorter(address);
-        }
-        shorterFlag = window.innerWidth < 450;
-        window.addEventListener('resize', () => {
-            shorterFlag = window.innerWidth < 450;
-            if (shorterFlag && address !== null) {
-              d.querySelector('.address a').innerHTML = getShorter(address);
-            }
-            else {
-              d.querySelector('.address a').innerHTML = address;
-            }
-        });
+    address = (addr = d.querySelector('.address a')) ? addr.innerHTML : null;
+    if (address && window.innerWidth < 450) {
+      d.querySelector('.address a').innerHTML = getShorter(address);
     }
+    shorterFlag = window.innerWidth < 450;
+    window.addEventListener('resize', () => {
+      shorterFlag = window.innerWidth < 450;
+      if (address !== null) {
+        d.querySelector('.address a').innerHTML = (shorterFlag) ? getShorter(address) : address;
+      }
+    });
+  }
 
   load();
 
