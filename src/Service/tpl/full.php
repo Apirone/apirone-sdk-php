@@ -64,7 +64,7 @@ use Apirone\SDK\Service\Utils;
                     <?php endif; ?>
                     <?php if($details && $amount) : ?>
                         <span><?php echo $amount . ' ' . strtoupper($details->currency); ?></span>
-                        <?php echo ($status->title == 'Refresh') ? $c($amount, 'margin-left: .5rem;', false) : ''; ?>
+                        <?php echo ($status->title == 'Refresh') ? $c($amount, '', false) : ''; ?>
                     <?php endif; ?>
                     </p>
                 <?php endif; /* Loading/Invoice end */ ?>
