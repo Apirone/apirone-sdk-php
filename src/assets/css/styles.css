@@ -239,8 +239,8 @@
   border-radius: 0 0 1rem 1rem;
 }
 #__apn-invoice .status-data.historyFlag .history ul {
+  margin: 0;
   padding: 0 1rem 1rem;
-  margin-bottom: 0;
   background-color: #fff;
 }
 #__apn-invoice .history__item {
