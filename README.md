@@ -270,7 +270,6 @@ After the start of the containers, the playground will be available in the brows
 ## Support
 
 - https://github.com/Apirone/apirone-sdk-php/issues
-
 - support@apirone.com
 
 ## License
@@ -298,6 +297,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ## Changelog
+
+### Version 1.1.6 | 21/11/2024 <!-- omit in toc -->
+
+- Isolated styles from sdk root element
+- Clear unused styles & code cleanup
+- Minimized styles assets
 
 ### Version 1.1.5 | 20/11/2024 <!-- omit in toc -->
 
