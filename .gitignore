@@ -11,3 +11,6 @@ src/*.json
 !src/Render.php
 examples/assets
 .php-cs-fixer.cache
+node_modules
+docs/.vitepress/cache
+docs/.vitepress/dist
