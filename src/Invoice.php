@@ -104,8 +104,21 @@ class Invoice extends AbstractModel
      *
      * @param mixed $logger
      * @return void
+     * @deprecated
      */
     public static function setLogger($logger): void
+    {
+        LoggerWrapper::setLogger($logger);
+    }
+
+    /**
+     * Set log handler
+     * Alias to setLogger()
+     *
+     * @param mixed $logger
+     * @return void
+     */
+    public static function logger($logger): void
     {
         LoggerWrapper::setLogger($logger);
     }

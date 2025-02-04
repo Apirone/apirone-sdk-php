@@ -22,4 +22,4 @@ $loggerCallback = static function ($level, $message, $context) {
     file_put_contents($log_file, print_r($data, true) . "\r\n", FILE_APPEND);
 };
 
-Invoice::setLogger($loggerCallback);
+Invoice::logger($loggerCallback)
