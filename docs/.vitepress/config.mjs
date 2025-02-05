@@ -8,7 +8,7 @@ export default defineConfig({
   head: [['link', { rel: 'icon', href: '/apirone-sdk-php/favicon.ico' }]],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    outline: 'deep',
+    outline: [1,3],
     logo: '/logo-primarySmall.svg',
     nav: nav(),
 
@@ -54,14 +54,14 @@ function sidebar() {
   return  [
       {
         items: [
-          { text: 'Intro', link: '/Intro' },
-          { text: 'Account', link: '/Account' },
-          { text: 'Wallet', link: '/Wallet' },
-          { text: 'Invoices', link: '/Invoices' },
-          { text: 'Services', link: '/Services' },
-          { text: 'Authorization', link: '/Authorization' },
-          { text: 'Helpers', link: '/Helpers' },
-          { text: 'Log handling', link: '/LogHandling' },
+          { text: 'Intro', link: '/intro' },
+          { text: 'Five steps', link: '/five-steps' },
+          // { text: 'Wallet', link: '/Wallet' },
+          // { text: 'Invoices', link: '/Invoices' },
+          // { text: 'Services', link: '/Services' },
+          // { text: 'Authorization', link: '/Authorization' },
+          // { text: 'Helpers', link: '/Helpers' },
+          // { text: 'Log handling', link: '/LogHandling' },
         ]
       },
     ]
