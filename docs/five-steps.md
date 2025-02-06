@@ -1,4 +1,4 @@
-# Five steps. Quick integration guide
+# Five-steps integration guide
 
 These five steps will help you easily integrate Apirone Payment Gateway into your application.
 
@@ -151,10 +151,10 @@ A more complicated variant is that you implement the way of storing settings you
 use Apirone\SDK\Model\Settings;
 
 // Save to file
-$settings->toFile('/absolute/path/to/settings/file.ext');
+$settings->toFile('/absolute/path/to/settings.json');
 
 // Restore from file
-$settings = Settings::fromFile('/absolute/path/to/settings/file.ext');
+$settings = Settings::fromFile('/absolute/path/to/settings.json');
 
 // Get settings JSON object
 $json = $settings->toJson();
@@ -166,5 +166,112 @@ $settings = Settings::fromJson($json);
 
 ## Step 4. Invoice creating
 
+A mandatory condition for creating an invoice is the presence of a database handler and a configured Settings object.
+To add the above, use the static methods of the Invoice class before creating an invoice instance.
+
+```php
+// Setup DB and Settings into Invoice class
+Invoice::db($db_handler, $table_prefix);
+Invoice::settings(Settings::fromFile('/absolute/path/to/settings.json'));
+```
+
+Let's create your first invoice. There are two ways to create an invoice - set an amount in crypto or create from fiat currency.
+
+### Via crypto amount
+
+The mandatory parameter for creating an invoice is the currency. All other parameters are optional.
+Initialize the invoice with the desired currency and call the `Invoice::create()` method.
+You can also set other parameters before you call the `Invoice::create()` method.
+
+```php
+$invoice_simple = Invoice::init('btc')->create();
+```
+
+If you have created the database function and the Settings object correctly, the result of the execution
+will be a created invoice and a record will be added to the invoice table.
+The created invoice will wait for any amount to be paid, after which its [status](https://apirone.com/docs/invoices/#invoice-status) will change to `completed`.
+
+To create a fixed amount invoice, you can set it up by calling the `Invoice::init()` method or using the `Invoice::amount()` method.
+The amount is indicated in minor units (e.g. 0.005 BTC shall be specified as 500000, e.g. for usdt@trx: 50 usd shall be specified as 50000000).
+
+```php
+// 0.005 btc
+$invoice_btc = Invoice::init('btc', 500000)->create();
+
+// 50 usd via usdt@trx
+$invoice_usdt = Invoice::init('usdt@trx')
+    ->amount(50000000)
+    ->create();
+```
+
+### Via fiat amount
+
+If you have an amount in fiat currency, you can convert it to the desired crypto yourself or use another static method `Invoice::fromFiatAmount()`.
+The amount specified in fiat will be converted to cryptocurrency automatically.
+See the list of [supported currencies](https://apirone.com/docs/supported-currencies-and-networks/).
+
+```php
+// Create an invoice for 99.50 USD via BTC
+$invoice_from_fiat = Invoice::fromFiatAmount(99.50, 'usd', 'btc');
+
+// Instead of this comment you can set other parameters.
+
+// Finally call create() method
+$invoice_from_fiat->create();
+```
+
 ## Step 5. Displaying an Invoice
 
+A special Render class that will easily allow you to display an invoice in your app.
+
+### Render invoice
+
+Add a page, the result of which will be html. It can be a template from your app, or a separate page with its own markup.
+Two files should be added to this page: `src/assets/css/styles.css` and `src/assets/js/script.js`.
+
+On this page, you should have the DB handler added and the Settings object loaded just like in Step 4.
+You should also customize the Render class by adding `Invoice Data URL` - a special address in your app
+that will return invoice data via POST AJAX request.
+
+You can add this parameter via the `Invoice::dataUrl()` method or directly, via the `Render::$dataUrl` property.
+
+```php
+use Apirone\SDK\Invoice;
+use Apirone\SDK\Model\Settings;
+
+// Setup DB and Settings into Invoice class
+Invoice::db($db_handler, $table_prefix);
+Invoice::settings(Settings::fromFile('/absolute/path/to/settings.json'));
+
+// Setup Invoice Data Url via Invoice class
+Invoice::dataUrl('https://my-domain.com/render-data-url.php');
+
+?>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="/assets/js/script.min.js" type="text/javascript"></script>
+        <link href="/assets/css/styles.min.css" rel="stylesheet">
+    </head>
+    <body style="margin: 0;">
+        <?php echo Invoice::renderLoader(); ?>
+    </body>
+</html>
+
+```
+
+### Render ajax response
+
+As well as Apirone callback handler, this is a page accessible from the Internet and supports POST requests.
+
+```php
+// Setup DB and Settings into Invoice class
+Invoice::db($db_handler, $table_prefix);
+Invoice::settings(Settings::fromFile('/absolute/path/to/settings.json'));
+
+// Setup Invoice Data Url via Invoice class
+Invoice::dataUrl('https://my-domain.com/render-data-url.php');
+
+Invoice::renderAjax();
+```

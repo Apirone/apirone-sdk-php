@@ -3,12 +3,12 @@ import { defineConfig } from 'vitepress'
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Apirone SDK PHP",
-  description: "PHP library for working with the Apirone API",
+  description: "Crypto payments in five easy steps",
   base: '/apirone-sdk-php/',
   head: [['link', { rel: 'icon', href: '/apirone-sdk-php/favicon.ico' }]],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    outline: [1,3],
+    outline: [2,3],
     logo: '/logo-primarySmall.svg',
     nav: nav(),
 
@@ -52,18 +52,33 @@ function nav() {
 
 function sidebar() {
   return  [
-      {
+      { 
+        text: 'Getting started',
+        collapsed: false,
         items: [
           { text: 'Intro', link: '/intro' },
-          { text: 'Five steps', link: '/five-steps' },
-          // { text: 'Wallet', link: '/Wallet' },
-          // { text: 'Invoices', link: '/Invoices' },
-          // { text: 'Services', link: '/Services' },
-          // { text: 'Authorization', link: '/Authorization' },
-          // { text: 'Helpers', link: '/Helpers' },
-          // { text: 'Log handling', link: '/LogHandling' },
+          { text: 'Five-steps integration', link: '/five-steps' },
         ]
       },
+      {
+        text: 'Classes',
+        collapsed: false,
+        items: [
+          {text: 'Invoice', link: '/invoice'},
+          {text: 'AbstractModel', link: '/abstract-model'},
+          {text: 'HistoryItem', link: '/history-item'},
+          {text: 'InvoiceDetails', link: '/invoice-details'},
+          {text: 'UserData', link: '/user-data'},
+          {text: 'UserData/ExtraItem', link: '/extra-item'},
+          {text: 'UserData/OrderItem', link: '/order-item'},
+          {text: 'Settings', link: '/settings'},
+          {text: 'Settings/Currency', link: '/currency'},
+          {text: 'InvoiceDb', link: '/invoice-db'},
+          {text: 'InvoiceQuery', link: '/invoice-query'},
+          {text: 'Render', link: '/render'},
+          {text: 'Utils', link: '/utils'},
+        ]
+      }
     ]
 }
 
