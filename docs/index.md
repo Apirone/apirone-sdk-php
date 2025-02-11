@@ -13,10 +13,8 @@ hero:
           text: GitHub
           link: https://github.com/Apirone/apirone-sdk-php
     image:
-        # src: /api-3d-icon_800x800.png
-        # src: /api-3d-icon_1024x1024.png
-        src: /api-3d-icon.png
-        alt: Apirone Api PHP
+        src: /sdk-3d-icon.png
+        alt: Apirone SDK PHP
 features:
     - title: White label
       details: Install via composer or download from our GitHub.
