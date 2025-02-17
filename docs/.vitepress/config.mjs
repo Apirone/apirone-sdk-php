@@ -6,6 +6,7 @@ export default defineConfig({
   description: "Crypto payments in five easy steps",
   base: '/apirone-sdk-php/',
   head: [['link', { rel: 'icon', href: '/apirone-sdk-php/favicon.ico' }]],
+  cleanUrls: true,
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     outline: [2,3],
@@ -56,29 +57,32 @@ function sidebar() {
         text: 'Getting started',
         collapsed: false,
         items: [
-          { text: 'Intro', link: '/intro' },
-          { text: 'Five-steps integration', link: '/five-steps' },
+          { text: 'Overview', link: '/overview' },
+          { text: 'Five-steps guide', link: '/five-steps-guide' },
         ]
       },
       {
-        text: 'Classes',
-        collapsed: false,
+        text: 'Dive deeper',
+        collapsed: true,
         items: [
           {text: 'Invoice', link: '/invoice'},
-          {text: 'AbstractModel', link: '/abstract-model'},
-          {text: 'HistoryItem', link: '/history-item'},
-          {text: 'InvoiceDetails', link: '/invoice-details'},
           {text: 'UserData', link: '/user-data'},
-          {text: 'UserData/ExtraItem', link: '/extra-item'},
-          {text: 'UserData/OrderItem', link: '/order-item'},
-          {text: 'Settings', link: '/settings'},
-          {text: 'Settings/Currency', link: '/currency'},
-          {text: 'InvoiceDb', link: '/invoice-db'},
-          {text: 'InvoiceQuery', link: '/invoice-query'},
-          {text: 'Render', link: '/render'},
+          {text: 'Settings class', link: '/settings'},
+          {text: 'Render invoice', link: '/render'},
           {text: 'Utils', link: '/utils'},
         ]
-      }
+      },
+      {
+        text: 'Usage examples',
+        link: '/usage-examples',
+      },
+      {
+        text: 'Deprecated pages',
+        items: [
+          {text: '__Overview', link: '/__overview'},
+          {text: '__Old readme', link: '/__readme'},
+        ]
+      },
     ]
 }
 
