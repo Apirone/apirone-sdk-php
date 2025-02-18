@@ -79,8 +79,8 @@ function sidebar() {
       {
         text: 'Deprecated pages',
         items: [
-          {text: '__Overview', link: '/__overview'},
-          {text: '__Old readme', link: '/__readme'},
+          {text: '_Overview', link: '/deprecated/overview'},
+          {text: '_README.md', link: '/deprecated/readme'},
         ]
       },
     ]
