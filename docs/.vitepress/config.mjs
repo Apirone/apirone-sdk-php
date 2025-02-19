@@ -54,17 +54,19 @@ function nav() {
 function sidebar() {
   return  [
       { 
-        text: 'Getting started',
+        text: 'Introduction',
         collapsed: false,
         items: [
-          { text: 'Overview', link: '/overview' },
+          { text: 'Getting started', link: '/getting-started' },
           { text: 'Five-steps guide', link: '/five-steps-guide' },
         ]
       },
       {
+        // text: 'Digging Deeper',
         text: 'Dive deeper',
         collapsed: true,
         items: [
+          {text: 'Overview', link: '/overview'},
           {text: 'Invoice', link: '/invoice'},
           {text: 'UserData', link: '/user-data'},
           {text: 'Settings class', link: '/settings'},

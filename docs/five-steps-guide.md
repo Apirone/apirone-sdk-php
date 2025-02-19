@@ -4,151 +4,134 @@ These five steps will help you easily integrate Apirone Payment Gateway into you
 
 ## Step 1. Configure logs and database
 
-For compatibility with various classes and functions for working with databases or logs, we use callback functions.
+We use callback functions for compatibility with different code to work with databases or logs.
 
 ### Creating a log handler
 
-You need to create a static function and wrap your logging system as a callback. If you don't use logging, you can skip this step.
+Create a static function and wrap the logging system in it as a callback.
+If you do not use logging, you can skip this step.
+Use the standard PSR-3: Logger Interface, which has a `log()` method, 
+or use your own function with the following parameters: `log($level, $message, $context)`
 
-You can use the standard PSR-3: Logger Interface which has a `log()` method. or use your own function with the following parameters: `log($level, $message, $context)`
-
-Simple log to file implementation
+Simple "log to file" implementation:
 
 ```php
+<?php
+use Apirone\SDK\Invoice;
+
 $logger_handler = static function ($level, $message, $context) {
     $log_file = '/path/to/log_file.txt';
     $data = [$level, $message, $context];
     file_put_contents($log_file, print_r($data, true) . "\r\n", FILE_APPEND);
 };
 
-// Set logger handler via Invoice class.
-Apirone\SDK\Invoice::logger($logger_handler);
-
-// Or use LoggerWrapper class directly
-Apirone\API\Log\LoggerWrapper::setLogger($logger_handler);
+// Set logger handler via Invoice class
+Invoice::logger($logger_handler);
 
 ```
 
-See `Apirone\API\Log\LoggerWrapper` for details.
+### Database handler
 
-### Database query handler
-
-Just like with the logs, we need to wrap your database using your class or function that is used in your system to work with the DB.
-
-The required parameter of the function is a string. In fact, this is a SQL-query that must be executed and return the query result.
-For boolean results, return true or false. For data rows use fetch all result rows as an associative array.
+As with logs, wrap the DB class or function used to manipulate the database
+into a callback function that is passed an SQL query as a parameter.
 
 Once you have created your database callback function, simply set it as a DB handler.
 
 ```php
 $db_handler = static function ($query) {
     // Your implementation here;
+    // Just run a sql query and return the result
 }
 
-Apirone\SDK\Service\InvoiceDB::setHandler($db_handler);
-
-// Use Invoice::db() to set both db handler and table prefix if you need.
-Apirone\SDK\Invoice::db($db_handler, 'pfx_');
+Invoice::db($db_handler);
 ```
 
-### Invoice table creation
+### Invoice table
 
-For normal operation, it is necessary to create an invoice table in the database.
-Just execute the `InvoiceDB::install()` method once.
-
-On this step you can set table prefix, charset and database collate.
-Default values are: __$prefix__ is `empty`, __$charset__ is `utf8mb4`, __$collate__ is `utf8mb4_general_ci`.
+After installing the DB-handler, create an invoice table in the database.
+<!-- To do this, just execute the `InvoiceDB::install()` method once. -->
+To do this, just execute the `InvoiceDB::install()` method once.
 
 ```php
-Apirone\SDK\Service\InvoiceDb::install();
+<?php
+use Apirone\SDK\Service\InvoiceDb;
+
+// Create an invoice table
+InvoiceDb::install();
 ```
 
-If you need to delete a table, use `InvoiceDB::uninstall()` method.
-
-## Step 2. Apirone API callback handler
+## Step 2. Working with Apirone callbacks
 
 ### Create handler
 
-Apirone API informs users about events via callbacks. To process them, you need to create a function that will be accessible from the Internet and support the POST request method. For example, at the address `https://my-domain.com/aporone-callback-handler.php`.
-
-To correctly handle callbacks from the API, you must use the `Invoice::callbackHandler()` method. It must be the last one in the code.
+The Apirone service informs you of invoice events with callbacks.
+Create a page that supports the POST method and add `Invoice::callbackHandler()` call to it.
+You will use the URL of this page when creating the Invoice as a callback address.
 
 ### Process callback data
 
-If you need to process a callback from API in your system, you need to create a static handler function and simply pass it to the method as a parameter.
+When the callback is received you can process its data in your app.
+Create a handler and simply add it as a parameter to the Invoice::callbackHandler() function.
+To authenticate the order in your app, set its ID to the `Invoice::$order` property
+at the creation stage and get it from the invoice data at the callback processing stage.
 
 ```php
 $my_apirone_callback_handler = static function ($invoice) {
-    $my_system_payment_id = $invoice->order; // Set on Invoice create step
+    $my_app_order_id = $invoice->order;
 
-    // Process your business logic with payment_id here
+    // Process your business logic with $my_app_order_id here
 };
 
-Apirone\SDK\Invoice::callbackHandler($my_apirone_callback_handler);
+Invoice::callbackHandler($my_apirone_callback_handler);
 ```
 
-## Step 3. Settings creating
+## Step 3. Apirone account
 
-For ease of working with SDK, there is a special Settings class, which allows you to work with accounts, currencies, invoice parameters, etc.
+A special Settings class that allows you to work with accounts, currencies, invoice parameters, fees, etc.
 
-### Create new account
+### New or existing account
 
-If you don't have an account yet or want to create a new one, just create a new Settings object and create an account. You can use arrow functions.
+If you don't have an account yet or want to create a new one, just init a new Settings object and call `createAccount()` method.
 
 ```php
-    // Create a settings object and account.
-    $settings = Apirone\SDK\Model\Settings::init();
-    $settings->createAccount();
+<?php
+use Apirone\SDK\Model\Settings;
+
+// Create a settings object and account.
+$settings = Settings::init()->createAccount();
 
 ```
-
-### Use existing account
 
 If you already have an account, you can create a Settings object using the account ID and transfer key as parameters.
 
 ```php
-    use Apirone\SDK\Model\Settings;
-
-    // As an example, let's take the values from the Apirone docs
-    // https://apirone.com/docs/account/#response-example
-    $account = 'apr-f9e1211f4b52a50bcf3c36819fdc4ad3';
-    $transferKey = '4sSm9aeXQiqMBmeEs42NTjZidJuGrqm7'
-    
-    // Create settings object with existing account
-    $settings = Settings::fromExistingAccount($account, $transferKey);
+$account = 'apr-f9e1211f4b52a50bcf3c36819fdc4ad3';
+$transferKey = '4sSm9aeXQiqMBmeEs42NTjZidJuGrqm7'
+$settings = Settings::fromExistingAccount($account, $transferKey);
 
 ```
 
-### Setup transfer destination addresses
+### Setting up a forwarding
 
 Destination addresses must be set before the invoice can be created.
 The destination is set separately for each currency and can only be one.
 
-__If no destination is specified, no automatic transfer will be made and the funds will accumulate in the account.__
+> [!WARNING]
+> If you do not specify a destination, no automatic forwarding will take place and funds will accumulate in the account.
 
 ```php
-// Get btc currency and set transfer address
-$settings->getCurrency('btc')
-    ->setAddress('3JH4GWtXNz7us8qw1zAtRr4zuq2nDFXTgu');
+// Set the btc currency and the transfer address for forwarding
+$settings->getCurrency('btc')->setAddress('3JH4GWtXNz7us8qw1zAtRr4zuq2nDFXTgu');
 
-// Saving destination and processing fee policy for the currency into account.
-// Batch processing of all currencies.
-// Can be called once after setting all desired values.
+// Save currency settings into account
 $settings->saveCurrencies();
 ```
 
-These are not all the parameters that can be configured.
-In addition to the basic parameters, the Settings object supports adding additional parameters that you can use as needed.
-Read more about them below or explore Setting class for details.
+### Save and restore
 
-### Save and restore settings
-
-The easiest way to do this is to save the settings to a text file. In fact, it is a JSON object. It is also very easy to restore settings from the file.
-
-A more complicated variant is that you implement the way of storing settings yourself. You can store them in a database or in any other way convenient for you. For this purpose you can unload settings into variable and restore them from it.
+The easiest way to do this is to save the settings to a text file. In fact, it is a JSON object. It is also very easy to restore settings from the file. A more complicated variant is that you implement the way of storing settings yourself.
 
 ```php
-use Apirone\SDK\Model\Settings;
 
 // Save to file
 $settings->toFile('/absolute/path/to/settings.json');
@@ -156,12 +139,6 @@ $settings->toFile('/absolute/path/to/settings.json');
 // Restore from file
 $settings = Settings::fromFile('/absolute/path/to/settings.json');
 
-// Get settings JSON object
-$json = $settings->toJson();
-
-
-// Restore from JSON
-$settings = Settings::fromJson($json);
 ```
 
 ## Step 4. Invoice creating
@@ -222,29 +199,40 @@ $invoice_from_fiat->create();
 
 ## Step 5. Displaying an Invoice
 
-A special Render class that will easily allow you to display an invoice in your app.
+The library provides methods that will allow you to add an invoice to your html.
+A special Render class that will allow you to do this.
 
-### Render invoice
+### Dynamic data update
 
-Add a page, the result of which will be html. It can be a template from your app, or a separate page with its own markup.
-Two files should be added to this page: `src/assets/css/styles.css` and `src/assets/js/script.js`.
+Create a page that supports the POST method, set its address using the `Invoice::dataUrl()` method,
+and then add a call to the `Invoice::renderAjax()` method.
 
+```php
+// Set invoice dataUrl
+Invoice::dataUrl('https://my-domain.com/render-invoice-data.php');
+
+// Return invoice data
+Invoice::renderAjax();
+```
+
+### Displaying an invoice
+
+Add `src/assets/css/styles.css` and `src/assets/js/script.js` to the page where you want to display the invoice.
+
+In the right place in the html markup, add a call to the `Invoice::renderLoader()` method.
 On this page, you should have the DB handler added and the Settings object loaded just like in Step 4.
-You should also customize the Render class by adding `Invoice Data URL` - a special address in your app
-that will return invoice data via POST AJAX request.
-
-You can add this parameter via the `Invoice::dataUrl()` method or directly, via the `Render::$dataUrl` property.
+See the code below for an example.
 
 ```php
 use Apirone\SDK\Invoice;
 use Apirone\SDK\Model\Settings;
 
-// Setup DB and Settings into Invoice class
+// Setup DB and Settings
 Invoice::db($db_handler, $table_prefix);
 Invoice::settings(Settings::fromFile('/absolute/path/to/settings.json'));
 
-// Setup Invoice Data Url via Invoice class
-Invoice::dataUrl('https://my-domain.com/render-data-url.php');
+// Setup Invoice Data Url
+Invoice::dataUrl('https://my-domain.com/render-invoice-data.php');
 
 ?>
 <html>
@@ -261,17 +249,7 @@ Invoice::dataUrl('https://my-domain.com/render-data-url.php');
 
 ```
 
-### Render ajax response
+## What's Next?
 
-As well as Apirone callback handler, this is a page accessible from the Internet and supports POST requests.
-
-```php
-// Setup DB and Settings into Invoice class
-Invoice::db($db_handler, $table_prefix);
-Invoice::settings(Settings::fromFile('/absolute/path/to/settings.json'));
-
-// Setup Invoice Data Url via Invoice class
-Invoice::dataUrl('https://my-domain.com/render-data-url.php');
-
-Invoice::renderAjax();
-```
+[Dive deeper](/overview) - by learning the classes of the library, you will be able to control
+all available parameters more flexibly and make more fine-tuning and use the full power of the library!

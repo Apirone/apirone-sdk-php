@@ -7,8 +7,8 @@ hero:
     tagline: The best way to get started using cryptocurrency with Apirone
     actions:
         - theme: brand
-          text: Overview
-          link: /overview
+          text: Getting started
+          link: /getting-started
         - theme: alt
           text: GitHub
           link: https://github.com/Apirone/apirone-sdk-php
