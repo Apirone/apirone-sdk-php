@@ -49,7 +49,6 @@ Invoice::db($db_handler);
 ### Invoice table
 
 After installing the DB-handler, create an invoice table in the database.
-<!-- To do this, just execute the `InvoiceDB::install()` method once. -->
 To do this, just execute the `InvoiceDB::install()` method once.
 
 ```php
@@ -71,7 +70,7 @@ You will use the URL of this page when creating the Invoice as a callback addres
 ### Process callback data
 
 When the callback is received you can process its data in your app.
-Create a handler and simply add it as a parameter to the Invoice::callbackHandler() function.
+Create a handler and simply add it as a parameter to the `Invoice::callbackHandler()` function.
 To authenticate the order in your app, set its ID to the `Invoice::$order` property
 at the creation stage and get it from the invoice data at the callback processing stage.
 
@@ -127,9 +126,9 @@ $settings->getCurrency('btc')->setAddress('3JH4GWtXNz7us8qw1zAtRr4zuq2nDFXTgu');
 $settings->saveCurrencies();
 ```
 
-### Save and restore
+### Save and restore Settings object
 
-The easiest way to do this is to save the settings to a text file. In fact, it is a JSON object. It is also very easy to restore settings from the file. A more complicated variant is that you implement the way of storing settings yourself.
+The easiest way to do this is to save the settings to a text file. It is also very easy to restore settings from the file. A more complicated variant is that you implement the way of storing settings yourself.
 
 ```php
 
@@ -152,7 +151,11 @@ Invoice::db($db_handler, $table_prefix);
 Invoice::settings(Settings::fromFile('/absolute/path/to/settings.json'));
 ```
 
-Let's create your first invoice. There are two ways to create an invoice - set an amount in crypto or create from fiat currency.
+---
+
+Unlike APIs, the library has two ways to create an invoice -
+set the amount in cryptocurrency or create from fiat currency.
+Let's look at both methods in more detail.
 
 ### Via crypto amount
 
@@ -161,7 +164,7 @@ Initialize the invoice with the desired currency and call the `Invoice::create()
 You can also set other parameters before you call the `Invoice::create()` method.
 
 ```php
-$invoice_simple = Invoice::init('btc')->create();
+$simplest_invoice = Invoice::init('btc')->create();
 ```
 
 If you have created the database function and the Settings object correctly, the result of the execution
@@ -183,19 +186,23 @@ $invoice_usdt = Invoice::init('usdt@trx')
 
 ### Via fiat amount
 
-If you have an amount in fiat currency, you can convert it to the desired crypto yourself or use another static method `Invoice::fromFiatAmount()`.
+If you have an amount in fiat currency, the first thing you need to do is convert it to cryptocurrency,
+as the API only supports creating an account in cryptocurrency.
+
+But the library has a special method `Invoice::fromFiatAmount()` that will do it for you.
 The amount specified in fiat will be converted to cryptocurrency automatically.
-See the list of [supported currencies](https://apirone.com/docs/supported-currencies-and-networks/).
 
 ```php
 // Create an invoice for 99.50 USD via BTC
 $invoice_from_fiat = Invoice::fromFiatAmount(99.50, 'usd', 'btc');
 
-// Instead of this comment you can set other parameters.
+// Instead of this comment, you can set other invoice parameters.
 
 // Finally call create() method
 $invoice_from_fiat->create();
 ```
+
+See the list of [supported fiat currencies](https://apirone.com/docs/supported-currencies-and-networks/).
 
 ## Step 5. Displaying an Invoice
 
@@ -220,7 +227,7 @@ Invoice::renderAjax();
 Add `src/assets/css/styles.css` and `src/assets/js/script.js` to the page where you want to display the invoice.
 
 In the right place in the html markup, add a call to the `Invoice::renderLoader()` method.
-On this page, you should have the DB handler added and the Settings object loaded just like in Step 4.
+On this page, you should have the DB handler added and the Settings object loaded just like in [Step 4](#step-4-invoice-creating).
 See the code below for an example.
 
 ```php
@@ -251,5 +258,6 @@ Invoice::dataUrl('https://my-domain.com/render-invoice-data.php');
 
 ## What's Next?
 
-[Dive deeper](/overview) - by learning the classes of the library, you will be able to control
-all available parameters more flexibly and make more fine-tuning and use the full power of the library!
+[Dive deeper](/overview) - by learning the classes of the library,
+you will be able to control all available parameters more flexibly
+and make more fine-tuning and use the full power of the library!

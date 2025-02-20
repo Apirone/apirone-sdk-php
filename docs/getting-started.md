@@ -30,11 +30,13 @@ src/
 │  └─ ...
 ├─ Model/
 │  ├─ Settings/
-│  │  └─ Currency.php
+│  |  └─ Currency.php
 │  ├─ Settings.php
 │  ├─ UserData.php
 │  └─ ...
 ├─ Service/
+|  ├─ tpl/
+|  |  └─ ...
 |  ├─ InvoiceDb.php
 |  ├─ Render.php
 |  ├─ Utils.php
@@ -44,10 +46,11 @@ src/
 
 - __assets__ - Contains js, css and image files for displaying the invoice.
 - __Model__ - Contains classes for working with various data.
+  - __Settings/Currency.php__ - Contains all currency properties and methods.
   - __Settings.php__ - Used to handle accounts, currencies, destinations, tariffs, synchronization and storage of settings.
-    - __Currency.php__ - Contains all currency properties.
   - __UserData.php__ - Used to configure some additional information about the invoice (includes following fields: title, merchant,url, price, sub-price, items, extras, etc.)
 - __Service__ - Contains service classes and invoice templates.
+  - __tpl__ - Templates & locales.
   - __InvoiceDb.php__ - Work with your Database.
   - __Render.php__ - Display the Invoice.
   - __Utils.php__ - Contain some useful methods.
@@ -58,8 +61,7 @@ src/
 
 ## What's Next?
 
-- To find out what Apirone Payment Gateway is, you can go to the [official website](https://apirone.com)
-  or go straight to the [API documentation](https://apirone.com/docs).
+- To find out what Apirone Payment Gateway is, you can go to the [official website](https://apirone.com) or go to the [API documentation](https://apirone.com/docs).
 
 - To understand how to integrate the library into your project, read this short [five-steps guide](five-steps-guide).
 
