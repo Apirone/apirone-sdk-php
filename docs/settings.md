@@ -6,3 +6,4 @@ The second most important class is the `Apirone\SDK\Model\Settings` class, which
 - setting up forwarding addresses,
 - setting tariffs,
 - saving and restoring these data in your application.
+

@@ -55,7 +55,7 @@ $invoice->init('btc');
 $invoiceUserData = UserData::init()
     ->setTitle('My invoice Title')
     ->setMerchant('Merchant name');
-    ->setPrivce('100$');
+    ->setPrice('$ 100');
 
 $invoice->userData($invoiceUserData);
 // ...
