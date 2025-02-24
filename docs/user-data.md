@@ -62,4 +62,4 @@ Example of user-data object
 
 User-data example result:
 
-![User-data invoice result](./user-data-invoice-example.png)
+![User-data invoice result](/user-data-invoice-example.png)
