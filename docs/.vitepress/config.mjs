@@ -64,13 +64,12 @@ function sidebar() {
       {
         // text: 'Digging Deeper',
         text: 'Dive deeper',
-        collapsed: true,
+        collapsed: false,
         items: [
-          {text: 'Overview', link: '/overview'},
           {text: 'Invoice', link: '/invoice'},
+          {text: 'Settings', link: '/settings'},
           {text: 'UserData', link: '/user-data'},
-          {text: 'Settings class', link: '/settings'},
-          {text: 'Render invoice', link: '/render'},
+          {text: 'Render', link: '/render'},
           {text: 'Utils', link: '/utils'},
         ]
       },
@@ -78,13 +77,13 @@ function sidebar() {
         text: 'Usage examples',
         link: '/usage-examples',
       },
-      {
-        text: 'Deprecated pages',
-        items: [
-          {text: '_Overview', link: '/deprecated/overview'},
-          {text: '_README.md', link: '/deprecated/readme'},
-        ]
-      },
+      // {
+      //   text: 'Deprecated pages',
+      //   items: [
+      //     {text: '_Overview', link: '/deprecated/overview'},
+      //     {text: '_README.md', link: '/deprecated/readme'},
+      //   ]
+      // },
     ]
 }
 

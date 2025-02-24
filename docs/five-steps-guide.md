@@ -6,7 +6,7 @@ These five steps will help you easily integrate Apirone Payment Gateway into you
 
 We use callback functions for compatibility with different code to work with databases or logs.
 
-### Creating a log handler
+### Create a log handler
 
 Create a static function and wrap the logging system in it as a callback.
 If you do not use logging, you can skip this step.
@@ -30,7 +30,7 @@ Invoice::logger($logger_handler);
 
 ```
 
-### Database handler
+### Create database handler
 
 As with logs, wrap the DB class or function used to manipulate the database
 into a callback function that is passed an SQL query as a parameter.
@@ -61,7 +61,7 @@ InvoiceDb::install();
 
 ## Step 2. Working with Apirone callbacks
 
-### Create handler
+### Create callbacks handler
 
 The Apirone service informs you of invoice events with callbacks.
 Create a page that supports the POST method and add `Invoice::callbackHandler()` call to it.
@@ -258,6 +258,6 @@ Invoice::dataUrl('https://my-domain.com/render-invoice-data.php');
 
 ## What's Next?
 
-[Dive deeper](/overview) - by learning the classes of the library,
+[Dive deeper](/invoice) - by learning the classes of the library,
 you will be able to control all available parameters more flexibly
 and make more fine-tuning and use the full power of the library!
