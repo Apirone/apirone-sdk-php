@@ -86,7 +86,7 @@ Invoice::callbackHandler($my_apirone_callback_handler);
 
 ## Step 3. Apirone account
 
-A special Settings class that allows you to work with accounts, currencies, invoice parameters, fees, etc.
+A special [Settings](/settings) class that allows you to work with accounts, currencies, invoice parameters, fees, etc.
 
 ### New or existing account
 
@@ -101,12 +101,10 @@ $settings = Settings::init()->createAccount();
 
 ```
 
-If you already have an account, you can create a Settings object using the account ID and transfer key as parameters.
+If you already have an account, you [can create](settings#use-existing-account) a Settings object using the account ID and transfer key as parameters.
 
 ```php
-$account = 'apr-f9e1211f4b52a50bcf3c36819fdc4ad3';
-$transferKey = '4sSm9aeXQiqMBmeEs42NTjZidJuGrqm7'
-$settings = Settings::fromExistingAccount($account, $transferKey);
+$settings = Settings::fromExistingAccount('account-id', 'transfer-key');
 
 ```
 

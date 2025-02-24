@@ -18,7 +18,7 @@ Add instances of the `OrderItem` and `ExtraItem` classes into arrays.
 
 Getters are also available for all properties. The arrays `items` and `extras` can be obtained using `getItems()` and `getExtras()`.
 
-Example of user-data object
+Example of user-data object as JSON:
 
 ```json
 "user-data": {
@@ -60,6 +60,28 @@ Example of user-data object
 }
 ```
 
+Same data via UserData class:
+
+```php
+$userData = UserData::init()
+    ->setTitle('Invoice for shop')
+    ->setMerchant('SHOP')
+    ->setUrl('http://exampleshop.com')
+    ->setPrice("$170")
+    ->setSubPrice("$160")
+    ->addOrderItem("box", "$10", 10, "$100")
+    ->addOrderItem("hat", "$5", 10, "$50")
+    ->addOrderItem("cap", "$1", 10, "$10")
+    ->addExtraItem("Shipping","$5")
+    ->addExtraItem("Tax name","$5");
+
+// Set to invoice
+$invoice->userData($userData);
+
+```
+
 User-data example result:
 
 ![User-data invoice result](/user-data-invoice-example.png)
+
+Thus, the UserData class makes it easy to add custom data to an invoice and influence its appearance.
