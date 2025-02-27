@@ -712,8 +712,8 @@ class Settings extends AbstractModel
         return $items;
     }
 
-        /**
-     * Get the value of extra
+    /**
+     * Get the value of meta
      *
      * @param string|null $key
      * @return mixed

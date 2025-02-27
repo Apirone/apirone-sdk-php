@@ -90,9 +90,22 @@ The `loadCurrencies()` method gets the currency settings from the account and up
 
 To save the local currency changes to the account, use the `saveCurrencies()` method;
 
-## Parameters storage
+## Additional Parameters storage
 
-### Predefined
+### Meta property
+
+Use the `meta` property to store additional parameters. This is a `stdClass` with key-value parameters.
+
+To add and update items, use `addMeta(‘key’, ‘value’)`.
+To get or delete an item by key, use `getMeta(‘key’)` and `deleteMeta(‘key’)` respectively.
+
+To get the entire object, use `$settings->getMeta()`.
+The `$settings->meta($json)` method sets the entire object.
+
+### Predefined and Extra props
+
+> [!WARNING]
+> These properties and methods will be deprecated and removed in future versions.
 
 The class has predefined properties that are used for general invoice settings and display.
 Working with parameters is done through getters and setters. For more details see properties and methods of the class.
@@ -100,19 +113,17 @@ Working with parameters is done through getters and setters. For more details se
 Use the property name to get the value and call the property name as a method with the value to set.
 You can use a call chain to set values.
 
-|Property|Method|Description|
-|---|---|---|
-|`title`|`title()`||
-|`merchant`|`merchant()`||
-|`merchantUrl`|`merchantUrl()`||
-|`timeout`|`timeout()`||
-|`factor`|`factor()`||
-|`backLink`|`backLink()`||
-|`logo`|`logo()`||
-|`qrOnly`|`qrOnly()`||
-|`debug`|`debug()`||
-|`extra`|`extra()`||
-
-### Extra parameters
+|Property|Set value method|Get value method|Description|
+|---|---|---|---|
+|`title`|`setTitle()`|`getTitle()`|Invoice title|
+|`merchant`|`setMerchant()`|`getMerchant()`|Merchant name|
+|`merchantUrl`|`setMerchantUrl()`|`getMerchantUrl()`|Merchant store URL|
+|`timeout`|`setTimeout()`|`getTimeout()`|Invoice lifetime|
+|`factor`|`setFactor()`|`getFactor()`|Amount adjustment factor|
+|`backLink`|`setBackLink()`|`setBackLink()`|Invoice backlink|
+|`logo`|`setLogo()`|`getLogo()`|Show the logo on the invoice|
+|`qrOnly`|`setQrOnly()`|`getQrOnly()`|Show qrCode template|
+|`debug`|`setDebug()`|`getDebug()`|Debug mode|
+|`extra`|`setExtraObj()`|`getExtra()`|Extra properties stdCLass|
 
 In case you need to store additional parameters, use `setExtra(‘key’, ‘value’)` and `getExtra(‘key’)`.
