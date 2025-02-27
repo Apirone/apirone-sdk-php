@@ -128,6 +128,30 @@ class Settings extends AbstractModel
         $this->extra = new \stdClass();
     }
 
+    public function __call($name, $value)
+    {
+        $name = static::convertToCamelCase($name);
+
+        if (\property_exists($this, $name)) {
+
+            $class = new \ReflectionClass(static::class);
+            
+            $property = $class->getProperty($name);
+            $property->setAccessible(true);
+
+            $property->setValue($this, $value[0]);
+
+            return $this;
+        }
+        $trace = \debug_backtrace();
+        \trigger_error(
+            'Call to undefined method ' . $name .
+            ' in ' . $trace[0]['file'] .
+            ' on line ' . $trace[0]['line'],
+            \E_USER_ERROR
+        );
+    }
+
     /**
      * Create instance
      *

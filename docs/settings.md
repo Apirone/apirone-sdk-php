@@ -9,12 +9,12 @@ There are several methods for creating an instance of a class.
 ### With new account
 
 If you don't already have an Apirone account, now is the time to create one.
-Just create an instance of the class using the `Settings::init()` method and call the `create()` method;
+Just create an instance of the class using the `Settings::init()` method and call the `createAccount()` method;
 
 ```php
 use Apirone\SDK\Model\Settings;
 
-$settings = Settings::init()->create();
+$settings = Settings::init()->createAccount();
 ```
 
 ### Use existing account
@@ -94,33 +94,25 @@ To save the local currency changes to the account, use the `saveCurrencies()` me
 
 ### Predefined
 
-`restoreDefaults()`
+The class has predefined properties that are used for general invoice settings and display.
+Working with parameters is done through getters and setters. For more details see properties and methods of the class.
 
+Use the property name to get the value and call the property name as a method with the value to set.
+You can use a call chain to set values.
 
-#### Title
-    setTitle()
-
-#### Merchant
-
-#### MerchantUrl
-
-#### Timeout
-
-#### Factor
-
-#### Backlink
-
-#### Logo
-
-#### qrOnly
-
-#### Debug
+|Property|Method|Description|
+|---|---|---|
+|`title`|`title()`||
+|`merchant`|`merchant()`||
+|`merchantUrl`|`merchantUrl()`||
+|`timeout`|`timeout()`||
+|`factor`|`factor()`||
+|`backLink`|`backLink()`||
+|`logo`|`logo()`||
+|`qrOnly`|`qrOnly()`||
+|`debug`|`debug()`||
+|`extra`|`extra()`||
 
 ### Extra parameters
 
-#### getExtra
-
-#### setExtra
-
-#### getExtraObj
-
+In case you need to store additional parameters, use `setExtra(‘key’, ‘value’)` and `getExtra(‘key’)`.
