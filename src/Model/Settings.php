@@ -126,6 +126,7 @@ class Settings extends AbstractModel
     private function __construct()
     {
         $this->extra = new \stdClass();
+        $this->meta = new \stdClass();
     }
 
     public function __call($name, $value)
@@ -271,8 +272,18 @@ class Settings extends AbstractModel
     {
         $data = parent::toArray();
 
-        if(empty($data['extra']) && gettype($data['extra']) == 'array') {
-            $data['extra'] = new \stdClass();
+        // if(empty($data['extra']) && gettype($data['extra']) == 'array') {
+        //     $data['extra'] = new \stdClass();
+        // }
+
+        if(empty($data['extra']))
+        {
+            unset($data['extra']);
+        }
+
+        if(empty($data['meta']))
+        {
+            unset($data['meta']);
         }
 
         return $data;
@@ -700,4 +711,61 @@ class Settings extends AbstractModel
 
         return $items;
     }
+
+        /**
+     * Get the value of extra
+     *
+     * @param string|null $key
+     * @return mixed
+     */
+    public function getMeta(string $key = null)
+    {
+        if ($key == null) {
+            return $this->meta;
+        }
+        if (property_exists($this->meta, $key)) {
+            return $this->meta->{$key};
+        }
+
+        return null;
+    }
+
+    /**
+     * Set the value of meta
+     *
+     * @return  self
+     */
+    public function meta($json = '{}')
+    {
+        $json = gettype($json) == 'string' ? json_decode($json) : $json;
+
+        $this->meta = $json;
+
+        return $this;
+    }
+
+    /**
+     * Add/edit meta item
+     *
+     * @return  self
+     */
+    public function addMeta($key, $value)
+    {
+        $this->meta->{$key} = $value;
+
+        return $this;
+    }
+
+    /**
+     * Delete meta item
+     *
+     * @return  self
+     */
+    public function deleteMeta($key)
+    {
+        unset($this->meta->{$key});
+
+        return $this;
+    }
+
 }
