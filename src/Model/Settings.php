@@ -355,7 +355,7 @@ class Settings extends AbstractModel
 
         $this->currencies = [];
         foreach($serviceInfo->currencies as $serviceItem) {
-            $currency = Currency::fromJson($serviceItem);
+            $currency = Currency::init($serviceItem);
             foreach ($accountInfo as $accountItem) {
                 if ($accountItem->currency !== $serviceItem->abbr) {
                     continue;
@@ -399,6 +399,16 @@ class Settings extends AbstractModel
         }
 
         return false;
+    }
+    /**
+     * Alias to getCurrency()
+     *
+     * @param mixed $abbr
+     * @return Currency | false
+     */
+    public function currency($abbr)
+    {
+        return $this->getCurrency($abbr);
     }
 
     /**
@@ -698,15 +708,15 @@ class Settings extends AbstractModel
     /**
      * Currencies list parser
      *
-     * @param mixed $json
+     * @param mixed $array Array of json currency objects
      * @return array
      * @throws ReflectionException
      */
-    public function parseCurrencies($json)
+    public function parseCurrencies($array)
     {
         $items = [];
-        foreach ($json as $item) {
-            $items[] = Currency::fromJson($item);
+        foreach ($array as $item) {
+            $items[] = Currency::init($item);
         }
 
         return $items;

@@ -9,8 +9,8 @@ src/*.json
 !src/Invoice.php
 !src/Utils.php
 !src/Render.php
-examples/assets
 .php-cs-fixer.cache
 node_modules
 docs/.vitepress/cache
 docs/.vitepress/dist
+examples/*
