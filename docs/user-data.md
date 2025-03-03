@@ -9,9 +9,9 @@ See [API docs](https://apirone.com/docs/invoices/#create-invoice) for a full des
 |`setMerchant()`|`merchant`|Merchant name|
 |`setUrl()`|`url`|Merchant url|
 |`setPrice()`|`price`|Displays the total price in fiat|
-|`setSubPrice`|`sub-price`|Displays amount in fiat before adding discount, tax or shipping charges|
-||`items`|Consists of objects with predefined fields: name, cost, qty (quantity), total|
-||`extras`|Additional elements on an invoice e.g fees, taxes or shipping price|
+|`setSubPrice()`|`sub-price`|Displays amount in fiat before adding discount, tax or shipping charges|
+|`setItems()`|`items`|Consists of objects with predefined fields: name, cost, qty (quantity), total|
+|`setExtras()`|`extras`|Additional elements on an invoice e.g fees, taxes or shipping price|
 
 The `addOrderItem()` and `addExtraItem()` functions are used to add items to the `items` and `extras` arrays respectively.
 Add instances of the `OrderItem` and `ExtraItem` classes into arrays.

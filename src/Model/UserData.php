@@ -207,12 +207,12 @@ class UserData extends AbstractModel
      */
     public function parseExtras($data)
     {
-        $taxes = [];
+        $extras = [];
         foreach ($data as $item) {
-            $taxes[] = ExtraItem::fromJson($item);
+            $extras[] = ExtraItem::fromJson($item);
         }
 
-        return $taxes;
+        return $extras;
     }
 
     /**
@@ -261,6 +261,18 @@ class UserData extends AbstractModel
     }
 
     /**
+     * Set the value of items
+     *
+     * @return $this
+     */
+    public function setItems(array $items = [])
+    {
+        $this->items = $this->parseItems($items);
+
+        return $this;
+    }
+
+    /**
      * Get the value of extras
      *
      * @return null|array
@@ -268,5 +280,16 @@ class UserData extends AbstractModel
     public function getExtras()
     {
         return $this->extras;
+    }
+    /**
+     * Set the value of extras
+     *
+     * @return null|array
+     */
+    public function setExtras(array $extras = [])
+    {
+        $this->extras = $this->parseExtras($extras);
+
+        return $this;
     }
 }
