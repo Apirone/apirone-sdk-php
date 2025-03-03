@@ -67,6 +67,7 @@ function sidebar() {
         collapsed: false,
         items: [
           {text: 'Invoice', link: '/invoice'},
+          {text: 'InvoiceDetails', link: '/invoice-details'},
           {text: 'Settings', link: '/settings'},
           {text: 'Currency', link: '/currency'},
           {text: 'UserData', link: '/user-data'},
