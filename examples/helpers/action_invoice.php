@@ -57,4 +57,4 @@ catch (Exception $e) {
     exit;
 }
 
-Utils::send_json($invoice->details->toJson());
+Utils::sendJson($invoice->details->toJson());
