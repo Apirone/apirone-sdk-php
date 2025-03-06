@@ -78,7 +78,6 @@ class Render
      * @var string
      */
     public static string $locales = '';
-    // public static array $locales = [];
 
     private function __construct() {}
 
@@ -118,6 +117,43 @@ class Render
         return new static();
     }
 
+    public static function fromJson($json)
+    {
+        $render =  new static();
+
+            $json = gettype($json) == 'string' ? json_decode($json) : $json;
+            $class = new \ReflectionClass(static::class);
+
+            foreach ($class->getStaticProperties() as $key => $val) {
+                if (property_exists($json, $key)) {
+                    $render->$key($json->$key);
+                }
+            }
+
+        return $render;
+    }
+
+    public static function toJson()
+    {
+        $class = new \ReflectionClass(static::class);
+        $json = new \stdClass;
+        foreach ($class->getStaticProperties() as $key => $val) {
+            $json->$key = $val;
+        }
+
+        return $json;
+    }
+
+    /**
+     * Convert class data to json string
+     *
+     * @param int $flag - second param for json_encode. For example - JSON_PRETTY_PRINT or 128
+     * @return string
+     */
+    public function toJsonString($flag = 0): string
+    {
+        return json_encode(Render::toJson(), $flag);
+    }
 
     public function idParam($param = "invoice")
     {
@@ -423,16 +459,5 @@ class Render
         $result = array_replace_recursive($fallback, $custom);
 
         return $result;
-    }
-
-    public static function getProps()
-    {
-        $class = new \ReflectionClass(static::class);
-        $props = [];
-        foreach ($class->getStaticProperties() as $key => $val) {
-            $props[$key] = $val;
-        }
-
-        return $props;
     }
 }
