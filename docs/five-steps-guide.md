@@ -205,7 +205,7 @@ See the list of [supported fiat currencies](https://apirone.com/docs/supported-c
 ## Step 5. Displaying an Invoice
 
 The library provides methods that will allow you to add an invoice to your html.
-A special Render class that will allow you to do this.
+A special [Render](/render) class that will allow you to do this.
 
 ### Dynamic data update
 

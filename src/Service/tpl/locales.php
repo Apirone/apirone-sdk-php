@@ -9,8 +9,6 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 $locales = [
     'en' => [
         "title" => "Invoice",
@@ -181,3 +179,5 @@ $locales = [
         'subtotal' => 'Ara Toplam',
     ],
 ];
+
+return $locales;

@@ -20,6 +20,7 @@ use DivisionByZeroError;
 use ArithmeticError;
 use Closure;
 use Exception;
+use ReflectionClass;
 use stdClass;
 
 class Render
@@ -67,22 +68,115 @@ class Render
     public static bool $logo = true;
 
     /**
-     * Set render options
-     *
-     * @param string $dataUrl
-     * @param bool $qrOnly
-     * @param bool $logo
-     * @param string $backlink
-     * @return void
+     * Absolute path to the custom template file.
+     * @var string
      */
-    public static function init($dataUrl = '', $qrOnly = false, $logo = true, $backlink = '')
+    public static string $template = '';
+
+    /**
+     * Absolute path to the custom locales file.
+     * @var string
+     */
+    public static string $locales = '';
+    // public static array $locales = [];
+
+    private function __construct() {}
+
+    /**
+     * Magic method for getting values of a private props by its name
+     *
+     * @param string $name 
+     * @return mixed 
+     */
+    public function __get($name)
     {
-        self::$dataUrl = $dataUrl;
-        self::$qrOnly = $qrOnly;
-        self::$logo = $logo;
-        self::$backlink = $backlink;
+        if ($name == 'locales') {
+            return self::getLocales();
+        }
+        if (\property_exists($this, $name)) {
+            $class = new \ReflectionClass(static::class);
+            
+            return $class->getStaticProperties()[$name];
+        }
+
+        $trace = \debug_backtrace();
+        \trigger_error(
+            'Undefined property ' . $name .
+            ' in ' . $trace[0]['file'] .
+            ' on line ' . $trace[0]['line'],
+            \E_USER_ERROR
+        );
     }
 
+    /**
+     * Returns an instance of a class for customizing static props using arrow function syntax.
+     *
+     * @return Render
+     */
+    public static function init()
+    {
+        return new static();
+    }
+
+
+    public function idParam($param = "invoice")
+    {
+        $this::$idParam = $param;
+
+        return $this;
+    }
+
+    public function dataUrl($url = "")
+    {
+        $this::$dataUrl = $url;
+
+        return $this;
+    }
+
+    public function backlink($url = "")
+    {
+        $this::$backlink = $url;
+
+        return $this;
+    }
+
+    public function timeZone($tz): self
+    {
+        $this::$timeZone = 'UTC';
+        if(preg_match('/(^GMT[+-][0-9]{2}:[0-9]{2}\b$)|(^UTC)/', $tz)) {
+            $this::$timeZone = $tz;
+        }
+
+        return $this;
+    }
+
+    public function qrOnly($qrOnly = false)
+    {
+        $this::$qrOnly = $qrOnly;
+
+        return $this;
+    }
+
+    public function logo($logo = true)
+    {
+        $this::$logo = $logo;
+
+        return $this;
+    }
+
+    public function template($absolutePath = '')
+    {
+        $this::$template = $absolutePath;
+
+        return $this;
+    }
+
+    public function locales($absolutePth = '')
+    {
+        self::$locales = $absolutePth;
+
+        return $this;
+    }
     /**
      * Set timezone by local timezone to UTC offset
      *
@@ -133,7 +227,6 @@ class Render
         $statusLink = self::$dataUrl ? self::$dataUrl : '/';
         $backlink = !empty(self::$backlink) ? self::$backlink : Invoice::$settings->getBacklink();
         $logo = Invoice::$settings->getLogo();
-        $template = !self::$qrOnly ? 'full' : 'qr-only';
         $note = null;
         $amount = null;
 
@@ -167,10 +260,19 @@ class Render
             $loading = true;
         }
 
+        // Set template
+        if (!empty(self::$template) && file_exists(self::$template)) {
+            $template = self::$template;
+        }
+        else {
+            $name = !self::$qrOnly ? 'full' : 'qr-only';
+            $template = __DIR__ . '/tpl/' . $name . '.php';
+        }
+
         // Draw output:
         [$t, $d, $c, $l] = self::helpers(); // translate, date, copy, link
         ob_start();
-        include(__DIR__ . '/tpl/' . $template . '.php');
+        include($template);
 
         return ob_get_clean();
     }
@@ -248,7 +350,7 @@ class Render
     private static function helpers()
     {
         // Localize callback
-        $locales = self::locales();
+        $locales = self::getLocales();
         $t = static function ($key, $echo = true) use ($locales) {
             if(empty($key)) {
                 $result = '';
@@ -305,12 +407,32 @@ class Render
     /**
      * Return locales for template
      *
-     * @return string[][]
+     * @return array
      */
-    private static function locales()
-    {
-        require(__DIR__ . '/tpl/locales.php');
 
-        return $locales;
+    public static function getLocales()
+    {
+        $default = require(__DIR__ . '/tpl/locales.php');
+
+        if (empty(self::$locales)) {
+            return $default;
+        }
+
+        $fallback['en'] = $default['en'];
+        $custom = require(self::$locales);
+        $result = array_replace_recursive($fallback, $custom);
+
+        return $result;
+    }
+
+    public static function getProps()
+    {
+        $class = new \ReflectionClass(static::class);
+        $props = [];
+        foreach ($class->getStaticProperties() as $key => $val) {
+            $props[$key] = $val;
+        }
+
+        return $props;
     }
 }
