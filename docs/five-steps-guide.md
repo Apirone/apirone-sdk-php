@@ -213,7 +213,7 @@ Create a page that supports the POST method, set its address using the `Invoice:
 and then add a call to the `Invoice::renderAjax()` method.
 
 ```php
-// Set invoice dataUrl
+// Set invoice dataUrl via Invoice class
 Invoice::dataUrl('https://my-domain.com/render-invoice-data.php');
 
 // Return invoice data
@@ -253,6 +253,8 @@ Invoice::dataUrl('https://my-domain.com/render-invoice-data.php');
 </html>
 
 ```
+
+For more invoice display and configuration settings, explore the [Render](/render) class.
 
 ## What's Next?
 

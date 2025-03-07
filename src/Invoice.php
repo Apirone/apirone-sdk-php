@@ -563,7 +563,7 @@ class Invoice extends AbstractModel
                     echo $invoice->id ? $invoice->details->statusNum() : 0;
                     exit;
                 }
-                Render::setTimeZoneByOffset($offset);
+                Render::timeZoneByOffset($offset);
                 echo $invoice->render();
             }
             exit;

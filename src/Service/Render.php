@@ -33,14 +33,14 @@ class Render
     public static string $idParam = 'invoice';
 
     /**
-     * Invoice data url for ajax request
+     * URL for ajax request to update invoice data
      *
      * @var string
      */
     public static string $dataUrl = '';
 
     /**
-     * Invoice store back link
+     * Invoice backlink to store
      *
      * @var string
      */
@@ -223,6 +223,27 @@ class Render
         return $this;
     }
 
+    /**
+     * Setting the $timeZone by local time zone with UTC offset
+     *
+     * @param int $offset
+     * @return void
+     * @throws DivisionByZeroError
+     * @throws ArithmeticError
+     */
+    public static function timeZoneByOffset(int $offset = 0)
+    {
+        if ($offset == 0 || abs($offset) >= 1140) {
+            $tz = 'UTC';
+        }
+        else {
+            $abs = abs($offset);
+            $t = sprintf('%02d:%02d', intdiv($abs, 60), fmod($abs, 60));
+            $tz = 'GMT' . (($offset < 0) ? '+' : '-') . $t;
+        }
+        self::$timeZone = $tz;
+    }
+
     public function qrOnly($qrOnly = false)
     {
         $this::$qrOnly = $qrOnly;
@@ -250,25 +271,19 @@ class Render
 
         return $this;
     }
+
     /**
-     * Set timezone by local timezone to UTC offset
+     * Setting the $timeZone by local time zone with UTC offset
      *
      * @param int $offset
      * @return void
      * @throws DivisionByZeroError
      * @throws ArithmeticError
+     * @deprecated Use timezoneByOffset()
      */
     public static function setTimeZoneByOffset(int $offset = 0)
     {
-        if ($offset == 0 || abs($offset) >= 1140) {
-            $tz = 'UTC';
-        }
-        else {
-            $abs = abs($offset);
-            $t = sprintf('%02d:%02d', intdiv($abs, 60), fmod($abs, 60));
-            $tz = 'GMT' . (($offset < 0) ? '+' : '-') . $t;
-        }
-        self::$timeZone = $tz;
+        self::timeZoneByOffset($offset);
     }
 
     /**
@@ -478,21 +493,22 @@ class Render
     }
 
     /**
-     * Return locales for template
-     *
-     * @return array
+     * Return locales for template. Sets custom locales via locales array.
+     * 
+     * @param array $custom 
+     * @return array 
      */
-
-    public static function getLocales()
+    public static function getLocales(array $custom = [])
     {
         $default = require(__DIR__ . '/tpl/locales.php');
-
         if (empty(self::$locales)) {
-            return $default;
+            $result = $default;
+        }
+        if (empty($custom)) {
+            $custom = require(self::$locales);
         }
 
         $fallback['en'] = $default['en'];
-        $custom = require(self::$locales);
         $result = array_replace_recursive($fallback, $custom);
 
         return $result;
