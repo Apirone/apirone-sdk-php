@@ -133,6 +133,27 @@ class Render
         return $render;
     }
 
+    /**
+     * Restore paremeters from file
+     *
+     * @param mixed $abspath 
+     * @return static|null 
+     */
+    public static function fromFile($abspath)
+    {
+        $json = @file_get_contents($abspath);
+
+        if ($json) {
+            return static::fromJson($json);
+        }
+
+        return null;
+    }
+
+    /**
+     * 
+     * @return \stdClass 
+     */
     public static function toJson()
     {
         $class = new \ReflectionClass(static::class);
@@ -142,6 +163,22 @@ class Render
         }
 
         return $json;
+    }
+
+    /**
+     * Save paremeters to file
+     *
+     * @param string $abspath
+     * @param string $filename
+     * @return bool
+     */
+    public function toFile($abspath)
+    {
+        if (file_put_contents($abspath, json_encode($this->toJson(), JSON_PRETTY_PRINT))) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
