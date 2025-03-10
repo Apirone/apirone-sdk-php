@@ -72,8 +72,8 @@ src/
 
 - To find out what Apirone Payment Gateway is, you can go to the [official website](https://apirone.com) or go to the [API documentation](https://apirone.com/docs).
 
-- To understand how to integrate the library into your project, read this short [five-steps guide](five-steps-guide).
+- To understand how to integrate the library into your project, read this short [five-steps guide](/five-steps-guide).
 
-- To learn more about what properties and methods are available in the library's classes, go to [Dive Deeper](overview).
+- To learn more about what properties and methods are available in the library's classes, go to [Dive Deeper](/invoice).
 
-- To learn about real-world usage of the library or to see a live example locally, go to the [Usage examples](usage-examples) section.
+- To learn about real-world usage of the library or to see a live example locally, go to the [Usage examples](/usage-examples) section.

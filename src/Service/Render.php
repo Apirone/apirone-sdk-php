@@ -71,13 +71,14 @@ class Render
      * Absolute path to the custom template file.
      * @var string
      */
-    public static string $template = '';
+    public static ?string $template = null;
 
     /**
      * Absolute path to the custom locales file.
-     * @var string
+     * @var mixed
      */
-    public static string $locales = '';
+    public static $locales = null;
+    public static ?array $_localesCache = null;
 
     private function __construct() {}
 
@@ -117,6 +118,12 @@ class Render
         return new static();
     }
 
+    /**
+     * Restopre render parameters from json
+     *
+     * @param mixed $json 
+     * @return static 
+     */
     public static function fromJson($json)
     {
         $render =  new static();
@@ -151,6 +158,7 @@ class Render
     }
 
     /**
+     * Export parameters to json
      * 
      * @return \stdClass 
      */
@@ -192,6 +200,12 @@ class Render
         return json_encode(Render::toJson(), $flag);
     }
 
+    /**
+     * Set idParam value
+     * 
+     * @param string $param 
+     * @return $this 
+     */
     public function idParam($param = "invoice")
     {
         $this::$idParam = $param;
@@ -199,6 +213,12 @@ class Render
         return $this;
     }
 
+    /**
+     * Set dataUrl value
+     * 
+     * @param string $url 
+     * @return $this 
+     */
     public function dataUrl($url = "")
     {
         $this::$dataUrl = $url;
@@ -206,6 +226,12 @@ class Render
         return $this;
     }
 
+    /**
+     * set backlink value
+     * 
+     * @param string $url 
+     * @return $this 
+     */
     public function backlink($url = "")
     {
         $this::$backlink = $url;
@@ -244,6 +270,12 @@ class Render
         self::$timeZone = $tz;
     }
 
+    /**
+     * Set qrOnly value
+     * 
+     * @param bool $qrOnly 
+     * @return $this 
+     */
     public function qrOnly($qrOnly = false)
     {
         $this::$qrOnly = $qrOnly;
@@ -251,6 +283,12 @@ class Render
         return $this;
     }
 
+    /**
+     * Set logo value
+     * 
+     * @param bool $logo 
+     * @return $this 
+     */
     public function logo($logo = true)
     {
         $this::$logo = $logo;
@@ -258,16 +296,29 @@ class Render
         return $this;
     }
 
-    public function template($absolutePath = '')
+    /**
+     * Set template value
+     * 
+     * @param mixed $absolutePath 
+     * @return $this 
+     */
+    public function template($absolutePath = null)
     {
         $this::$template = $absolutePath;
 
         return $this;
     }
 
-    public function locales($absolutePth = '')
+    /**
+     * Set locales value
+     * 
+     * @param mixed $locales 
+     * @return $this 
+     */
+    public function locales($locales = null)
     {
-        self::$locales = $absolutePth;
+        self::$_localesCache = null;
+        self::$locales = $locales;
 
         return $this;
     }
@@ -349,7 +400,7 @@ class Render
         }
 
         // Set template
-        if (!empty(self::$template) && file_exists(self::$template)) {
+        if (self::$template !== null && file_exists(self::$template)) {
             $template = self::$template;
         }
         else {
@@ -493,23 +544,46 @@ class Render
     }
 
     /**
-     * Return locales for template. Sets custom locales via locales array.
+     * Return locales for template.
      * 
-     * @param array $custom 
      * @return array 
      */
-    public static function getLocales(array $custom = [])
+    public static function getLocales()
     {
-        $default = require(__DIR__ . '/tpl/locales.php');
-        if (empty(self::$locales)) {
-            $result = $default;
-        }
-        if (empty($custom)) {
-            $custom = require(self::$locales);
+        // Return locales cache if set
+        if (self::$_localesCache !== null) {
+            return self::$_localesCache; 
         }
 
-        $fallback['en'] = $default['en'];
-        $result = array_replace_recursive($fallback, $custom);
+        $default = require(__DIR__ . '/tpl/locales.php');
+        if (self::$locales == null) {
+            return $default;
+        }
+
+        $type = gettype(self::$locales);
+        switch ($type) {
+            case 'string':
+                $custom = file_exists(self::$locales) ? require(self::$locales) : $default;
+                break;
+            case 'array':
+                $custom = self::$locales;
+                break;
+            default:
+                $custom = $default;
+        }
+
+        $fallbacks = [];
+        foreach ($default as $key => $val) {
+            if (array_key_exists($key, $custom)) {
+                $fallbacks[$key] = $default[$key];
+            }
+        }
+
+        $fallbacks['en'] = $default['en'];
+        $result = \array_replace_recursive($fallbacks, $custom);
+
+        // Set result to cache
+        self::$_localesCache = $result;
 
         return $result;
     }
