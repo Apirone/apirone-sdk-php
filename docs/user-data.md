@@ -1,6 +1,6 @@
 # UserData class
 
-This class class that allows you to configure Invoice user-data property using setters to set values rather than json format.
+This class allows you to configure Invoice user-data property using setters to set values rather than json format.
 
 See [API docs](https://apirone.com/docs/invoices/#create-invoice) for a full description of the parameters.
 |Class method|API parameter|Description|
