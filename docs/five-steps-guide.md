@@ -1,6 +1,6 @@
 # Five-steps integration guide
 
-These five steps will help you easily integrate Apirone Payment Gateway into your application.
+These five steps will help you easily integrate the Apirone Payment Gateway into your application.
 
 ## Step 1. Configure logs and database
 
@@ -117,7 +117,7 @@ The destination is set separately, one for each currency.
 > If you do not specify a destination, no automatic forwarding will take place and funds will accumulate in the account.
 
 ```php
-// Set the btc currency and the transfer address for forwarding
+// Set the BTC currency and the transfer address for forwarding
 $settings->getCurrency('btc')->setAddress('3JH4GWtXNz7us8qw1zAtRr4zuq2nDFXTgu');
 
 // Save currency settings into account
@@ -204,7 +204,7 @@ See the list of [supported fiat currencies](https://apirone.com/docs/supported-c
 
 ## Step 5. Displaying an Invoice
 
-The library provides methods that will allow you to add an invoice to your html.
+The library provides methods that will allow you to add an invoice to your HTML.
 A special [Render](/render) class that will allow you to do this.
 
 ### Dynamic data update
@@ -224,7 +224,7 @@ Invoice::renderAjax();
 
 Add `src/assets/css/styles.css` and `src/assets/js/script.js` to the page where you want to display the invoice.
 
-In the right place in the html markup, add a call to the `Invoice::renderLoader()` method.
+In the right place in the HTML markup, add a call to the `Invoice::renderLoader()` method.
 On this page, you should have the DB handler added and the Settings object loaded just like in [Step 4](#step-4-invoice-creating).
 See the code below for an example.
 
