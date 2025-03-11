@@ -101,7 +101,7 @@ $settings = Settings::init()->createAccount();
 
 ```
 
-If you already have an account, you [can create](settings#use-existing-account) a Settings object using the account ID and transfer key as parameters.
+If you have already had an account, you [can create](settings#use-existing-account) a Settings object using the account ID and transfer key as parameters.
 
 ```php
 $settings = Settings::fromExistingAccount('account-id', 'transfer-key');
@@ -111,7 +111,7 @@ $settings = Settings::fromExistingAccount('account-id', 'transfer-key');
 ### Setting up a forwarding
 
 Destination addresses must be set before the invoice can be created.
-The destination is set separately for each currency and can only be one.
+The destination is set separately, one for each currency.
 
 > [!WARNING]
 > If you do not specify a destination, no automatic forwarding will take place and funds will accumulate in the account.
