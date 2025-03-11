@@ -7,9 +7,9 @@ logging, working with the database, and actually displaying the invoice on your 
 All this is already implemented in the SDK and works out of the box.
 
 Despite the small size this library is a powerful SDK for integrating [Apirone Invoices](https://apirone.com/docs/invoices/) into your PHP application.
-SDK simplifies work with requests to API and allows you to work with Invoice as a php class.
+The SDK simplifies work with requests to API and allows you to work with Invoice as a php class.
 
-Library does not use dependencies from external developers. Only two dependencies are used here,
+The library does not use dependencies from external developers. Only two dependencies are used here,
 also developed by Apirone. This gives us extra control over the library, makes sure that
 nothing will break due to external dependencies, and ensures that the library is small.
 
@@ -66,7 +66,7 @@ src/
 - __Invoice.php__ - The main entry point to the library.
 
 > [!NOTE]
-> All other classes of the library are not used directly, but will be discussed in the next sections of the documentation.
+> All other classes of the library are not used directly, but will be described in the next sections of the documentation.
 
 ## What's Next?
 
