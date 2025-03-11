@@ -1,7 +1,7 @@
 # Currency class
 
 Currency class is designed to work with Apirone currencies and contains all necessary data and methods.
-It is used to synchronize settings between api and local settings,
+It is used to synchronize settings between the API and local settings,
 allows you to set the transfer address and processing fees in the API.
 
 ## Create an instance
