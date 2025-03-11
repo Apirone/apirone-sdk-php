@@ -1,6 +1,6 @@
 # Render class
 
-The Render class is designed to set parameters for generating and outputting the html layout of an invoice.
+The Render class is designed to set parameters for generating and outputting the HTML layout of an invoice.
 You can also create your own custom template and localization file.
 
 The class is designed with static methods and properties, but it is possible
@@ -11,7 +11,7 @@ to create an instance of the class for easier parameter customization.
 |Property|Type|Description|
 |---|---|---|
 |`$idParam`|string|Invoice ID parameter name. The default is `invoice`|
-|`$dataUrl`|string|URL for ajax request to update invoice data.|
+|`$dataUrl`|string|URL for AJAX request to update invoice data.|
 |`$backlink`|string|URL backlink to store.|
 |`$timeZone`|string|Client time zone to generate the correct time. The default is UTC.|
 |`$qrOnly`|bool|If set, the `qr-only.php` template is used.|
@@ -43,14 +43,14 @@ $dataUrl = $render->dataUrl;
 |Method|Description|
 |---|---|
 |`init()`|Returns class instance|
-|`fromJson()`|Returns an instance of the class with customized parameters from json.|
-|`fromFile()`|Reads json from a file and returns a configured instance of the class.|
-|`toJson()`|Returns a json object with class parameters.|
-|`toJsonString()`|Returns a json object with class parameters as string.|
+|`fromJson()`|Returns an instance of the class with customized parameters from JSON.|
+|`fromFile()`|Reads JSON from a file and returns a configured instance of the class.|
+|`toJson()`|Returns a JSON object with class parameters.|
+|`toJsonString()`|Returns a JSON object with class parameters as string.|
 |`toFile()`|Saves class parameters to a file.|
 |`timeZoneByOffset()`|Setting the $timeZone by local time zone with UTC offset.|
 |`show()`|Render invoice html.|
-|`isAjaxRequest()`|Checks the request headers and determines if it is an ajax request.|
+|`isAjaxRequest()`|Checks the request headers and determines if it is an AJAX request.|
 |`getLocales()`|Returns an array of locales.|
 
 The methods for setting properties are not listed here.
