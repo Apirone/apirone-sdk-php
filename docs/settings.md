@@ -1,6 +1,6 @@
 # Settings class
 
-The second most important class is the `Apirone\SDK\Model\Settings` class, which is used to handle the account, retrieve network and currency lists, set forwarding addresses and policy fees and store common invoice and SDK parameters such as `lifetime`, `title`, `debug`, etc.
+The second most important class is the `Apirone\SDK\Model\Settings` class, which is used to handle the account, retrieve network and currency lists, set forwarding addresses and policy fees, and store common invoice and SDK parameters such as `lifetime`, `title`, `debug`, etc.
 
 ## Creating and saving
 
@@ -8,7 +8,7 @@ There are several methods for creating an instance of a class.
 
 ### With new account
 
-If you don't already have an Apirone account, now is the time to create one.
+If you haven't already had an Apirone account, now is the time to create one.
 Just create an instance of the class using the `Settings::init()` method and call the `createAccount()` method;
 
 ```php
@@ -20,7 +20,7 @@ $settings = Settings::init()->createAccount();
 ### Use existing account
 
 If you already have an [account](https://apirone.com/docs/account/#create-account)
-and you want to create a Settings object use special static function `fromExistingAccount()`
+and you want to create a Settings object, use special static function `fromExistingAccount()`
 with the account ID and transfer key as parameters.
 
 ```php
