@@ -1,0 +1,100 @@
+{
+    "account": "apr-6f456f6e57e6302a7b073a5312ca9779",
+    "transfer-key": "BRn2C5kMWvVPS8EcfJpkztVXFIlsjKXf",
+    "currencies": [
+        {
+            "name": "Bitcoin",
+            "abbr": "btc",
+            "units": "satoshi",
+            "units-factor": 1.0e-8,
+            "dust-rate": 1000,
+            "address": "34yhKRX8pNkJVxTZEARe4UVQZTj7P4K4Ew",
+            "policy": "percentage",
+            "network": "btc",
+            "token": null,
+            "error": null
+        },
+        {
+            "name": "Bitcoin (testnet)",
+            "abbr": "tbtc",
+            "units": "satoshi",
+            "units-factor": 1.0e-8,
+            "dust-rate": 1000,
+            "address": "2N186GvYp1gctUXMT4RXzAv3N5MB7wLncq7",
+            "policy": "percentage",
+            "network": "tbtc",
+            "token": null,
+            "error": null
+        },
+        {
+            "name": "Litecoin",
+            "abbr": "ltc",
+            "units": "satoshi",
+            "units-factor": 1.0e-8,
+            "dust-rate": 10000,
+            "address": null,
+            "policy": "fixed",
+            "network": "ltc",
+            "token": null,
+            "error": null
+        },
+        {
+            "name": "Bitcoin Cash",
+            "abbr": "bch",
+            "units": "satoshi",
+            "units-factor": 1.0e-8,
+            "dust-rate": 1000,
+            "address": null,
+            "policy": "fixed",
+            "network": "bch",
+            "token": null,
+            "error": null
+        },
+        {
+            "name": "Dogecoin",
+            "abbr": "doge",
+            "units": "satoshi",
+            "units-factor": 1.0e-8,
+            "dust-rate": 40000000,
+            "address": null,
+            "policy": "fixed",
+            "network": "doge",
+            "token": null,
+            "error": null
+        },
+        {
+            "name": "TRON",
+            "abbr": "trx",
+            "units": "sun",
+            "units-factor": 1.0e-6,
+            "dust-rate": 0,
+            "address": null,
+            "policy": "fixed",
+            "network": "trx",
+            "token": null,
+            "error": null
+        },
+        {
+            "name": "Tether USD (TRC20)",
+            "abbr": "usdt@trx",
+            "units": "",
+            "units-factor": 1.0e-6,
+            "dust-rate": 0,
+            "address": null,
+            "policy": "fixed",
+            "network": "trx",
+            "token": "usdt",
+            "error": null
+        }
+    ],
+    "title": "",
+    "merchant": "",
+    "merchant-url": "",
+    "timeout": 1800,
+    "factor": 1,
+    "backlink": "",
+    "qr-only": false,
+    "logo": true,
+    "debug": false,
+    "extra": {}
+}

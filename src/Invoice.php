@@ -104,8 +104,21 @@ class Invoice extends AbstractModel
      *
      * @param mixed $logger
      * @return void
+     * @deprecated
      */
     public static function setLogger($logger): void
+    {
+        LoggerWrapper::setLogger($logger);
+    }
+
+    /**
+     * Set log handler
+     * Alias to setLogger()
+     *
+     * @param mixed $logger
+     * @return void
+     */
+    public static function logger($logger): void
     {
         LoggerWrapper::setLogger($logger);
     }
@@ -259,7 +272,7 @@ class Invoice extends AbstractModel
         if (!$params) {
             $message = 'Data not received';
             LoggerWrapper::debug($message);
-            Utils::send_json('Data not received', 400);
+            Utils::sendJson('Data not received', 400);
 
             return;
         }
@@ -267,7 +280,7 @@ class Invoice extends AbstractModel
         if (!property_exists($params, 'invoice') || !property_exists($params, 'status')) {
             $message = 'Wrong params received: ' . json_encode($params);
             LoggerWrapper::debug($message);
-            Utils::send_json('Wrong params received: ' . json_encode($params), 400);
+            Utils::sendJson('Wrong params received: ' . json_encode($params), 400);
 
             return;
         }
@@ -277,7 +290,7 @@ class Invoice extends AbstractModel
         if (!$invoice->invoice) {
             $message = "Invoice not found: " . $params->invoice;
             LoggerWrapper::debug($message);
-            Utils::send_json($message, 404);
+            Utils::sendJson($message, 404);
 
             return;
         }
@@ -550,7 +563,7 @@ class Invoice extends AbstractModel
                     echo $invoice->id ? $invoice->details->statusNum() : 0;
                     exit;
                 }
-                Render::setTimeZoneByOffset($offset);
+                Render::timeZoneByOffset($offset);
                 echo $invoice->render();
             }
             exit;

@@ -38,7 +38,7 @@ class Currency extends AbstractModel
 
     private ?string $address = null;
 
-    private string $policy = 'fixed';
+    private string $policy = 'percentage';
 
     private ?string $network = null;
     
@@ -50,19 +50,22 @@ class Currency extends AbstractModel
 
     /**
      * Create a currency instance
-     *
+
+     * @param mixed $json
+     * @return $this
      * @return static
      */
-    public static function init()
+    public static function init($json)
     {
         $class = new static();
 
-        return $class;
+        return $class->classLoader($json);
     }
 
     /**
-     * Restore currency instance from JSON
+     * Create currency instance from JSON
      *
+     * @deprecated use Currency::init($json)
      * @param mixed $json
      * @return $this
      * @throws ReflectionException
@@ -219,10 +222,10 @@ class Currency extends AbstractModel
     /**
      * Set the value of policy
      *
-     * @param null|string $policy
+     * @param string $policy `fixed` or `percentage`
      * @return $this
      */
-    public function setPolicy(?string $policy = null)
+    public function setPolicy(string $policy)
     {
         $this->policy = $policy;
 
@@ -271,7 +274,9 @@ class Currency extends AbstractModel
 
     /**
      * Return array of currencies
-     * @return array
+     * 
+     * @param array $currencies
+     * @return \Apirone\SDK\Model\Settings\Currency[] 
      */
     public function getTokens(array $currencies)
     {
@@ -292,6 +297,7 @@ class Currency extends AbstractModel
     /**
      * Parse currency abbr to set network & token
      *
+     * @deprecated Since the API now supports network and token properties
      * @return self
      */
     public function parseAbbr()

@@ -25,13 +25,13 @@ $action = $_GET['action'] ?? false;
 
 switch ($action) {
     case 'create':
-        Utils::send_json(InvoiceDb::install($table_prefix));
+        Utils::sendJson(InvoiceDb::install($table_prefix));
 
         break;
     case 'delete':
-        Utils::send_json(!InvoiceDb::uninstall($table_prefix));
+        Utils::sendJson(!InvoiceDb::uninstall($table_prefix));
 
         break;
     default:
-        Utils::send_json($table_exists);
+        Utils::sendJson($table_exists);
 }

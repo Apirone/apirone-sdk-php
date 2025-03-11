@@ -31,4 +31,4 @@ switch ($action) {
 
 $content = file_exists($path) ? load_file_content($path, false) : false;
 
-Utils::send_json($content);
+Utils::sendJson($content);

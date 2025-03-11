@@ -20,6 +20,7 @@ use DivisionByZeroError;
 use ArithmeticError;
 use Closure;
 use Exception;
+use ReflectionClass;
 use stdClass;
 
 class Render
@@ -32,14 +33,14 @@ class Render
     public static string $idParam = 'invoice';
 
     /**
-     * Invoice data url for ajax request
+     * URL for ajax request to update invoice data
      *
      * @var string
      */
     public static string $dataUrl = '';
 
     /**
-     * Invoice store back link
+     * Invoice backlink to store
      *
      * @var string
      */
@@ -67,31 +68,196 @@ class Render
     public static bool $logo = true;
 
     /**
-     * Set render options
-     *
-     * @param string $dataUrl
-     * @param bool $qrOnly
-     * @param bool $logo
-     * @param string $backlink
-     * @return void
+     * Absolute path to the custom template file.
+     * @var string
      */
-    public static function init($dataUrl = '', $qrOnly = false, $logo = true, $backlink = '')
+    public static ?string $template = null;
+
+    /**
+     * Absolute path to the custom locales file.
+     * @var mixed
+     */
+    public static $locales = null;
+    public static ?array $_localesCache = null;
+
+    private function __construct() {}
+
+    /**
+     * Magic method for getting values of a private props by its name
+     *
+     * @param string $name 
+     * @return mixed 
+     */
+    public function __get($name)
     {
-        self::$dataUrl = $dataUrl;
-        self::$qrOnly = $qrOnly;
-        self::$logo = $logo;
-        self::$backlink = $backlink;
+        if ($name == 'locales') {
+            return self::getLocales();
+        }
+        if (\property_exists($this, $name)) {
+            $class = new \ReflectionClass(static::class);
+            
+            return $class->getStaticProperties()[$name];
+        }
+
+        $trace = \debug_backtrace();
+        \trigger_error(
+            'Undefined property ' . $name .
+            ' in ' . $trace[0]['file'] .
+            ' on line ' . $trace[0]['line'],
+            \E_USER_ERROR
+        );
     }
 
     /**
-     * Set timezone by local timezone to UTC offset
+     * Returns an instance of a class for customizing static props using arrow function syntax.
+     *
+     * @return Render
+     */
+    public static function init()
+    {
+        return new static();
+    }
+
+    /**
+     * Restopre render parameters from json
+     *
+     * @param mixed $json 
+     * @return static 
+     */
+    public static function fromJson($json)
+    {
+        $render =  new static();
+
+            $json = gettype($json) == 'string' ? json_decode($json) : $json;
+            $class = new \ReflectionClass(static::class);
+
+            foreach ($class->getStaticProperties() as $key => $val) {
+                if (property_exists($json, $key)) {
+                    $render->$key($json->$key);
+                }
+            }
+
+        return $render;
+    }
+
+    /**
+     * Restore paremeters from file
+     *
+     * @param mixed $abspath 
+     * @return static|null 
+     */
+    public static function fromFile($abspath)
+    {
+        $json = @file_get_contents($abspath);
+
+        if ($json) {
+            return static::fromJson($json);
+        }
+
+        return null;
+    }
+
+    /**
+     * Export parameters to json
+     * 
+     * @return \stdClass 
+     */
+    public static function toJson()
+    {
+        $class = new \ReflectionClass(static::class);
+        $json = new \stdClass;
+        foreach ($class->getStaticProperties() as $key => $val) {
+            $json->$key = $val;
+        }
+
+        return $json;
+    }
+
+    /**
+     * Save paremeters to file
+     *
+     * @param string $abspath
+     * @param string $filename
+     * @return bool
+     */
+    public function toFile($abspath)
+    {
+        if (file_put_contents($abspath, json_encode($this->toJson(), JSON_PRETTY_PRINT))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Convert class data to json string
+     *
+     * @param int $flag - second param for json_encode. For example - JSON_PRETTY_PRINT or 128
+     * @return string
+     */
+    public function toJsonString($flag = 0): string
+    {
+        return json_encode(Render::toJson(), $flag);
+    }
+
+    /**
+     * Set idParam value
+     * 
+     * @param string $param 
+     * @return $this 
+     */
+    public function idParam($param = "invoice")
+    {
+        $this::$idParam = $param;
+
+        return $this;
+    }
+
+    /**
+     * Set dataUrl value
+     * 
+     * @param string $url 
+     * @return $this 
+     */
+    public function dataUrl($url = "")
+    {
+        $this::$dataUrl = $url;
+
+        return $this;
+    }
+
+    /**
+     * set backlink value
+     * 
+     * @param string $url 
+     * @return $this 
+     */
+    public function backlink($url = "")
+    {
+        $this::$backlink = $url;
+
+        return $this;
+    }
+
+    public function timeZone($tz): self
+    {
+        $this::$timeZone = 'UTC';
+        if(preg_match('/(^GMT[+-][0-9]{2}:[0-9]{2}\b$)|(^UTC)/', $tz)) {
+            $this::$timeZone = $tz;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Setting the $timeZone by local time zone with UTC offset
      *
      * @param int $offset
      * @return void
      * @throws DivisionByZeroError
      * @throws ArithmeticError
      */
-    public static function setTimeZoneByOffset(int $offset = 0)
+    public static function timeZoneByOffset(int $offset = 0)
     {
         if ($offset == 0 || abs($offset) >= 1140) {
             $tz = 'UTC';
@@ -102,6 +268,73 @@ class Render
             $tz = 'GMT' . (($offset < 0) ? '+' : '-') . $t;
         }
         self::$timeZone = $tz;
+    }
+
+    /**
+     * Set qrOnly value
+     * 
+     * @param bool $qrOnly 
+     * @return $this 
+     */
+    public function qrOnly($qrOnly = false)
+    {
+        $this::$qrOnly = $qrOnly;
+
+        return $this;
+    }
+
+    /**
+     * Set logo value
+     * 
+     * @param bool $logo 
+     * @return $this 
+     */
+    public function logo($logo = true)
+    {
+        $this::$logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * Set template value
+     * 
+     * @param mixed $absolutePath 
+     * @return $this 
+     */
+    public function template($absolutePath = null)
+    {
+        $this::$template = $absolutePath;
+
+        return $this;
+    }
+
+    /**
+     * Set locales value
+     * 
+     * @param mixed $locales 
+     * @return $this 
+     */
+    public function locales($locales = null)
+    {
+        self::$_localesCache = null;
+        self::$locales = $locales;
+
+        return $this;
+    }
+
+    /**
+     * Setting the $timeZone by local time zone with UTC offset
+     *
+     * @param int $offset
+     * @return void
+     * @throws DivisionByZeroError
+     * @throws ArithmeticError
+     * @deprecated Use timezoneByOffset()
+     */
+    public static function setTimeZoneByOffset(int $offset = 0)
+    {
+        self::timeZoneByOffset($offset);
     }
 
     /**
@@ -133,7 +366,6 @@ class Render
         $statusLink = self::$dataUrl ? self::$dataUrl : '/';
         $backlink = !empty(self::$backlink) ? self::$backlink : Invoice::$settings->getBacklink();
         $logo = Invoice::$settings->getLogo();
-        $template = !self::$qrOnly ? 'full' : 'qr-only';
         $note = null;
         $amount = null;
 
@@ -167,10 +399,19 @@ class Render
             $loading = true;
         }
 
+        // Set template
+        if (self::$template !== null && file_exists(self::$template)) {
+            $template = self::$template;
+        }
+        else {
+            $name = !self::$qrOnly ? 'full' : 'qr-only';
+            $template = __DIR__ . '/tpl/' . $name . '.php';
+        }
+
         // Draw output:
         [$t, $d, $c, $l] = self::helpers(); // translate, date, copy, link
         ob_start();
-        include(__DIR__ . '/tpl/' . $template . '.php');
+        include($template);
 
         return ob_get_clean();
     }
@@ -248,7 +489,7 @@ class Render
     private static function helpers()
     {
         // Localize callback
-        $locales = self::locales();
+        $locales = self::getLocales();
         $t = static function ($key, $echo = true) use ($locales) {
             if(empty($key)) {
                 $result = '';
@@ -303,14 +544,47 @@ class Render
     }
 
     /**
-     * Return locales for template
-     *
-     * @return string[][]
+     * Return locales for template.
+     * 
+     * @return array 
      */
-    private static function locales()
+    public static function getLocales()
     {
-        require(__DIR__ . '/tpl/locales.php');
+        // Return locales cache if set
+        if (self::$_localesCache !== null) {
+            return self::$_localesCache; 
+        }
 
-        return $locales;
+        $default = require(__DIR__ . '/tpl/locales.php');
+        if (self::$locales == null) {
+            return $default;
+        }
+
+        $type = gettype(self::$locales);
+        switch ($type) {
+            case 'string':
+                $custom = file_exists(self::$locales) ? require(self::$locales) : $default;
+                break;
+            case 'array':
+                $custom = self::$locales;
+                break;
+            default:
+                $custom = $default;
+        }
+
+        $fallbacks = [];
+        foreach ($default as $key => $val) {
+            if (array_key_exists($key, $custom)) {
+                $fallbacks[$key] = $default[$key];
+            }
+        }
+
+        $fallbacks['en'] = $default['en'];
+        $result = \array_replace_recursive($fallbacks, $custom);
+
+        // Set result to cache
+        self::$_localesCache = $result;
+
+        return $result;
     }
 }

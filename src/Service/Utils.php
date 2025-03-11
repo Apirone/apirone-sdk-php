@@ -99,6 +99,7 @@ class Utils
      * @param mixed $currency
      * @param mixed $input_address
      * @param mixed $amount
+     * @deprecated Use renderQr() to get base64 encoded PNG
      * @return string
      */
     public static function getQrLink($currency, $input_address, $amount = null)
@@ -208,6 +209,7 @@ class Utils
      */
     public static function fiat2crypto($value, $from, $to)
     {
+        // TODO Remove fiat2cripto call - use ticker
         return Service::fiat2crypto($value, $from, $to);
     }
 
@@ -265,7 +267,7 @@ class Utils
      * @param int $code
      * @return false|void
      */
-    public static function send_json($data, $code = 200)
+    public static function sendJson($data, $code = 200)
     {
         if (headers_sent()) {
             return false;
@@ -287,5 +289,18 @@ class Utils
 
         header('Content-Type: application/json; charset=utf-8');
         echo $json;
+    }
+
+    /**
+     * Send JSON response
+     *
+     * @param mixed $data
+     * @param int $code
+     * @return false|void
+     * @deprecated Use sendJson()
+     */
+    public function send_json($data, $code = 200)
+    {
+        return self::sendJson($data, $code = 200);
     }
 }
