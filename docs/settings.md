@@ -19,7 +19,7 @@ $settings = Settings::init()->createAccount();
 
 ### Use existing account
 
-If you already have an [account](https://apirone.com/docs/account/#create-account)
+If you have already had an [account](https://apirone.com/docs/account/#create-account)
 and you want to create a Settings object, use special static function `fromExistingAccount()`
 with the account ID and transfer key as parameters.
 
