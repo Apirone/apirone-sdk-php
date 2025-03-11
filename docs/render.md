@@ -10,18 +10,18 @@ to create an instance of the class for easier parameter customization.
 
 |Property|Type|Description|
 |---|---|---|
-|`$idParam`|string|Invoice id param name. The default is `invoice`|
+|`$idParam`|string|Invoice ID parameter name. The default is `invoice`|
 |`$dataUrl`|string|URL for ajax request to update invoice data.|
 |`$backlink`|string|URL backlink to store.|
 |`$timeZone`|string|Client time zone to generate the correct time. The default is UTC.|
 |`$qrOnly`|bool|If set, the `qr-only.php` template is used.|
-|`$logo`|bool|If set, the apirone logo will be shown.|
+|`$logo`|bool|If set, the Apirone logo will be shown.|
 |`$template`|string|Absolute path to the template file.|
 |`$locales`|string|Absolute path to the locales file.|
 
 All properties are available as `Render::$propetyName`.
 For convenience, you can create an instance of the class and customize it with arrow functions
-using the name of the porarameter as the function name:
+using the name of the parameter as the function name:
 
 ```php
 // Create an instance and configure
@@ -33,7 +33,7 @@ $render = Render::init()
 // Call the method without parameter to set the default value
 $render->dataUrl();
 
-// To get a property value, use the obeject syntax
+// To get a property value, use the object syntax
 $dataUrl = $render->dataUrl;
 
 ```
@@ -68,7 +68,7 @@ to the `locales()` method. In case, if some value is missing,
 the value from `en` locale will be used as a fallback value.
 
 Officially, the library supports English `en`, Russian `ru`, Espanol `es`, French `fr`, German `de` and Turkish `tr`.
-If you want to change eth from the list, create an array with locales, passing only the codes of the desired languages:
+If you want to change the list, for example to leave only three locales, then create an array with locales, passing only the codes of the desired languages:
 
 ```php
 $locales = [
