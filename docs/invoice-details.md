@@ -1,6 +1,6 @@
 # InvoiceDetails class
 
-After the invoice is created, the service returns a json object with information about it.
+After the invoice is created, the service returns a JSON object with information about it.
 For easier handling of the data, the `InvoceDetails` class loads the data and provides easy access to the properties.
 
 ## Class properties
@@ -15,7 +15,7 @@ For easier handling of the data, the `InvoceDetails` class loads the data and pr
 |`$expire`|Invoice expiration time in ISO-8601 format, for example, 2022-02-22T09:00:30|
 |`$currency`|Amount in the selected currency|
 |`$userData`|[UserData](user-data) class|
-|`$status`|Invoce current status|
+|`$status`|Invoice current status|
 |`$history`|Invoice status change history|
 |`$linlback`|The customer will be redirected to this URL after the payment is completed|
 |`$callbackUrl`|Callback URL to receive data about the payment|
@@ -29,9 +29,9 @@ All properties also available via `getPropertyName()` functions.
 |---|---|
 |`update()`|Returns updated invoice data from the API|
 |`info()`|Returns public or private invoice info|
-|`isExpired()`|Checks whether the invoice has not expired|
-|`timeToExpire()`|Returns the number of seconds until an invoice expires. If the invoice is finalized - returns -1|
-|`showLinkback()`*|Show linkback if set and invoice status is paid or overpaid|
-|`statusNum()`*|Return count of history items. In case when invoice completed or expired return zero value|
+|`isExpired()`|Checks if the invoice has not expired|
+|`timeToExpire()`|Returns the number of seconds until an invoice expires. If the invoice is completed - returns -1|
+|`showLinkback()`*|Shows linkback if set and invoice status is paid or overpaid|
+|`statusNum()`*|Returns count of history items. In case when the invoice completed or expired return zero value|
 
-`*` - Used to render invoice data.
+`*` - Used to render the invoice data.
