@@ -1,16 +1,14 @@
 import { defineConfig } from 'vitepress'
 
-// https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "Apirone SDK PHP",
+  title: "SDK PHP",
   description: "Crypto payments in five easy steps",
   base: '/apirone-sdk-php/',
   head: [['link', { rel: 'icon', href: '/apirone-sdk-php/favicon.ico' }]],
   cleanUrls: true,
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
     outline: [2,3],
-    logo: '/logo-primarySmall.svg',
+    logo: '/logo.svg',
     nav: nav(),
 
     sidebar: sidebar(),
@@ -53,7 +51,7 @@ function nav() {
 
 function sidebar() {
   return  [
-      { 
+      {
         text: 'Introduction',
         collapsed: false,
         items: [
@@ -79,13 +77,6 @@ function sidebar() {
         text: 'Usage examples',
         link: '/usage-examples',
       },
-      // {
-      //   text: 'Deprecated pages',
-      //   items: [
-      //     {text: '_Overview', link: '/deprecated/overview'},
-      //     {text: '_README.md', link: '/deprecated/readme'},
-      //   ]
-      // },
     ]
 }
 
