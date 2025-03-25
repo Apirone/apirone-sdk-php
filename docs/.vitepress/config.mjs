@@ -2,13 +2,19 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   title: "SDK PHP",
+  titleTemplate: 'Apirone :title',
   description: "Crypto payments in five easy steps",
   base: '/apirone-sdk-php/',
   head: [['link', { rel: 'icon', href: '/apirone-sdk-php/favicon.ico' }]],
   cleanUrls: true,
+  sitemap: {
+    hostname: 'https://apirone.github.io/apirone-sdk-php'
+  },
   themeConfig: {
     outline: [2,3],
     logo: '/logo.svg',
+    externalLinkIcon: true,
+
     nav: nav(),
 
     sidebar: sidebar(),
