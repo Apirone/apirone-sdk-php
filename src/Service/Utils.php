@@ -23,6 +23,8 @@ use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\Lib\PhpQRCode\QRCode;
 use Apirone\SDK\Model\Settings\Currency;
 
+use function PHPSTORM_META\type;
+
 class Utils
 {
     public const FROM = '?from=apirone';
@@ -53,20 +55,35 @@ class Utils
 
     public static function getExplorerHref(Currency $currency, $type, $hash = '')
     {
-        $explorer = 'blockchair.com';
-        $currencyName = strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $currency->getName()));
-        $from = '?from=apirone';
-        if ($currency->getAbbr() == 'tbtc') {
-            $currencyName = 'bitcoin/testnet';
-            $from = '';
+        // Explorer switch
+        switch ($currency->getAbbr()) {
+            case (substr_count($currency->getAbbr(), 'trx') > 0 ):
+                $explorer = $currency->isTestnet() ? 'shasta.tronscan.org' : 'tronscan.org';
+                $path = implode('/', ['#', $type, $hash]);
+                break;
+            case (substr_count($currency->getAbbr(), 'eth') > 0 ):
+                $explorer = $currency->isTestnet() ? 'sepolia.etherscan.io' : 'etherscan.io';
+                $type = ($type == 'transaction') ? 'tx' : $type;
+                $path = implode('/', ['#', $type, $hash]);
+                break;
+            case 'btc':
+                $explorer = 'explorer.apirone.com';
+                $type = ($type == 'transaction') ? 'tx' : $type;
+                $path = implode('/', [$type, $hash]);
+                break;
+            default:
+                $explorer = 'blockchair.com';
+                $currencyName = strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $currency->getName()));
+                $from = '?from=apirone';
+                if ($currency->getAbbr() == 'tbtc') {
+                    $currencyName = 'bitcoin/testnet';
+                    $from = '';
+                }
+                $path = implode('/', [$currencyName, $type, $hash . $from]);
+                break;
         }
 
-        if (substr_count($currency->getAbbr(), 'trx') > 0 ){
-            $explorer = $currency->isTestnet() ? 'shasta.tronscan.org' : 'tronscan.org';
-            $currencyName = '#';
-        }
-
-        $href = sprintf('https://%s/%s/%s/%s', ...[$explorer, $currencyName, $type, $hash . $from]);
+        $href = sprintf('https://%s/%s', ...[$explorer, $path]);
 
         return $href;
     }
