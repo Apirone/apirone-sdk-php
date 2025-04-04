@@ -192,9 +192,12 @@ $color-bg-white: #fff;
                 background-image: url('icons/crypto/usdt_eth.svg'), url('icons/crypto/aprn.svg');
             }
             &.tbch, &.tbtc, &.tdoge, &.tltc,
-            &.ttrx, &.usdc-ttrx, &.usdt-ttrx, 
+            &.ttrx, &.usdc-ttrx, &.usdt-ttrx,
             &.teth, &.link-teth, &.usdc-teth, &.usdt-teth {
                 filter:grayscale(1);
+            }
+            &.tcn-trx, &.tcn-ttrx {
+                background-image: url('icons/crypto/aprn.svg');
             }
         }
     }

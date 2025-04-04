@@ -60,6 +60,9 @@ RUN pecl install xdebug-3.1.4 && \
     docker-php-ext-enable xdebug && \
     mkdir /var/log/xdebug
 
+# CA-Certificates
+RUN apt-get install ca-certificates
+
 COPY docker/composer_init.sh /usr/bin/composer_init.sh
 RUN cd /usr/bin && chmod +x composer_init.sh
 
