@@ -236,7 +236,7 @@ class Utils
     {
         $result = static::fiat2cryptos($fiatAmount, $fiatCode, [$currency]);
         if ($result) {
-            return $result[$currency->abbr];
+            return (float)$result[$currency->abbr];
         }
 
         return $result;
@@ -266,12 +266,18 @@ class Utils
         $amounts = [];
 
         if (property_exists($rates, $fiatCode)) {
-            $amounts[$currencies[0]->abbr] = $fiatAmount / $rates->$fiatCode;
+            $amount = $fiatAmount / $rates->$fiatCode;
+            $decimals = strlen((string)(intval((1 / $currencies[0]->unitsFactor)) - 1));
+            $format = '%.' . $decimals . 'f';
+            $amounts[$currencies[0]->abbr] = sprintf($format, floatval($amount));
         }
         else {
             foreach ($currencies as $currency) {
                 if (property_exists($rates, $currency->abbr)) {
-                    $amounts[$currency->abbr] = $fiatAmount / $rates->{$currency->abbr}->$fiatCode;
+                    $amount = $fiatAmount / $rates->{$currency->abbr}->$fiatCode;
+                    $decimals = strlen((string)(intval((1 / $currency->unitsFactor)) - 1));
+                    $format = '%.' . $decimals . 'f';
+                    $amounts[$currency->abbr] = sprintf($format, floatval($amount));
                 }
             }
         }
