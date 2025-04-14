@@ -217,7 +217,6 @@ class Utils
         return number_format(round($value / $unitsFactor), 0, '.', '');
     }
 
-
     /**
      * Convert fiat amount to crypto
      * 
