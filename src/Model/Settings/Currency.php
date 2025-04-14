@@ -24,6 +24,23 @@ use Apirone\SDK\Model\AbstractModel;
 use Exception;
 use ReflectionException;
 
+/**
+ * Apirone crypto currency
+ *
+ * @property-read string $name
+ * @property-read string $abbr
+ * @property-read string $units
+ * @property-read string $unitsFactor
+ * @property-read int    $dustRate
+ * @property-read string $address
+ * @property-read string $policy
+ * @property-read string $network
+ * @property-read string $token
+ * @property-read string $error
+ *
+ * @method public address(string $address)
+ * @method public policy(string $policyType) 'fixed' or 'percentage'
+ */
 class Currency extends AbstractModel
 {
     private ?string $name = null;
@@ -75,16 +92,6 @@ class Currency extends AbstractModel
         $class = new static();
 
         return $class->classLoader($json);
-    }
-
-    /**
-     * Check is a test currency
-     *
-     * @return bool
-     */
-    public function isTestnet()
-    {
-        return (substr_count(strtolower($this->name), 'testnet') > 0) ? true : false;
     }
 
     /**
@@ -140,6 +147,7 @@ class Currency extends AbstractModel
      * Get the value of name
      *
      * @return null|string
+     * @deprecated Use $class->name
      */
     public function getName()
     {
@@ -150,6 +158,7 @@ class Currency extends AbstractModel
      * Get the value of abbr
      *
      * @return null|string
+     * @deprecated Use $class->abbr
      */
     public function getAbbr()
     {
@@ -160,6 +169,7 @@ class Currency extends AbstractModel
      * Get the value of units
      *
      * @return null|string
+     * @deprecated Use $class->units
      */
     public function getUnits()
     {
@@ -170,6 +180,7 @@ class Currency extends AbstractModel
      * Get the value of unitsFactor
      *
      * @return null|float
+     * @deprecated Use $class->unitsFactor
      */
     public function getUnitsFactor()
     {
@@ -180,6 +191,7 @@ class Currency extends AbstractModel
      * Get the value of dustRate
      *
      * @return null|int
+     * @deprecated Use $class->dustRate
      */
     public function getDustRate()
     {
@@ -190,6 +202,7 @@ class Currency extends AbstractModel
      * Get the currency destination address
      *
      * @return null|string
+     * @deprecated Use $class->address
      */
     public function getAddress()
     {
@@ -202,7 +215,7 @@ class Currency extends AbstractModel
      * @param null|string $address
      * @return $this
      */
-    public function setAddress(?string $address = null)
+    public function address(?string $address = null)
     {
         $this->address = empty($address) ? null : trim($address);
 
@@ -210,9 +223,22 @@ class Currency extends AbstractModel
     }
 
     /**
+     * Set currency destination address
+     *
+     * @param null|string $address
+     * @return $this
+     * @deprecated Use $class->address()
+     */
+    public function setAddress(?string $address = null)
+    {
+        return $this->address($address);
+    }
+
+    /**
      * Get the value of policy
      *
      * @return string
+     * @deprecated Use $class->policy
      */
     public function getPolicy()
     {
@@ -225,7 +251,7 @@ class Currency extends AbstractModel
      * @param string $policy `fixed` or `percentage`
      * @return $this
      */
-    public function setPolicy(string $policy)
+    public function policy(string $policy)
     {
         $this->policy = $policy;
 
@@ -233,9 +259,22 @@ class Currency extends AbstractModel
     }
 
     /**
+     * Set the value of policy
+     *
+     * @param string $policy `fixed` or `percentage`
+     * @return $this
+     * @deprecated Use $class->policy()
+     */
+    public function setPolicy(string $policy)
+    {
+        return $this->policy($policy);
+    }
+
+    /**
      * Get the value of error
      *
      * @return null|string
+     * @deprecated Use $class->error
      */
     public function getError()
     {
@@ -253,7 +292,17 @@ class Currency extends AbstractModel
     }
 
     /**
-     * Return network abbr if currency a network
+     * Check is a test currency
+     *
+     * @return bool
+     */
+    public function isTestnet()
+    {
+        return (substr_count(strtolower($this->name), 'testnet') > 0) ? true : false;
+    }
+
+    /**
+     * Returns network abbr if currency a network
      * 
      * @return null|string 
      */
@@ -273,7 +322,17 @@ class Currency extends AbstractModel
     }
 
     /**
-     * Return array of currencies
+     * Returns whether the currency is a stablecoin
+     * 
+     * @return bool
+     */
+    public function isStablecoin()
+    {
+        return (substr_count(strtolower($this->name), 'usd') > 0) ? true : false;
+    }
+
+    /**
+     * Returns array of currencies
      * 
      * @param array $currencies
      * @return \Apirone\SDK\Model\Settings\Currency[] 
@@ -295,7 +354,7 @@ class Currency extends AbstractModel
     }
 
     /**
-     * Parse currency abbr to set network & token
+     * Parses currency abbr to set network & token
      *
      * @deprecated Since the API now supports network and token properties
      * @return self
