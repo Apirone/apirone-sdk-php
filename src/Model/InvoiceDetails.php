@@ -28,6 +28,26 @@ use Apirone\SDK\Model\HistoryItem;
 use Apirone\SDK\Tools\Utils;
 use ReflectionException;
 
+/**
+ * Apirone invoice wrapper class
+ *
+ * @package Apirone\SDK\Model
+ * 
+ * @property-read string $account
+ * @property-read string $invoice
+ * @property-read string $created
+ * @property-read string $currency
+ * @property-read string $address
+ * @property-read string $expire
+ * @property-read string $amount
+ * @property-read string $userData
+ * @property-read string $status
+ * @property-read string $history
+ * @property-read string $linkback
+ * @property-read string $callbackUrl
+ * @property-read string $invoiceUrl
+ */
+
 class InvoiceDetails extends AbstractModel
 {
     /**
@@ -62,9 +82,9 @@ class InvoiceDetails extends AbstractModel
     private ?string $expire;
 
     /**
-     * @var null|int Amount in the selected currency
+     * @var null|string Amount in the selected currency
      */
-    private ?int $amount;
+    private ?string $amount;
 
     /**
      * @var null|UserData Some additional information about the invoice
@@ -207,6 +227,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of currency
+     * @deprecated Use $class->currency
      */
     public function getCurrency()
     {
@@ -215,6 +236,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of address
+     * @deprecated Use $class->address
      */
     public function getAddress()
     {
@@ -223,6 +245,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of expire
+     * @deprecated Use $class->expire
      */
     public function getExpire()
     {
@@ -231,6 +254,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of amount
+     * @deprecated Use $class->amount
      */
     public function getAmount()
     {
@@ -239,6 +263,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of userData
+     * @deprecated Use $class->userData
      */
     public function getUserData()
     {
@@ -247,6 +272,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of status
+     * @deprecated Use $class->status
      */
     public function getStatus()
     {
@@ -255,6 +281,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of history
+     * @deprecated Use $class->history
      */
     public function getHistory()
     {
@@ -263,6 +290,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of linkback
+     * @deprecated Use $class->linkback
      */
     public function getLinkback()
     {
@@ -271,6 +299,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of callbackUrl
+     * @deprecated Use $class->callbackUrl
      */
     public function getCallbackUrl()
     {
@@ -279,6 +308,7 @@ class InvoiceDetails extends AbstractModel
 
     /**
      * Get the value of invoiceUrl
+     * @deprecated Use $class->invoiceUrl
      */
     public function getInvoiceUrl()
     {

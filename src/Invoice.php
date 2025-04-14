@@ -130,14 +130,14 @@ class Invoice extends AbstractModel
      * @param null|int $amount
      * @return static
      */
-    public static function init(string $currency, ?int $amount = null): Invoice
+    public static function init(string $currency, $amount = null): Invoice
     {
         $class = new static();
 
         $class->currency($currency);
 
         if ($amount !== null) {
-            $class->createParams['amount'] = $amount;
+            $class->amount($amount);
         }
 
         return $class;
@@ -339,10 +339,10 @@ class Invoice extends AbstractModel
     /**
      * Set invoice amount
      *
-     * @param null|int $amount
+     * @param $amount
      * @return $this
      */
-    public function amount(?int $amount = null)
+    public function amount($amount = null)
     {
         if (!$this->id) {
             $this->createParams['amount'] = $amount;

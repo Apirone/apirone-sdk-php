@@ -23,6 +23,8 @@ use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\Lib\PhpQRCode\QRCode;
 use Apirone\SDK\Model\Settings\Currency;
 
+use function PHPSTORM_META\type;
+
 class Utils
 {
     public const FROM = '?from=apirone';
@@ -53,20 +55,35 @@ class Utils
 
     public static function getExplorerHref(Currency $currency, $type, $hash = '')
     {
-        $explorer = 'blockchair.com';
-        $currencyName = strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $currency->getName()));
-        $from = '?from=apirone';
-        if ($currency->getAbbr() == 'tbtc') {
-            $currencyName = 'bitcoin/testnet';
-            $from = '';
+        // Explorer switch
+        switch ($currency->getAbbr()) {
+            case (substr_count($currency->getAbbr(), 'trx') > 0 ):
+                $explorer = $currency->isTestnet() ? 'shasta.tronscan.org' : 'tronscan.org';
+                $path = implode('/', ['#', $type, $hash]);
+                break;
+            case (substr_count($currency->getAbbr(), 'eth') > 0 ):
+                $explorer = $currency->isTestnet() ? 'sepolia.etherscan.io' : 'etherscan.io';
+                $type = ($type == 'transaction') ? 'tx' : $type;
+                $path = implode('/', ['#', $type, $hash]);
+                break;
+            case 'btc':
+                $explorer = 'explorer.apirone.com';
+                $type = ($type == 'transaction') ? 'tx' : $type;
+                $path = implode('/', [$type, $hash]);
+                break;
+            default:
+                $explorer = 'blockchair.com';
+                $currencyName = strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $currency->getName()));
+                $from = '?from=apirone';
+                if ($currency->getAbbr() == 'tbtc') {
+                    $currencyName = 'bitcoin/testnet';
+                    $from = '';
+                }
+                $path = implode('/', [$currencyName, $type, $hash . $from]);
+                break;
         }
 
-        if (substr_count($currency->getAbbr(), 'trx') > 0 ){
-            $explorer = $currency->isTestnet() ? 'shasta.tronscan.org' : 'tronscan.org';
-            $currencyName = '#';
-        }
-
-        $href = sprintf('https://%s/%s/%s/%s', ...[$explorer, $currencyName, $type, $hash . $from]);
+        $href = sprintf('https://%s/%s', ...[$explorer, $path]);
 
         return $href;
     }
@@ -154,6 +171,7 @@ class Utils
         return sprintf('%.8f', floatval($value));
     }
 
+
     /**
      * Convert to decimal and trim trailing zeros if $zeroTrim set true
      *
@@ -162,14 +180,14 @@ class Utils
      * @param bool $zeroTrim (optional)
      * @return string
      */
-    public static function humanizeAmount($amount, $currency, $zeroTrim = false)
+    public static function humanizeAmount($amount, $currency, $zeroTrim = true)
     {
         $amount = $amount * $currency->unitsFactor;
-        $decimals = $currency->isToken() ? '2' : strlen((string)((1 / $currency->unitsFactor) - 1));
+        $decimals = $currency->isStablecoin() ? '2' : strlen((string)(intval((1 / $currency->unitsFactor)) - 1));
         $format = '%.' . $decimals . 'f';
 
         if ($zeroTrim) {
-            return rtrim(rtrim(sprintf($format, floatval($amount)), 0), '.');
+            return rtrim(rtrim(sprintf($format, floatval($amount)), '0'), '.');
         }
 
         return sprintf($format, floatval($amount));
@@ -196,21 +214,69 @@ class Utils
      */
     public static function cur2min($value, $unitsFactor)
     {
-        return (int) round($value / $unitsFactor);
+        return number_format(round($value / $unitsFactor), 0, '.', '');
+    }
+
+
+    /**
+     * Convert fiat amount to crypto
+     * 
+     * @param mixed $fiatAmount 
+     * @param mixed $fiatCode 
+     * @param mixed $crypto 
+     * @return float 
+     * @throws \Apirone\API\Exceptions\RuntimeException 
+     * @throws \Apirone\API\Exceptions\ValidationFailedException 
+     * @throws \Apirone\API\Exceptions\UnauthorizedException 
+     * @throws \Apirone\API\Exceptions\ForbiddenException 
+     * @throws \Apirone\API\Exceptions\NotFoundException 
+     * @throws \Apirone\API\Exceptions\MethodNotAllowedException 
+     */
+    public static function fiat2crypto(float $fiatAmount, string $fiatCode, Currency $currency): float
+    {
+        $result = static::fiat2cryptos($fiatAmount, $fiatCode, [$currency]);
+        if ($result) {
+            return $result[$currency->abbr];
+        }
+
+        return $result;
     }
 
     /**
-     * Convert fiat value to crypto by request to apirone api
+     * Converts fiat amount to crypto for array of cryptos
      *
-     * @param mixed $value
-     * @param string $from
-     * @param string $to
-     * @return mixed
+     * @param float $fiatAmount 
+     * @param string $fiatCode 
+     * @param Currency[] $currencies 
+     * @return array<mixed, int|float> 
+     * @throws \Apirone\API\Exceptions\RuntimeException 
+     * @throws \Apirone\API\Exceptions\ValidationFailedException 
+     * @throws \Apirone\API\Exceptions\UnauthorizedException 
+     * @throws \Apirone\API\Exceptions\ForbiddenException 
+     * @throws \Apirone\API\Exceptions\NotFoundException 
+     * @throws \Apirone\API\Exceptions\MethodNotAllowedException 
      */
-    public static function fiat2crypto($value, $from, $to)
+    public static function fiat2cryptos(float $fiatAmount, string $fiatCode, array $currencies)
     {
-        // TODO Remove fiat2cripto call - use ticker
-        return Service::fiat2crypto($value, $from, $to);
+        $to = [];
+        foreach ($currencies as $currency) {
+            $to[] = $currency->abbr;
+        }
+        $rates = Service::ticker(implode(',', $to), $fiatCode);
+        $amounts = [];
+
+        if (property_exists($rates, $fiatCode)) {
+            $amounts[$currencies[0]->abbr] = $fiatAmount / $rates->$fiatCode;
+        }
+        else {
+            foreach ($currencies as $currency) {
+                if (property_exists($rates, $currency->abbr)) {
+                    $amounts[$currency->abbr] = $fiatAmount / $rates->{$currency->abbr}->$fiatCode;
+                }
+            }
+        }
+
+        return $amounts;
     }
 
     /**
