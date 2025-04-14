@@ -119,7 +119,7 @@ class Currency extends AbstractModel
     }
 
     /**
-     * Cave currency settings to account
+     * Save currency settings to account
      *
      * @param mixed $account
      * @param mixed $transferKey
@@ -282,7 +282,7 @@ class Currency extends AbstractModel
     }
 
     /**
-     * Is currency has an error
+     * Checks is the currency has an error
      *
      * @return bool
      */
