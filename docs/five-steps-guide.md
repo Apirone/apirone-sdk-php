@@ -10,7 +10,7 @@ We use callback functions for compatibility with different code to work with dat
 
 Create a static function and wrap the logging system in it as a callback.
 If you do not use logging, you can skip this step.
-Use the standard PSR-3: Logger Interface, which has a `log()` method, 
+Use the standard PSR-3: Logger Interface, which has a `log()` method,
 or use your own function with the following parameters: `log($level, $message, $context)`
 
 Simple "log to file" implementation:

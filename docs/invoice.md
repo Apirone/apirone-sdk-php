@@ -28,6 +28,7 @@ You need to have an Apirone account to create an invoice. Use the Settings class
 ### Creation parameters
 
 See [API docs](https://apirone.com/docs/invoices/#create-invoice) for a full description of the parameters.
+
 |Class method|API parameter|Description|
 |---|---|---|
 |`currency()`|`currency`|Currency type supported by service. Required|

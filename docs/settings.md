@@ -50,7 +50,6 @@ $json_settings = $settings->toJson();
 $json_settings = $settings->toJsonString();
 ```
 
-
 ::: details Settings.json example
 
 ```json
