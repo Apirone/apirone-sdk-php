@@ -334,7 +334,12 @@ class Invoice extends AbstractModel
     public function amount($amount = null)
     {
         if (!$this->id) {
-            $this->createParams['amount'] = $amount;
+            if ($amount < 9223372036854775807) {
+                $this->createParams['amount'] = (int) $amount;
+            }
+            else {
+                $this->createParams['amount'] = (string) $amount;
+            }
         }
 
         return $this;
