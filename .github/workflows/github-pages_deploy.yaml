@@ -2,9 +2,9 @@ name: 'Build & deploy docs to github pages'
 on:
   workflow_dispatch:
 # #   pull_request:
-  # push:
-  #   branches:
-  #     - docs
+  push:
+    branches:
+      - docs
 #     tags:
 #       - 'v*'
 
