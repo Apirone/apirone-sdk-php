@@ -14,6 +14,10 @@ require_once('helpers/common.php');
 use Apirone\SDK\Invoice;
 
 $loggerCallback = static function ($level, $message, $context) {
+    // No debug level logs
+    if (strtoupper($level) == 'DEBUG') {
+        return;
+    }
     $log_file = '/var/www/storage/log.txt';
     $dt = new \DateTime();
     $context = ($context) ? ' CONTEXT: ' . json_encode($context) : '';
