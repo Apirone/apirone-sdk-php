@@ -36,7 +36,6 @@ To do this, use `$class->address()` and `$class->policy()` methods.
 |`saveSettings()`|Save currency settings to account|
 |`hasError()`|Checks is the currency has an error|
 
-
 ## Additional methods
 
 |Method|Description|

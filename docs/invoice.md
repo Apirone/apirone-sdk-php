@@ -53,9 +53,9 @@ Usage example:
 $invoice->init('btc');
 // ...
 $invoiceUserData = UserData::init()
-    ->setTitle('My invoice Title')
-    ->setMerchant('Merchant name');
-    ->setPrice('$ 100');
+    ->itle('My invoice Title')
+    ->merchant('Merchant name');
+    ->price('$ 100');
 
 $invoice->userData($invoiceUserData);
 // ...
@@ -74,7 +74,7 @@ The `invoice` property, which contains the invoice identifier, becomes available
 
 ## Existing invoice & order invoices
 
-To retrieve an invoice from the database, execute the static method `Invoice::getInvoice($invoice)`, where the invoice ID is used as a parameter.
+To retrieve an invoice from the database, execute the static method `Invoice::get($invoice)`, where the invoice ID is used as a parameter.
 
 In addition, you can update the invoice information by calling the `update()` method on the invoice instance.
 If the invoice data has changed, such as its status, it will be automatically updated in the database.
@@ -84,4 +84,4 @@ Use the `setMeta($key, $value )` method to set and the `getMeta($key)` method to
 
 If you set the `order` property when creating an invoice, you can retrieve all invoices associated with that payment.
 
-Use getOrderInvoices($order) method for this and get an array with invoices or an empty array if no invoices are found.
+Use `Invoice::getByOrder($order)` method for this and get an array with invoices or an empty array if no invoices are found.

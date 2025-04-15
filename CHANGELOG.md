@@ -3,15 +3,15 @@
 ## [1.2.0-RC.0](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.0-rc.0) (2025-04-14)
 
 - Icons added
-- GetExplorerHref() updated
 - Styles updated
+- GetExplorerHref() updated
 - Composer dependency updated
 - Examples loggerCallback updated
+- fiat2cryptos updated
 - Add tcn@trx & ca-certificates
 - Multiple changes. Eth preparations
-- Styles updated
-- Add tcn@trx & ca-certificates
-- fiat2cryptos updated
+- Deprecated added
+- Docs updated
 
 ## [1.1.6](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.1.6) (2024-11-21)
 
