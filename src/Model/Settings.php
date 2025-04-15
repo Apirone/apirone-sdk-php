@@ -339,24 +339,6 @@ class Settings extends AbstractModel
     }
 
     /**
-     * Reset settings to default values
-     *
-     * @return self
-     * @deprecated The method will be removed in future versions.
-     */
-    public function restoreDefaults()
-    {
-        $this->merchantUrl = '';
-        $this->merchant = '';
-        $this->timeout = 1800;
-        $this->factor = 1;
-        $this->backlink = '';
-        $this->logo = true;
-
-        return $this;
-    }
-
-    /**
      * Load currencies from an apirone service
      *
      * @return self
@@ -405,18 +387,6 @@ class Settings extends AbstractModel
     }
 
     /**
-     * Alias to currency()
-     *
-     * @param mixed $abbr
-     * @return Currency | false
-     * @deprecated Use $class->currency() method
-     */
-    public function getCurrency($abbr)
-    {
-        return $this->currency($abbr);
-    }
-
-    /**
      * Get currency object by it abbreviation
      *
      * @param mixed $abbr
@@ -431,6 +401,113 @@ class Settings extends AbstractModel
         }
 
         return false;
+    }
+
+    /**
+     * Get the networks only
+     * 
+     * @return array 
+     */
+    public function networks()
+    {
+        $networks = [];
+        foreach ($this->currencies as $currency) {
+            if (!$currency->isToken()) {
+                $networks[] = $currency;
+            }
+        }
+        return $networks;
+    }
+
+    /**
+     * Currencies list parser
+     *
+     * @param mixed $array Array of json currency objects
+     * @return array
+     * @throws ReflectionException
+     */
+    public function parseCurrencies($array)
+    {
+        $items = [];
+        foreach ($array as $item) {
+            $items[] = Currency::init($item);
+        }
+
+        return $items;
+    }
+
+    /**
+     * Get the value of meta
+     *
+     * @param string|null $key
+     * @return mixed
+     */
+    public function getMeta(string $key = null)
+    {
+        if ($key == null) {
+            return $this->meta;
+        }
+        if (property_exists($this->meta, $key)) {
+            return $this->meta->{$key};
+        }
+
+        return null;
+    }
+
+    /**
+     * Set the value of meta
+     *
+     * @return self
+     */
+    public function meta($json = '{}')
+    {
+        $json = gettype($json) == 'string' ? json_decode($json) : $json;
+
+        $this->meta = $json;
+
+        return $this;
+    }
+
+    /**
+     * Add/edit meta item
+     *
+     * @return self
+     */
+    public function addMeta($key, $value)
+    {
+        $this->meta->{$key} = $value;
+
+        return $this;
+    }
+
+    /**
+     * Delete meta item
+     *
+     * @return self
+     */
+    public function deleteMeta($key)
+    {
+        unset($this->meta->{$key});
+
+        return $this;
+    }
+
+    /**
+     * Reset settings to default values
+     *
+     * @return self
+     * @deprecated The method will be removed in future versions.
+     */
+    public function restoreDefaults()
+    {
+        $this->merchantUrl = '';
+        $this->merchant = '';
+        $this->timeout = 1800;
+        $this->factor = 1;
+        $this->backlink = '';
+        $this->logo = true;
+
+        return $this;
     }
 
     /**
@@ -456,6 +533,18 @@ class Settings extends AbstractModel
     }
 
     /**
+     * Alias to currency()
+     *
+     * @param mixed $abbr
+     * @return Currency | false
+     * @deprecated Use $class->currency() method
+     */
+    public function getCurrency($abbr)
+    {
+        return $this->currency($abbr);
+    }
+
+    /**
      * Get the value of currencies
      * 
      * @return array
@@ -467,7 +556,7 @@ class Settings extends AbstractModel
     }
 
     /**
-     * Get the networks only
+     * Alias to networks()
      * 
      * @return array 
      * @deprecated Use $class->networks
@@ -475,22 +564,6 @@ class Settings extends AbstractModel
     public function getNetworks()
     {
         return $this->networks();
-    }
-
-    /**
-     * Alias to getNetworks()
-     * 
-     * @return array 
-     */
-    public function networks()
-    {
-        $networks = [];
-        foreach ($this->currencies as $currency) {
-            if (!$currency->isToken()) {
-                $networks[] = $currency;
-            }
-        }
-        return $networks;
     }
 
     /**
@@ -761,78 +834,4 @@ class Settings extends AbstractModel
 
         return $this;
     }
-
-    /**
-     * Currencies list parser
-     *
-     * @param mixed $array Array of json currency objects
-     * @return array
-     * @throws ReflectionException
-     */
-    public function parseCurrencies($array)
-    {
-        $items = [];
-        foreach ($array as $item) {
-            $items[] = Currency::init($item);
-        }
-
-        return $items;
-    }
-
-    /**
-     * Get the value of meta
-     *
-     * @param string|null $key
-     * @return mixed
-     */
-    public function getMeta(string $key = null)
-    {
-        if ($key == null) {
-            return $this->meta;
-        }
-        if (property_exists($this->meta, $key)) {
-            return $this->meta->{$key};
-        }
-
-        return null;
-    }
-
-    /**
-     * Set the value of meta
-     *
-     * @return self
-     */
-    public function meta($json = '{}')
-    {
-        $json = gettype($json) == 'string' ? json_decode($json) : $json;
-
-        $this->meta = $json;
-
-        return $this;
-    }
-
-    /**
-     * Add/edit meta item
-     *
-     * @return self
-     */
-    public function addMeta($key, $value)
-    {
-        $this->meta->{$key} = $value;
-
-        return $this;
-    }
-
-    /**
-     * Delete meta item
-     *
-     * @return self
-     */
-    public function deleteMeta($key)
-    {
-        unset($this->meta->{$key});
-
-        return $this;
-    }
-
 }

@@ -80,21 +80,6 @@ class Currency extends AbstractModel
     }
 
     /**
-     * Create currency instance from JSON
-     *
-     * @deprecated use Currency::init($json)
-     * @param mixed $json
-     * @return $this
-     * @throws ReflectionException
-     */
-    public static function fromJson($json)
-    {
-        $class = new static();
-
-        return $class->classLoader($json);
-    }
-
-    /**
      * Load currency settings from account
      *
      * @param mixed $account
@@ -141,6 +126,119 @@ class Currency extends AbstractModel
         }
 
         return $this;
+    }
+
+    /**
+     * Set currency destination address
+     *
+     * @param null|string $address
+     * @return $this
+     */
+    public function address(?string $address = null)
+    {
+        $this->address = empty($address) ? null : trim($address);
+
+        return $this;
+    }
+
+    /**
+     * Set the value of policy
+     *
+     * @param string $policy `fixed` or `percentage`
+     * @return $this
+     */
+    public function policy(string $policy)
+    {
+        $this->policy = $policy;
+
+        return $this;
+    }
+
+    /**
+     * Checks is the currency has an error
+     *
+     * @return bool
+     */
+    public function hasError(): bool
+    {
+        return $this->error ? true : false;
+    }
+
+    /**
+     * Check is a test currency
+     *
+     * @return bool
+     */
+    public function isTestnet()
+    {
+        return (substr_count(strtolower($this->name), 'testnet') > 0) ? true : false;
+    }
+
+    /**
+     * Returns network abbr if currency a network
+     * 
+     * @return null|string 
+     */
+    public function isNetwork()
+    {
+        return ($this->token == null) ? $this->network : null;
+    }
+
+    /**
+     * Return network abbr if currency a token
+     * 
+     * @return null|string 
+     */
+    public function isToken()
+    {
+        return ($this->token !== null ) ? $this->network : null;
+    }
+
+    /**
+     * Returns whether the currency is a stablecoin
+     * 
+     * @return bool
+     */
+    public function isStablecoin()
+    {
+        return (substr_count(strtolower($this->name), 'usd') > 0) ? true : false;
+    }
+
+    /**
+     * Returns array of currencies
+     * 
+     * @param array $currencies
+     * @return \Apirone\SDK\Model\Settings\Currency[] 
+     */
+    public function getTokens(array $currencies)
+    {
+        if ($this->isToken()) {
+            return [];
+        }
+        $tokens = [];
+        
+        foreach ($currencies as $currency) {
+            if ($currency instanceof Currency && $currency->isToken() == $this->network) {
+                $tokens[] = $currency;
+            }
+        }
+
+        return $tokens;
+    }
+
+    /**
+     * Create currency instance from JSON
+     *
+     * @deprecated use Currency::init($json)
+     * @param mixed $json
+     * @return $this
+     * @throws ReflectionException
+     */
+    public static function fromJson($json)
+    {
+        $class = new static();
+
+        return $class->classLoader($json);
     }
 
     /**
@@ -214,19 +312,6 @@ class Currency extends AbstractModel
      *
      * @param null|string $address
      * @return $this
-     */
-    public function address(?string $address = null)
-    {
-        $this->address = empty($address) ? null : trim($address);
-
-        return $this;
-    }
-
-    /**
-     * Set currency destination address
-     *
-     * @param null|string $address
-     * @return $this
      * @deprecated Use $class->address()
      */
     public function setAddress(?string $address = null)
@@ -250,19 +335,6 @@ class Currency extends AbstractModel
      *
      * @param string $policy `fixed` or `percentage`
      * @return $this
-     */
-    public function policy(string $policy)
-    {
-        $this->policy = $policy;
-
-        return $this;
-    }
-
-    /**
-     * Set the value of policy
-     *
-     * @param string $policy `fixed` or `percentage`
-     * @return $this
      * @deprecated Use $class->policy()
      */
     public function setPolicy(string $policy)
@@ -279,78 +351,6 @@ class Currency extends AbstractModel
     public function getError()
     {
         return $this->error;
-    }
-
-    /**
-     * Checks is the currency has an error
-     *
-     * @return bool
-     */
-    public function hasError(): bool
-    {
-        return $this->error ? true : false;
-    }
-
-    /**
-     * Check is a test currency
-     *
-     * @return bool
-     */
-    public function isTestnet()
-    {
-        return (substr_count(strtolower($this->name), 'testnet') > 0) ? true : false;
-    }
-
-    /**
-     * Returns network abbr if currency a network
-     * 
-     * @return null|string 
-     */
-    public function isNetwork()
-    {
-        return ($this->token == null) ? $this->network : null;
-    }
-
-    /**
-     * Return network abbr if currency a token
-     * 
-     * @return null|string 
-     */
-    public function isToken()
-    {
-        return ($this->token !== null ) ? $this->network : null;
-    }
-
-    /**
-     * Returns whether the currency is a stablecoin
-     * 
-     * @return bool
-     */
-    public function isStablecoin()
-    {
-        return (substr_count(strtolower($this->name), 'usd') > 0) ? true : false;
-    }
-
-    /**
-     * Returns array of currencies
-     * 
-     * @param array $currencies
-     * @return \Apirone\SDK\Model\Settings\Currency[] 
-     */
-    public function getTokens(array $currencies)
-    {
-        if ($this->isToken()) {
-            return [];
-        }
-        $tokens = [];
-        
-        foreach ($currencies as $currency) {
-            if ($currency instanceof Currency && $currency->isToken() == $this->network) {
-                $tokens[] = $currency;
-            }
-        }
-
-        return $tokens;
     }
 
     /**

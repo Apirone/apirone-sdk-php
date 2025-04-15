@@ -16,6 +16,14 @@ namespace Apirone\SDK\Model\UserData;
 use Apirone\SDK\Model\AbstractModel;
 use ReflectionException;
 
+/**
+ * @property-read string $name
+ * @property-read string $price
+ *
+ * @method public name(string $name)
+ * @method public price(string $price)
+ */
+
 class ExtraItem extends AbstractModel
 {
     private ?string $name = null;
@@ -33,6 +41,28 @@ class ExtraItem extends AbstractModel
     {
         $this->name = $name;
         $this->price = $price;
+    }
+
+    public function __call($name, $value)
+    {
+        if (\property_exists($this, $name)) {
+
+            $class = new \ReflectionClass(static::class);
+            
+            $property = $class->getProperty($name);
+            $property->setAccessible(true);
+
+            $property->setValue($this, $value[0]);
+
+            return $this;
+        }
+        $trace = \debug_backtrace();
+        \trigger_error(
+            'Call to undefined method ' . $name .
+            ' in ' . $trace[0]['file'] .
+            ' on line ' . $trace[0]['line'],
+            \E_USER_ERROR
+        );
     }
 
     /**
@@ -76,6 +106,8 @@ class ExtraItem extends AbstractModel
 
     /**
      * Get the value of name
+     *
+     * @deprecated Use $class->name
      */
     public function getName()
     {
@@ -85,7 +117,8 @@ class ExtraItem extends AbstractModel
     /**
      * Set the value of name
      *
-     * @return  self
+     * @return self
+     * @deprecated Use $class->name()
      */
     public function setName($name)
     {
@@ -98,6 +131,7 @@ class ExtraItem extends AbstractModel
      * Get the value of price
      *
      * @return null|string
+     * @deprecated Use $class->price
      */
     public function getPrice()
     {
@@ -107,7 +141,8 @@ class ExtraItem extends AbstractModel
     /**
      * Set the value of price
      *
-     * @return  self
+     * @return self
+     * @deprecated Use $class->price()
      */
     public function setPrice($price)
     {
