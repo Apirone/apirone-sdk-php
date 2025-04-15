@@ -697,7 +697,7 @@ class Invoice extends AbstractModel
      */
     public static function getInvoice(?string $invoice): ?Invoice
     {
-        return static::get(?string $invoice);
+        return static::get($invoice);
     }
 
     /**
@@ -710,6 +710,6 @@ class Invoice extends AbstractModel
 
     public static function getOrderInvoices(int $order): array
     {
-        return static::getByOrder(int $order);
+        return static::getByOrder($order);
     }
 }
