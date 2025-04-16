@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.0-RC.1](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.0-rc.1) (2025-04-16)
+
+- Fixed composer version apirone-api-php library
+
 ## [1.2.0-RC.0](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.0-rc.0) (2025-04-14)
 
 - Icons added
