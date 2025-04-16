@@ -16,18 +16,20 @@ namespace Apirone\SDK\Model;
 use Apirone\SDK\Model\AbstractModel;
 use ReflectionException;
 
+/**
+ * @property-read string $date
+ * @property-read string $status
+ * @property-read string $txid
+ * @property-read int    $amount
+ */
 class HistoryItem extends AbstractModel
 {
-    // date	string	Invoice status change date
     private ?string $date = null;
 
-    // status	string	Invoice status
     private ?string $status = null;
 
-    // txid	string	Identifier of the transaction in the blockchain
     private ?string $txid = null;
 
-    // amount	integer	Paid amount
     private ?int $amount = null;
 
     private function __construct() {}
@@ -65,6 +67,8 @@ class HistoryItem extends AbstractModel
 
     /**
      * Get the value of date
+     *
+     * @deprecated Use $class->date
      */
     public function getDate()
     {
@@ -73,6 +77,8 @@ class HistoryItem extends AbstractModel
 
     /**
      * Get the value of status
+     *
+     * @deprecated Use $class->status
      */
     public function getStatus()
     {
@@ -81,6 +87,8 @@ class HistoryItem extends AbstractModel
 
     /**
      * Get the value of txid
+     *
+     * @deprecated Use $class->txid
      */
     public function getTxid()
     {
@@ -89,6 +97,8 @@ class HistoryItem extends AbstractModel
 
     /**
      * Get the value of amount
+     *
+     * @deprecated Use $class->amount
      */
     public function getAmount()
     {

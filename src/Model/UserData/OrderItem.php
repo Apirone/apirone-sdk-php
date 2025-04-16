@@ -16,6 +16,17 @@ namespace Apirone\SDK\Model\UserData;
 use Apirone\SDK\Model\AbstractModel;
 use ReflectionException;
 
+/**
+ * @property-read string $name
+ * @property-read string $cost
+ * @property-read string $qty
+ * @property-read string $total
+ *
+ * @method public name(string $name)
+ * @method public cost(string $cost)
+ * @method public qty(string $qty)
+ * @method public total(string $total)
+ */
 class OrderItem extends AbstractModel
 {
     private ?string $name = null;
@@ -45,6 +56,30 @@ class OrderItem extends AbstractModel
         $this->cost = $cost;
         $this->qty = $qty;
         $this->total = $total;
+    }
+
+    public function __call($name, $value)
+    {
+        $name = static::convertToCamelCase($name);
+
+        if (\property_exists($this, $name)) {
+
+            $class = new \ReflectionClass(static::class);
+            
+            $property = $class->getProperty($name);
+            $property->setAccessible(true);
+
+            $property->setValue($this, $value[0]);
+
+            return $this;
+        }
+        $trace = \debug_backtrace();
+        \trigger_error(
+            'Call to undefined method ' . $name .
+            ' in ' . $trace[0]['file'] .
+            ' on line ' . $trace[0]['line'],
+            \E_USER_ERROR
+        );
     }
 
     /**
@@ -89,6 +124,8 @@ class OrderItem extends AbstractModel
 
     /**
      * Get the value of name
+     *
+     * @deprecated Use $class->name
      */
     public function getName()
     {
@@ -98,7 +135,8 @@ class OrderItem extends AbstractModel
     /**
      * Set the value of name
      *
-     * @return  self
+     * @return self
+     * @deprecated Use $class->name()
      */
     public function setName($name)
     {
@@ -109,6 +147,8 @@ class OrderItem extends AbstractModel
 
     /**
      * Get the value of cost
+     *
+     * @deprecated Use $class->cost
      */
     public function getCost()
     {
@@ -118,7 +158,8 @@ class OrderItem extends AbstractModel
     /**
      * Set the value of cost
      *
-     * @return  self
+     * @return self
+     * @deprecated Use $class->cost()
      */
     public function setCost($cost)
     {
@@ -131,6 +172,7 @@ class OrderItem extends AbstractModel
      * Get the value of qty
      *
      * @return null|int
+     * @deprecated Use $class->qty
      */
     public function getQty()
     {
@@ -141,6 +183,7 @@ class OrderItem extends AbstractModel
      * Set the value of qty
      *
      * @return  self
+     * @deprecated Use $class->qty()
      */
     public function setQty($qty)
     {
@@ -153,6 +196,7 @@ class OrderItem extends AbstractModel
      * Get the value of total
      *
      * @return null|string
+     * @deprecated Use $class->total
      */
     public function getTotal()
     {
@@ -162,7 +206,8 @@ class OrderItem extends AbstractModel
     /**
      * Set the value of total
      *
-     * @return  self
+     * @return self
+     * @deprecated Use $class->total()
      */
     public function setTotal($total)
     {

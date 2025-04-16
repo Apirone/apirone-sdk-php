@@ -50,7 +50,6 @@ $json_settings = $settings->toJson();
 $json_settings = $settings->toJsonString();
 ```
 
-
 ::: details Settings.json example
 
 ```json
@@ -73,18 +72,18 @@ $json_settings = Settings::fromJson($settings);
 
 Currencies are all the cryptocurrencies that Apirone supports. The list of supported currencies
 can be obtained via [API](https://apirone.com/docs/service/#service-info) or by using
-the `Settings::getCurrencies()` method.
+the `Settings::currencies()` method.
 
 A network refers to a blockchain, for example, Bitcoin is both a currency and a network.
 Similarly, Tron is both a currency and a network. At the same time, USDT or USDC using
 the Tron network as a carrier is both currency and token.
-If you need a list of networks use the `Settings::getNetworks()` method.
+If you need a list of networks use the `Settings::networks()` method.
 
 > [!INFO]
 > If the currency `abbr` property contains `@`, this is an indication that the currency is a token.
 > For example, `trx` is a network, `usdt@trx` is a Tron-based token.
 
-As mentioned above, use the `getCurrencies()` or `getNetworks()` methods to get a list of currencies and return an array of [Currency](/currency) classes. You can also get any currency by its abbreviation using the `getCurrency(‘abbr’)` method.
+As mentioned above, use the `currencies()` or `networks()` methods to get a list of currencies and return an array of [Currency](/currency) classes. You can also get any currency by its abbreviation using the `currency(‘abbr’)` method.
 
 The `loadCurrencies()` method gets the currency settings from the account and updates the local values for each of them. You must then save the Settings object locally.
 

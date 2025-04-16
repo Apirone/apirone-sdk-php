@@ -19,6 +19,23 @@ use Apirone\SDK\Model\UserData\OrderItem;
 use ReflectionException;
 use stdClass;
 
+/**
+ * @property-read string $title
+ * @property-read string $merchant
+ * @property-read string $url
+ * @property-read string $price
+ * @property-read string $subPrice
+ * @property-read array  $items
+ * @property-read array  $extras
+ *
+ * @method public title(string $title)
+ * @method public merchant(string $merchant)
+ * @method public url(string $url)
+ * @method public price(string $price)
+ * @method public subPrice(string $subPrice)
+ * @method public items(array $items)
+ * @method public extras(array $extras)
+ */
 class UserData extends AbstractModel
 {
     private ?string $title = null;
@@ -36,6 +53,28 @@ class UserData extends AbstractModel
     private ?array $extras = null;
 
     private function __construct() {}
+
+    public function __call($name, $value)
+    {
+        if (\property_exists($this, $name)) {
+
+            $class = new \ReflectionClass(static::class);
+            
+            $property = $class->getProperty($name);
+            $property->setAccessible(true);
+
+            $property->setValue($this, $value[0]);
+
+            return $this;
+        }
+        $trace = \debug_backtrace();
+        \trigger_error(
+            'Call to undefined method ' . $name .
+            ' in ' . $trace[0]['file'] .
+            ' on line ' . $trace[0]['line'],
+            \E_USER_ERROR
+        );
+    }
 
     /**
      * Create instance
@@ -63,110 +102,6 @@ class UserData extends AbstractModel
         return $class->classLoader($json);
     }
 
-    /**
-     * Get the value of title
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * Set the title value
-     *
-     * @param null|string $title
-     * @return $this
-     */
-    public function setTitle(?string $title = null)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of merchant
-     */
-    public function getMerchant()
-    {
-        return $this->merchant;
-    }
-
-    /**
-     * Set the merchant value
-     *
-     * @param null|string $merchant
-     * @return $this
-     */
-    public function setMerchant(?string $merchant = null)
-    {
-        $this->merchant = $merchant;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of url
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * Set the url value
-     *
-     * @param null|string $url
-     * @return $this
-     */
-    public function setUrl(?string $url = null)
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of price
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
-     * Set the price value
-     *
-     * @param null|string $value
-     * @return $this
-     */
-    public function setPrice(?string $value = null)
-    {
-        $this->price = $value;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of subPrice
-     */
-    public function getSubPrice()
-    {
-        return $this->subPrice;
-    }
-
-    /**
-     * Set the subPrice value
-     *
-     * @param null|string $value
-     * @return $this
-     */
-    public function setSubPrice(?string $value = null)
-    {
-        $this->subPrice = $value;
-
-        return $this;
-    }
 
     /**
      * Add order item
@@ -251,9 +186,129 @@ class UserData extends AbstractModel
     }
 
     /**
+     * Get the value of title
+     *
+     * @deprecated Use $class->title
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set the title value
+     *
+     * @param null|string $title
+     * @return $this
+     * @deprecated Use $class->title()
+     */
+    public function setTitle(?string $title = null)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of merchant
+     *
+     * @deprecated Use $class->merchant
+     */
+    public function getMerchant()
+    {
+        return $this->merchant;
+    }
+
+    /**
+     * Set the merchant value
+     *
+     * @param null|string $merchant
+     * @return $this
+     * @deprecated Use $class->merchant()
+     */
+    public function setMerchant(?string $merchant = null)
+    {
+        $this->merchant = $merchant;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of url
+     *
+     * @deprecated Use $class->url
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * Set the url value
+     *
+     * @param null|string $url
+     * @return $this
+     * @deprecated Use $class->url()
+     */
+    public function setUrl(?string $url = null)
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of price
+     *
+     * @deprecated Use $class->price
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Set the price value
+     *
+     * @param null|string $value
+     * @return $this
+     * @deprecated Use $class->price()
+     */
+    public function setPrice(?string $value = null)
+    {
+        $this->price = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of subPrice
+     *
+     * @deprecated Use $class->subPrice
+     */
+    public function getSubPrice()
+    {
+        return $this->subPrice;
+    }
+
+    /**
+     * Set the subPrice value
+     *
+     * @param null|string $value
+     * @return $this
+     * @deprecated Use $class->subPrice()
+     */
+    public function setSubPrice(?string $value = null)
+    {
+        $this->subPrice = $value;
+
+        return $this;
+    }
+    /**
      * Get the value of items
      *
      * @return null|array
+     * @deprecated Use $class->items
      */
     public function getItems()
     {
@@ -264,6 +319,7 @@ class UserData extends AbstractModel
      * Set the value of items
      *
      * @return $this
+     * @deprecated Use $class->items()
      */
     public function setItems(array $items = [])
     {
@@ -276,6 +332,7 @@ class UserData extends AbstractModel
      * Get the value of extras
      *
      * @return null|array
+     * @deprecated Use $class->extras
      */
     public function getExtras()
     {
@@ -285,6 +342,7 @@ class UserData extends AbstractModel
      * Set the value of extras
      *
      * @return null|array
+     * @deprecated Use $class->extras()
      */
     public function setExtras(array $extras = [])
     {

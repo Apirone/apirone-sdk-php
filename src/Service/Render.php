@@ -324,20 +324,6 @@ class Render
     }
 
     /**
-     * Setting the $timeZone by local time zone with UTC offset
-     *
-     * @param int $offset
-     * @return void
-     * @throws DivisionByZeroError
-     * @throws ArithmeticError
-     * @deprecated Use timezoneByOffset()
-     */
-    public static function setTimeZoneByOffset(int $offset = 0)
-    {
-        self::timeZoneByOffset($offset);
-    }
-
-    /**
      * Render invoice html
      *
      * @param Invoice $invoice
@@ -586,5 +572,19 @@ class Render
         self::$_localesCache = $result;
 
         return $result;
+    }
+
+    /**
+     * Setting the $timeZone by local time zone with UTC offset
+     *
+     * @param int $offset
+     * @return void
+     * @throws DivisionByZeroError
+     * @throws ArithmeticError
+     * @deprecated Use timezoneByOffset()
+     */
+    public static function setTimeZoneByOffset(int $offset = 0)
+    {
+        self::timeZoneByOffset($offset);
     }
 }

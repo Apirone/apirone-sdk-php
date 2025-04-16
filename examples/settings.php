@@ -33,8 +33,8 @@ else {
 $destination = '2N186GvYp1gctUXMT4RXzAv3N5MB7wLncq7';
 $fee = 'percentage';
 
-$settings->getCurrency('btc')->setAddress();
-$settings->getCurrency('tbtc')->setAddress($destination)->setPolicy($fee);
+$settings->currency('btc')->address();
+$settings->currency('tbtc')->address($destination)->policy($fee);
 
 // Save currencies settings into account
 $settings->saveCurrencies();

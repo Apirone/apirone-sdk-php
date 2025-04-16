@@ -21,7 +21,7 @@ For easier handling of the data, the `InvoiceDetails` class loads the data and p
 |`$callbackUrl`|Callback URL to receive data about the payment|
 |`$invoiceUrl`|Link to the Apirone invoice web view - apirone.com/invoice|
 
-All properties also available via `getPropertyName()` functions.
+All properties also available via `getPropertyName()` functions. Deprecated, use `$InvoiceDetails->propertyName`.
 
 ## Additional methods
 
