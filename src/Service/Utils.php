@@ -219,21 +219,29 @@ class Utils
 
     /**
      * Convert fiat amount to crypto
-     * 
-     * @param mixed $fiatAmount 
-     * @param mixed $fiatCode 
-     * @param mixed $crypto 
-     * @return float 
-     * @throws \Apirone\API\Exceptions\RuntimeException 
-     * @throws \Apirone\API\Exceptions\ValidationFailedException 
-     * @throws \Apirone\API\Exceptions\UnauthorizedException 
-     * @throws \Apirone\API\Exceptions\ForbiddenException 
-     * @throws \Apirone\API\Exceptions\NotFoundException 
-     * @throws \Apirone\API\Exceptions\MethodNotAllowedException 
+     *
+     * @param mixed $fiatAmount
+     * @param mixed $fiatCode
+     * @param mixed $crypto
+     * @return float
+     * @throws \Apirone\API\Exceptions\RuntimeException
+     * @throws \Apirone\API\Exceptions\ValidationFailedException
+     * @throws \Apirone\API\Exceptions\UnauthorizedException
+     * @throws \Apirone\API\Exceptions\ForbiddenException
+     * @throws \Apirone\API\Exceptions\NotFoundException
+     * @throws \Apirone\API\Exceptions\MethodNotAllowedException
      */
-    public static function fiat2crypto(float $fiatAmount, string $fiatCode, Currency $currency): float
+    public static function fiat2crypto(float $fiatAmount, string $fiatCode, $currency): float
     {
+        // Fallback for support currency abbr
+        if (gettype($currency == 'string')) {
+            $json = Utils::currency(strtolower($currency));
+            $currency = Currency::init($json);
+        }
+        $fiatCode = strtolower($fiatCode);
+
         $result = static::fiat2cryptos($fiatAmount, $fiatCode, [$currency]);
+
         if ($result) {
             return (float)$result[$currency->abbr];
         }
@@ -244,20 +252,22 @@ class Utils
     /**
      * Converts fiat amount to crypto for array of cryptos
      *
-     * @param float $fiatAmount 
-     * @param string $fiatCode 
-     * @param Currency[] $currencies 
-     * @return array<mixed, int|float> 
-     * @throws \Apirone\API\Exceptions\RuntimeException 
-     * @throws \Apirone\API\Exceptions\ValidationFailedException 
-     * @throws \Apirone\API\Exceptions\UnauthorizedException 
-     * @throws \Apirone\API\Exceptions\ForbiddenException 
-     * @throws \Apirone\API\Exceptions\NotFoundException 
-     * @throws \Apirone\API\Exceptions\MethodNotAllowedException 
+     * @param float $fiatAmount
+     * @param string $fiatCode
+     * @param Currency[] $currencies
+     * @return array<mixed, int|float>
+     * @throws \Apirone\API\Exceptions\RuntimeException
+     * @throws \Apirone\API\Exceptions\ValidationFailedException
+     * @throws \Apirone\API\Exceptions\UnauthorizedException
+     * @throws \Apirone\API\Exceptions\ForbiddenException
+     * @throws \Apirone\API\Exceptions\NotFoundException
+     * @throws \Apirone\API\Exceptions\MethodNotAllowedException
      */
     public static function fiat2cryptos(float $fiatAmount, string $fiatCode, array $currencies)
     {
+        $fiatCode = strtolower($fiatCode);
         $to = [];
+        $currencies = array_values($currencies);
         foreach ($currencies as $currency) {
             $to[] = $currency->abbr;
         }
@@ -265,18 +275,18 @@ class Utils
         $amounts = [];
 
         if (property_exists($rates, $fiatCode)) {
-            $amount = $fiatAmount / $rates->$fiatCode;
-            $decimals = strlen((string)(intval((1 / $currencies[0]->unitsFactor)) - 1));
+            $amount =  floatval($fiatAmount / (float) $rates->$fiatCode);
+            $decimals = substr((string)$currencies[0]->unitsFactor, strpos((string)$currencies[0]->unitsFactor, "-") + 1);
             $format = '%.' . $decimals . 'f';
-            $amounts[$currencies[0]->abbr] = sprintf($format, floatval($amount));
+            $amounts[$currencies[0]->abbr] = floatval(sprintf('%.' . $decimals . 'f', $amount));
         }
         else {
             foreach ($currencies as $currency) {
                 if (property_exists($rates, $currency->abbr)) {
-                    $amount = $fiatAmount / $rates->{$currency->abbr}->$fiatCode;
-                    $decimals = strlen((string)(intval((1 / $currency->unitsFactor)) - 1));
+                    $amount =  floatval($fiatAmount / (float) $rates->{$currency->abbr}->$fiatCode);
+                    $decimals = substr((string)$currency->unitsFactor, strpos((string)$currency->unitsFactor, "-") + 1);
                     $format = '%.' . $decimals . 'f';
-                    $amounts[$currency->abbr] = sprintf($format, floatval($amount));
+                    $amounts[$currency->abbr] = floatval(sprintf('%.' . $decimals . 'f', $amount));
                 }
             }
         }
