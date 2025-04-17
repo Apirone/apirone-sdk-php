@@ -4,5 +4,9 @@
 .php-cs-fixer.php      export-ignore
 .php-cs-fixer.cache    export-ignore
 /.github/              export-ignore
-/docker/           export-ignore
+/docker/               export-ignore
+/docs/                 export-ignore
 /examples/             export-ignore
+/node-modules/         export-ignore
+package-lock.json      export-ignore
+package.json           export-ignore

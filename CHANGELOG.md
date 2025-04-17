@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.0-RC.2](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.0-rc.1) (2025-04-17)
+
+- Fiat to cryptocurrency conversions updated
+
 ## [1.2.0-RC.1](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.0-rc.1) (2025-04-16)
 
 - Fixed composer version apirone-api-php library
