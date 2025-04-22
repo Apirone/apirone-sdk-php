@@ -23,11 +23,13 @@ use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\Lib\PhpQRCode\QRCode;
 use Apirone\SDK\Model\Settings\Currency;
 
-use function PHPSTORM_META\type;
-
 class Utils
 {
     public const FROM = '?from=apirone';
+
+    public const THRASHOLD = 1.0E-8;
+
+    public const SUFFIX = '0000000000';
 
     /**
      * Get apirone currency by abbreviation
@@ -182,15 +184,23 @@ class Utils
      */
     public static function humanizeAmount($amount, $currency, $zeroTrim = true)
     {
-        $amount = $amount * $currency->unitsFactor;
-        $decimals = $currency->isStablecoin() ? '2' : strlen((string)(intval((1 / $currency->unitsFactor)) - 1));
-        $format = '%.' . $decimals . 'f';
-
-        if ($zeroTrim) {
-            return rtrim(rtrim(sprintf($format, floatval($amount)), '0'), '.');
+        $amount = Utils::min2cur($amount, $currency->unitsFactor);
+        if($currency->isStablecoin()) {
+            $decimals = 2;
+        }
+        else {
+            $unitsFactor = ($currency->unitsFactor < static::THRASHOLD) ? static::THRASHOLD : $currency->unitsFactor; 
+            $decimals = substr((string) $unitsFactor, strpos((string) $unitsFactor, "-") + 1);
+            $suffix = ($currency->unitsFactor < static::THRASHOLD) ? static::SUFFIX : '';
         }
 
-        return sprintf($format, floatval($amount));
+        $amount = sprintf('%.' . $decimals . 'F', floatval($amount)) . $suffix;
+
+        if ($zeroTrim) {
+            return rtrim(rtrim($amount, '0'), '.');
+        }
+
+        return $amount;
     }
 
     /**
@@ -214,7 +224,11 @@ class Utils
      */
     public static function cur2min($value, $unitsFactor)
     {
-        return number_format(round($value / $unitsFactor), 0, '.', '');
+        if ($unitsFactor < static::THRASHOLD) {
+            return number_format(floatval($value / static::THRASHOLD), 0, '.', '') . static::SUFFIX;
+        }
+
+        return number_format(floatval($value / $unitsFactor), 0, '.', '');
     }
 
     /**
