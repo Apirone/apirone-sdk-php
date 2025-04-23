@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.0-RC.3](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.0-rc.3) (2025-04-23)
+
+- Convertation form cur to min amount value updated
+- Amount humanizer updated
+
 ## [1.2.0-RC.2](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.0-rc.2) (2025-04-17)
 
 - Fiat to cryptocurrency conversions updated
