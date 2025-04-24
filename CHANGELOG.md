@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.0-RC.4](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.0-rc.4) (2025-04-24)
+
+- Amount humanizer fixed
+
 ## [1.2.0-RC.3](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.0-rc.3) (2025-04-23)
 
 - Convertation form cur to min amount value updated

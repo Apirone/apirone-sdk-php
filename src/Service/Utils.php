@@ -27,7 +27,7 @@ class Utils
 {
     public const FROM = '?from=apirone';
 
-    public const THRASHOLD = 1.0E-8;
+    public const THRESHOLD = 1.0E-8;
 
     public const SUFFIX = '0000000000';
 
@@ -185,16 +185,16 @@ class Utils
     public static function humanizeAmount($amount, $currency, $zeroTrim = true)
     {
         $amount = Utils::min2cur($amount, $currency->unitsFactor);
+        $suffix = ($currency->unitsFactor < static::THRESHOLD) ? static::SUFFIX : '';
         if($currency->isStablecoin()) {
             $decimals = 2;
         }
         else {
-            $unitsFactor = ($currency->unitsFactor < static::THRASHOLD) ? static::THRASHOLD : $currency->unitsFactor; 
+            $unitsFactor = ($currency->unitsFactor < static::THRESHOLD) ? static::THRESHOLD : $currency->unitsFactor; 
             $decimals = substr((string) $unitsFactor, strpos((string) $unitsFactor, "-") + 1);
-            $suffix = ($currency->unitsFactor < static::THRASHOLD) ? static::SUFFIX : '';
         }
 
-        $amount = sprintf('%.' . $decimals . 'F', floatval($amount)) . $suffix;
+        $amount = sprintf('%.' . $decimals . 'f', floatval($amount)) . $suffix;
 
         if ($zeroTrim) {
             return rtrim(rtrim($amount, '0'), '.');
@@ -224,8 +224,8 @@ class Utils
      */
     public static function cur2min($value, $unitsFactor)
     {
-        if ($unitsFactor < static::THRASHOLD) {
-            return number_format(floatval($value / static::THRASHOLD), 0, '.', '') . static::SUFFIX;
+        if ($unitsFactor < static::THRESHOLD) {
+            return number_format(floatval($value / static::THRESHOLD), 0, '.', '') . static::SUFFIX;
         }
 
         return number_format(floatval($value / $unitsFactor), 0, '.', '');
