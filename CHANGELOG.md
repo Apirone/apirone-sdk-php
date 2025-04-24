@@ -1,9 +1,5 @@
 # Changelog
 
-## [1.2.0-RC.5](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.0-rc.5) (2025-04-24)
-
-- Settings::loadCurrencies() fixed
-
 ## [1.2.0-RC.4](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.0-rc.4) (2025-04-24)
 
 - Amount humanizer fixed
@@ -33,6 +29,10 @@
 - Multiple changes. Eth preparations
 - Deprecated added
 - Docs updated
+- Settings::loadCurrencies() fixed
+- Convertation form cur to min amount value updated
+- Amount humanizer updated
+- Fiat to cryptocurrency conversions updated
 
 ## [1.1.6](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.1.6) (2024-11-21)
 
