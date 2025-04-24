@@ -363,7 +363,7 @@ class Settings extends AbstractModel
                     continue;
                 }
                 $address = ($accountItem->destinations !== null) ? $accountItem->destinations[0]->address : null;
-                $currency->address($address);
+                $currency->ddress($address);
                 $currency->policy($accountItem->{'processing-fee-policy'});
             }
             $this->currencies[] = $currency;
