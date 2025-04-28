@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.1](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.1) (2025-04-28)
+
+- Fixed getExplorerHref for eth
+
 ## [1.2.0](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.0) (2025-04-24)
 
 - Convertation form cur to min amount value updated

@@ -66,7 +66,7 @@ class Utils
             case (substr_count($currency->getAbbr(), 'eth') > 0 ):
                 $explorer = $currency->isTestnet() ? 'sepolia.etherscan.io' : 'etherscan.io';
                 $type = ($type == 'transaction') ? 'tx' : $type;
-                $path = implode('/', ['#', $type, $hash]);
+                $path = implode('/', [$type, $hash]);
                 break;
             case 'btc':
                 $explorer = 'explorer.apirone.com';
