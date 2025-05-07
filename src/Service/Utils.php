@@ -248,7 +248,7 @@ class Utils
     public static function fiat2crypto(float $fiatAmount, string $fiatCode, $currency): float
     {
         // Fallback for support currency abbr
-        if (gettype($currency == 'string')) {
+        if (gettype($currency) == 'string') {
             $json = Utils::currency(strtolower($currency));
             $currency = Currency::init($json);
         }
@@ -291,7 +291,6 @@ class Utils
         if (property_exists($rates, $fiatCode)) {
             $amount =  floatval($fiatAmount / (float) $rates->$fiatCode);
             $decimals = substr((string)$currencies[0]->unitsFactor, strpos((string)$currencies[0]->unitsFactor, "-") + 1);
-            $format = '%.' . $decimals . 'f';
             $amounts[$currencies[0]->abbr] = floatval(sprintf('%.' . $decimals . 'f', $amount));
         }
         else {
@@ -299,7 +298,6 @@ class Utils
                 if (property_exists($rates, $currency->abbr)) {
                     $amount =  floatval($fiatAmount / (float) $rates->{$currency->abbr}->$fiatCode);
                     $decimals = substr((string)$currency->unitsFactor, strpos((string)$currency->unitsFactor, "-") + 1);
-                    $format = '%.' . $decimals . 'f';
                     $amounts[$currency->abbr] = floatval(sprintf('%.' . $decimals . 'f', $amount));
                 }
             }
