@@ -1,12 +1,17 @@
 # Changelog
 
+## [1.2.2](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.2) (2025-05-07)
+
+- Utils::fiat2crypto() hotfix
+- Code cleanup
+
 ## [1.2.1](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.1) (2025-04-28)
 
 - Fixed getExplorerHref for eth
 
 ## [1.2.0](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.0) (2025-04-24)
 
-- Convertation form cur to min amount value updated
+- Convert form cur to min amount value updated
 - Amount humanizer updated
 - Fiat to cryptocurrency conversions updated
 - Icons added
@@ -20,7 +25,6 @@
 - Deprecated added
 - Docs updated
 - Settings::loadCurrencies() fixed
-- Convertation form cur to min amount value updated
 - Fiat to cryptocurrency conversions updated
 
 ## [1.1.6](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.1.6) (2024-11-21)
