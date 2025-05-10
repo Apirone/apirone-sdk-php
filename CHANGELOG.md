@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.3](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.3) (2025-05-10)
+
+- Settings - get networks as property. Method network() mark as deprecated.
+
 ## [1.2.2](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.2) (2025-05-07)
 
 - Utils::fiat2crypto() hotfix
