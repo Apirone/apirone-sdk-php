@@ -350,8 +350,8 @@ class Render
         $status = self::statusDescription($invoice);
 
         $statusLink = self::$dataUrl ? self::$dataUrl : '/';
-        $backlink = !empty(self::$backlink) ? self::$backlink : Invoice::$settings->getBacklink();
-        $logo = Invoice::$settings->getLogo();
+        $backlink = self::$backlink;
+        $logo = self::$logo;
         $note = null;
         $amount = null;
 

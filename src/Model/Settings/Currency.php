@@ -210,7 +210,7 @@ class Currency extends AbstractModel
      * @param array $currencies
      * @return \Apirone\SDK\Model\Settings\Currency[] 
      */
-    public function getTokens(array $currencies)
+    public function tokens(array $currencies)
     {
         if ($this->isToken()) {
             return [];
@@ -224,6 +224,18 @@ class Currency extends AbstractModel
         }
 
         return $tokens;
+    }
+
+    /**
+     * Alias to tokens();
+     *
+     * @param array $currencies 
+     * @return \Apirone\SDK\Model\Settings\Currency[] 
+     * @deprecated Use $class->tokens() function
+     */
+    public function getTokens(array $currencies)
+    {
+        return $this->getTokens($currencies);
     }
 
     /**
