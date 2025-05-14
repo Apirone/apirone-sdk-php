@@ -235,7 +235,7 @@ class Currency extends AbstractModel
      */
     public function getTokens(array $currencies)
     {
-        return $this->getTokens($currencies);
+        return $this->tokens($currencies);
     }
 
     /**

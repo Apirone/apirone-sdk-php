@@ -357,8 +357,8 @@ class Render
 
         if ($show) {
             $details = $invoice->details;
-            $userData = $details->getUserData();
-            $currency = Invoice::$settings->getCurrency($details->getCurrency());
+            $userData = $details->userData;
+            $currency = Invoice::$settings->currency($details->currency);
 
             if ($details->amount !== null) {
                 $overpaid = false;

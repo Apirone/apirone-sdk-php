@@ -439,7 +439,7 @@ class Invoice extends AbstractModel
         $this->order = array_key_exists('order', $this->createParams) ? $this->createParams['order'] : 0;
 
         unset($this->createParams['order']);
-        $account_id = ($account === null) ? Invoice::$settings->getAccount() : $account;
+        $account_id = ($account === null) ? Invoice::$settings->account : $account;
 
         $account = Account::init($account_id);
         $created = false;

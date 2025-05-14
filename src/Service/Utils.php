@@ -58,12 +58,12 @@ class Utils
     public static function getExplorerHref(Currency $currency, $type, $hash = '')
     {
         // Explorer switch
-        switch ($currency->getAbbr()) {
-            case (substr_count($currency->getAbbr(), 'trx') > 0 ):
+        switch ($currency->abbr) {
+            case (substr_count($currency->abbr, 'trx') > 0 ):
                 $explorer = $currency->isTestnet() ? 'shasta.tronscan.org' : 'tronscan.org';
                 $path = implode('/', ['#', $type, $hash]);
                 break;
-            case (substr_count($currency->getAbbr(), 'eth') > 0 ):
+            case (substr_count($currency->abbr, 'eth') > 0 ):
                 $explorer = $currency->isTestnet() ? 'sepolia.etherscan.io' : 'etherscan.io';
                 $type = ($type == 'transaction') ? 'tx' : $type;
                 $path = implode('/', [$type, $hash]);
@@ -75,9 +75,9 @@ class Utils
                 break;
             default:
                 $explorer = 'blockchair.com';
-                $currencyName = strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $currency->getName()));
+                $currencyName = strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $currency->name));
                 $from = '?from=apirone';
-                if ($currency->getAbbr() == 'tbtc') {
+                if ($currency->abbr == 'tbtc') {
                     $currencyName = 'bitcoin/testnet';
                     $from = '';
                 }
