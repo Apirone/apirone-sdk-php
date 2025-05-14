@@ -69,10 +69,6 @@ class Invoice extends AbstractModel
     public static function settings(\Apirone\SDK\Model\Settings $settings): void
     {
         static::$settings = $settings;
-
-        Render::$backlink = $settings->getBacklink();
-        Render::$logo = $settings->getLogo();
-        Render::$qrOnly = $settings->getQrOnly();
     }
 
     /**
