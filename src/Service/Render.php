@@ -350,15 +350,15 @@ class Render
         $status = self::statusDescription($invoice);
 
         $statusLink = self::$dataUrl ? self::$dataUrl : '/';
-        $backlink = !empty(self::$backlink) ? self::$backlink : Invoice::$settings->getBacklink();
-        $logo = Invoice::$settings->getLogo();
+        $backlink = self::$backlink;
+        $logo = self::$logo;
         $note = null;
         $amount = null;
 
         if ($show) {
             $details = $invoice->details;
-            $userData = $details->getUserData();
-            $currency = Invoice::$settings->getCurrency($details->getCurrency());
+            $userData = $details->userData;
+            $currency = Invoice::$settings->currency($details->currency);
 
             if ($details->amount !== null) {
                 $overpaid = false;

@@ -29,6 +29,7 @@ use stdClass;
  * @property-read string $account
  * @property-read string $transferKey
  * @property-read array  $currencies
+ * @property-read array  $networks
  * @property-read stdClass $meta
  */
 class Settings extends AbstractModel
@@ -150,6 +151,14 @@ class Settings extends AbstractModel
     {
         $this->extra = new \stdClass();
         $this->meta = new \stdClass();
+    }
+
+    public function __get($name) {
+        if ($name == 'networks') {
+            return $this->networks();
+        }
+
+        return parent::__get($name);
     }
 
     public function __call($name, $value)
@@ -407,6 +416,7 @@ class Settings extends AbstractModel
      * Get the networks only
      * 
      * @return array 
+     * @deprecated Use as property $class->network
      */
     public function networks()
     {

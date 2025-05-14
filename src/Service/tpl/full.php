@@ -89,8 +89,8 @@ use Apirone\SDK\Service\Utils;
                 
                 <?php if(!$loading && $userData) : ?>
                 <?php
-                    $items = $userData->getItems();
-                    $extras = $userData->getExtras();
+                    $items = $userData->items;
+                    $extras = $userData->extras;
                 ?>
                 <div class="invoice-table">
                     <table>
@@ -167,15 +167,15 @@ use Apirone\SDK\Service\Utils;
                             <ul>
                                 <?php foreach ($details->history as $item) : ?>
                                 <li>
-                                    <?php if ($item->getAmount()) : ?>
-                                    <a class="history__item" href="<?php echo Utils::getTransactionLink($currency, $item->getTxid()); ?>" target="_blank">
-                                        <span><?php $d($item->getDate()); ?> <span>(<?php echo Utils::humanizeAmount($item->getAmount(), $currency) ?>)</span></span>
-                                        <span style="text-align: right;"><?php $t($item->getStatus()); ?></span>
+                                    <?php if ($item->amount) : ?>
+                                    <a class="history__item" href="<?php echo Utils::getTransactionLink($currency, $item->txid); ?>" target="_blank">
+                                        <span><?php $d($item->date); ?> <span>(<?php echo Utils::humanizeAmount($item->amount, $currency) ?>)</span></span>
+                                        <span style="text-align: right;"><?php $t($item->status); ?></span>
                                     </a>
                                     <?php else : ?>
                                     <span class="history__item">
-                                        <span><?php $d($item->getDate()); ?></span>
-                                        <span style="text-align: right;"><?php $t($item->getStatus()); ?></span>
+                                        <span><?php $d($item->date); ?></span>
+                                        <span style="text-align: right;"><?php $t($item->status); ?></span>
                                     </span>
                                     <?php endif; ?>
                                 </li>

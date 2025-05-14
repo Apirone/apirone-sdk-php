@@ -69,10 +69,6 @@ class Invoice extends AbstractModel
     public static function settings(\Apirone\SDK\Model\Settings $settings): void
     {
         static::$settings = $settings;
-
-        Render::$backlink = $settings->getBacklink();
-        Render::$logo = $settings->getLogo();
-        Render::$qrOnly = $settings->getQrOnly();
     }
 
     /**
@@ -443,7 +439,7 @@ class Invoice extends AbstractModel
         $this->order = array_key_exists('order', $this->createParams) ? $this->createParams['order'] : 0;
 
         unset($this->createParams['order']);
-        $account_id = ($account === null) ? Invoice::$settings->getAccount() : $account;
+        $account_id = ($account === null) ? Invoice::$settings->account : $account;
 
         $account = Account::init($account_id);
         $created = false;

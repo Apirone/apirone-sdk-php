@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.3) (2025-05-14)
+
+- Render - Setting $logo and $backlink properties via Invoice::$settings has been removed. Set the properties directly.
+- Currency - add alias tokens() to getTokens() function.
+- Settings - get networks as property. Method network() mark as deprecated.
+- Refactoring deprecated usage
+
 ## [1.2.2](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.2) (2025-05-07)
 
 - Utils::fiat2crypto() hotfix
