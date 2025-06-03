@@ -107,14 +107,14 @@ require_once('helpers/common.php');
                                         <template x-if="$store.settings">
                                             <template x-for="currency in $store.settings.currencies">
                                                 <template x-if="currency.address">
-                                                    <option x-text="currency.alias"></option>
+                                                    <option x-text="currency.alias" x-bind:value="currency.abbr"></option>
                                                 </template>
                                             </template>
                                         </template>
                                         <template x-if="$store.settings">
                                             <template x-for="currency in $store.settings.currencies">
                                                 <template x-if="!currency.address">
-                                                    <option x-text="currency.alias" disabled></option>
+                                                    <option x-text="currency.alias" x-bind:value="currency.abbr" disabled></option>
                                                 </template>
                                             </template>
                                         </template>

@@ -22,7 +22,7 @@ use Apirone\SDK\Service\Utils;
                         <?php if ($status->title == 'Refresh') : ?>
                         <figure class="qr">
                             <img src="<?php echo Utils::renderQr($currency, $details->address, $amount); ?>" />
-                            <span class="qr__logo <?php echo str_replace('@', '-', $details->currency); ?>" title="<?php echo $currency->name; ?>"></span>
+                            <span class="qr__logo <?php echo str_replace('@', '-', $details->currency); ?>" title="<?php echo $currency->alias; ?>"></span>
                         </figure>
                         <?php else : ?>
                         <div class="qr__<?php echo strtolower($status->title); ?>"></div>
@@ -86,7 +86,7 @@ use Apirone\SDK\Service\Utils;
                     <?php endif; ?>
                 </div>
                 <?php endif; ?>
-                
+
                 <?php if(!$loading && $userData) : ?>
                 <?php
                     $items = $userData->items;
@@ -191,12 +191,12 @@ use Apirone\SDK\Service\Utils;
                     </div>
                     <?php endif; ?>
                 </div>
-                <?php if($details && @$details->showLinkback()) : ?> 
+                <?php if($details && @$details->showLinkback()) : ?>
                 <p class="countdown" style="text-align: center;">
                     <?php echo sprintf($t('getBack', false), 15, $l($details->linkback, $details->invoice)); ?>
                 </p>
                 <?php endif; ?>
-                
+
                 <?php if ($backlink || $logo) : ?>
                 <div class="invoice__footer">
                     <?php if ($backlink) : ?>
