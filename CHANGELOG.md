@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.4](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.4) (2025-06-03)
+
+- Added currency alias property and method;
+
 ## [1.2.3](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.3) (2025-05-14)
 
 - Render - Setting $logo and $backlink properties via Invoice::$settings has been removed. Set the properties directly.

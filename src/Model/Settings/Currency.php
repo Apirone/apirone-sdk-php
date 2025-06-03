@@ -29,6 +29,7 @@ use ReflectionException;
  *
  * @property-read string $name
  * @property-read string $abbr
+ * @property-read string $alias
  * @property-read string $units
  * @property-read string $unitsFactor
  * @property-read int    $dustRate
@@ -47,6 +48,8 @@ class Currency extends AbstractModel
 
     private ?string $abbr = null;
 
+    private ?string $alias = null;
+
     private ?string $units = null;
 
     private ?float $unitsFactor = null;
@@ -58,7 +61,7 @@ class Currency extends AbstractModel
     private string $policy = 'percentage';
 
     private ?string $network = null;
-    
+
     private ?string $token = null;
 
     private ?string $error = null;
@@ -76,7 +79,7 @@ class Currency extends AbstractModel
     {
         $class = new static();
 
-        return $class->classLoader($json);
+        return $class->classLoader($json)->alias();
     }
 
     /**
@@ -155,6 +158,36 @@ class Currency extends AbstractModel
     }
 
     /**
+     * Set currency alias depends on currency properties
+     * @return $this;
+     */
+    private function alias()
+    {
+        if ($this->token == null) {
+            $this->alias = $this->name;
+            return $this;
+        }
+        switch ($this->network) {
+            case 'trx':
+            case 'ttrx':
+                $suffix = 'trc20';
+                break;
+            case 'eth':
+            case 'teth':
+                $suffix = 'erc20';
+                break;
+            default:
+                $suffix = '';
+        }
+
+        $format = ($this->isTestnet()) ? '%s (t%s)' : '%s (%s)';
+
+        $this->alias = strtoupper(sprintf($format, $this->token, $suffix));
+
+        return $this;
+    }
+
+    /**
      * Checks is the currency has an error
      *
      * @return bool
@@ -176,8 +209,8 @@ class Currency extends AbstractModel
 
     /**
      * Returns network abbr if currency a network
-     * 
-     * @return null|string 
+     *
+     * @return null|string
      */
     public function isNetwork()
     {
@@ -186,8 +219,8 @@ class Currency extends AbstractModel
 
     /**
      * Return network abbr if currency a token
-     * 
-     * @return null|string 
+     *
+     * @return null|string
      */
     public function isToken()
     {
@@ -196,7 +229,7 @@ class Currency extends AbstractModel
 
     /**
      * Returns whether the currency is a stablecoin
-     * 
+     *
      * @return bool
      */
     public function isStablecoin()
@@ -206,9 +239,9 @@ class Currency extends AbstractModel
 
     /**
      * Returns array of currencies
-     * 
+     *
      * @param array $currencies
-     * @return \Apirone\SDK\Model\Settings\Currency[] 
+     * @return \Apirone\SDK\Model\Settings\Currency[]
      */
     public function tokens(array $currencies)
     {
@@ -216,7 +249,7 @@ class Currency extends AbstractModel
             return [];
         }
         $tokens = [];
-        
+
         foreach ($currencies as $currency) {
             if ($currency instanceof Currency && $currency->isToken() == $this->network) {
                 $tokens[] = $currency;
@@ -229,8 +262,8 @@ class Currency extends AbstractModel
     /**
      * Alias to tokens();
      *
-     * @param array $currencies 
-     * @return \Apirone\SDK\Model\Settings\Currency[] 
+     * @param array $currencies
+     * @return \Apirone\SDK\Model\Settings\Currency[]
      * @deprecated Use $class->tokens() function
      */
     public function getTokens(array $currencies)
