@@ -68,14 +68,6 @@ class Currency extends AbstractModel
 
     private function __construct() {}
 
-    public function __get($name) {
-        if ($name == 'alias') {
-            return $this->alias();
-        }
-
-        return parent::__get($name);
-    }
-
     /**
      * Create a currency instance
 
@@ -87,7 +79,7 @@ class Currency extends AbstractModel
     {
         $class = new static();
 
-        return $class->classLoader($json);
+        return $class->classLoader($json)->alias();
     }
 
     /**
@@ -166,13 +158,14 @@ class Currency extends AbstractModel
     }
 
     /**
-     * Return currency alias depends on currency properties
-     * @return string
+     * Set currency alias depends on currency properties
+     * @return $this;
      */
-    public function alias()
+    private function alias()
     {
         if ($this->token == null) {
-            return strtoupper($this->name);
+            $this->alias = $this->name;
+            return $this;
         }
         switch ($this->network) {
             case 'trx':
@@ -189,7 +182,9 @@ class Currency extends AbstractModel
 
         $format = ($this->isTestnet()) ? '%s (t%s)' : '%s (%s)';
 
-        return strtoupper(sprintf($format, $this->token, $suffix));
+        $this->alias = strtoupper(sprintf($format, $this->token, $suffix));
+
+        return $this;
     }
 
     /**

@@ -40,7 +40,7 @@ require_once('helpers/common.php');
                 <p>
                     When creating a settings object, you need to create an account, or you can use an existing one.
                     Also, all accessible cryptos of the service are automatically added to the settings object.
-                    For invoice you can set only one destination address for each currency. You can set the destination address for each currency right away or do it later. 
+                    For invoice you can set only one destination address for each currency. You can set the destination address for each currency right away or do it later.
                 </p>
                 <p>
                     You can store the settings in a file or get them as a JSON-object and save them in any way you like.
@@ -62,11 +62,11 @@ require_once('helpers/common.php');
                 <h2>Apirone callback handler</h2>
                 <p>
                     Response processing is important for correct operation of the library.
-                    To do this, you need to create a URL that will respond to requests from the apirone service. 
-                    There is a special static method for this. You only need to register its call. 
+                    To do this, you need to create a URL that will respond to requests from the apirone service.
+                    There is a special static method for this. You only need to register its call.
                 </p>
                 <p>
-                    If you want to process invoice statuses for your system, 
+                    If you want to process invoice statuses for your system,
                     you need to create a callback function that will handle the changed invoice status.
                 </p>
                 <?php echo load_file_content('./callback.php'); ?>
@@ -85,8 +85,8 @@ require_once('helpers/common.php');
                 </p>
                 <?php echo load_file_content('./render.php'); ?>
                 <p>
-                    To process ajax requests from the invoice output page, you need to add a request processing page via 
-                    <code>Invoice::dataUrl('/render_ajax_response.php');</code> The required parameters will be added by the JS script. 
+                    To process ajax requests from the invoice output page, you need to add a request processing page via
+                    <code>Invoice::dataUrl('/render_ajax_response.php');</code> The required parameters will be added by the JS script.
                     The request is made using the POST method and also has an additional header <code>HTTP_X_REQUESTED_WITH = XMLHttpRequest</code>
                 </p>
                 <?php echo load_file_content('./render_ajax_response.php'); ?>
@@ -107,42 +107,42 @@ require_once('helpers/common.php');
                                         <template x-if="$store.settings">
                                             <template x-for="currency in $store.settings.currencies">
                                                 <template x-if="currency.address">
-                                                    <option x-text="currency.abbr"></option>
+                                                    <option x-text="currency.alias"></option>
                                                 </template>
                                             </template>
                                         </template>
                                         <template x-if="$store.settings">
                                             <template x-for="currency in $store.settings.currencies">
                                                 <template x-if="!currency.address">
-                                                    <option x-text="currency.abbr" disabled></option>
+                                                    <option x-text="currency.alias" disabled></option>
                                                 </template>
                                             </template>
                                         </template>
                                     </select>
                                     <span class="inline-block mt-2 text-gray-400 text-sm">
                                         Currency type - any cryptocurrency supported by service.
-                                        If no destination is set, currency is disabled. See settings.json above. Required	
+                                        If no destination is set, currency is disabled. See settings.json above. Required
                                     </span>
                                 </label>
                                 <label class="block">
                                     <span class="text-gray-700">Amount</span>
                                     <input type="number" x-model="data.amount" class="mt-1 block w-full placeholder-gray-400" placeholder="Enter amount value in minor units">
                                     <span class="inline-block mt-2 text-gray-400 text-sm">
-                                        Amount for the checkout in the selected currency of the invoice object. Also you may create invoices without fixed amount. The amount is indicated in minor units	
+                                        Amount for the checkout in the selected currency of the invoice object. Also you may create invoices without fixed amount. The amount is indicated in minor units
                                     </span>
                                 </label>
                                 <label class="block">
                                     <span class="text-gray-700">Lifetime</span>
                                     <input x-model="data.lifetime" type="number" class="mt-1 block w-full">
                                     <span class="inline-block mt-2 text-gray-400 text-sm">
-                                        Duration of invoice validity (indicated in seconds)	
+                                        Duration of invoice validity (indicated in seconds)
                                     </span>
                                 </label>
                                 <label class="block">
                                     <span class="text-gray-700">Expire</span>
                                     <input x-model="data.expire" type="text" class="mt-1 block w-full">
                                     <span class="inline-block mt-2 text-gray-400 text-sm no-prose">
-                                        Invoice expiration time in <a href="https://www.iso.org/iso-8601-date-and-time-format.html" target="_blank" class="not-prose text-gray-400 hover:text-gray-500">ISO-8601</a> format, for example, 
+                                        Invoice expiration time in <a href="https://www.iso.org/iso-8601-date-and-time-format.html" target="_blank" class="not-prose text-gray-400 hover:text-gray-500">ISO-8601</a> format, for example,
                                         <a href="#" @click.prevent="data.expire = $el.innerHTML" class="not-prose text-gray-400 hover:text-gray-500"><?php echo date('Y-m-d\TH:i:s', strtotime('1 day')); ?></a>.
                                         If both parameters are specified: lifetime and expire, then the parameter expire will take precedence
                                     </span>
