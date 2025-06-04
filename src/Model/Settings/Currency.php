@@ -204,6 +204,10 @@ class Currency extends AbstractModel
      */
     public function isTestnet()
     {
+        if ($this->isToken() && ($this->network == 'ttrx' || $this->network == 'teth')) {
+            return true;
+        }
+
         return (substr_count(strtolower($this->name), 'testnet') > 0) ? true : false;
     }
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.5](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.5) (2025-06-04)
+
+- Fixed currency isTestnet() method;
+
 ## [1.2.4](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.4) (2025-06-03)
 
 - Added currency alias property and method;
