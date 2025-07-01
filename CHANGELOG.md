@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.6](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.6) (2025-07-01)
+
+- Updated Invoice::fromFiatAmount() method;
+
 ## [1.2.5](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.5) (2025-06-04)
 
 - Fixed currency isTestnet() method;

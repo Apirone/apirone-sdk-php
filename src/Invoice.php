@@ -147,7 +147,7 @@ class Invoice extends AbstractModel
     {
         $class = new static();
         $class->currency($to);
-        $cryptoAmount = Service::fiat2crypto($value * $factor, $from, $to);
+        $cryptoAmount = Utils::fiat2crypto($value * $factor, $from, $to);
         $unitFactor = $class->createParams['currency']->{'units-factor'};
 
         $class->createParams['amount'] = Utils::cur2min($cryptoAmount, $unitFactor);
@@ -691,8 +691,8 @@ class Invoice extends AbstractModel
     }
 
     /**
-     * @param null|string $invoice 
-     * @return null|\Apirone\SDK\Invoice 
+     * @param null|string $invoice
+     * @return null|\Apirone\SDK\Invoice
      * @throws \ReflectionException
      * @deprecated Use Invoice::get()
      */
