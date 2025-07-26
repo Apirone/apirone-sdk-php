@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", function(e) {
   const d = document;
   const offset = new Date().getTimezoneOffset();
-  // const loading = d.querySelector('.loading');
   const _id = d.getElementById('invoice_id');  
   const id = _id ? _id.value : null;
-  const link = (ln = d.getElementById('statusUrl')) ? ln.attributes.href.value : null;
+  const ln = d.getElementById('statusUrl');
+  const link = ln ? ln.attributes.href.value : null;
   const url = link;
   let statusNum = null;
   let shorterFlag = false;
@@ -36,7 +36,8 @@ document.addEventListener("DOMContentLoaded", function(e) {
     const result = await response.text();
     const wrapper = d.getElementById('__apn-invoice');
     wrapper.outerHTML = result;
-    statusNum = (stn = d.getElementById('statusNum')) ? stn.value : 0;
+    const stn = d.getElementById('statusNum');
+    statusNum = stn ? stn.value : 0;
     setCopy();
     setToggler();
     countdown();
@@ -47,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
     async function refresh() {
         if (statusNum === 0) { clearInterval(processId); return; }
         statusNum = await getStat();
-        if (statusNum !== stat) { document.location.reload();}
+        if (statusNum !== stat) { d.location.reload();}
     };
     if (statusNum > 0) { processId = setInterval(refresh, 5e3); }
   }
@@ -87,13 +88,20 @@ document.addEventListener("DOMContentLoaded", function(e) {
         + (hours > 0 ? `${hours}h `: '')
         + (minutes > 0 ? `${minutes}m `: '')
         + `${seconds}s`;
-      distance -=1;
+      distance--;
       if (distance < 0) {
         clearInterval(interval);
         counter.innerHTML = '';
-        document.location.reload();
+        d.location.reload();
       }
     }, 1000);
+    d.addEventListener('visibilitychange', function() {
+      if (d.visibilityState === 'hidden') {
+        clearInterval(interval);
+        return
+      }
+      d.location.reload();
+    });
   }
   function f2i (value) {
     return value | 0;
@@ -119,7 +127,8 @@ document.addEventListener("DOMContentLoaded", function(e) {
     return `${value.slice(0, 10)}...${value.slice(-10)}`;
   }
   function setShorter() {
-    address = (addr = d.querySelector('.address a')) ? addr.innerHTML : null;
+    const addr = d.querySelector('.address a');
+    address = addr ? addr.innerHTML : null;
     if (address && window.innerWidth < 450) {
       d.querySelector('.address a').innerHTML = getShorter(address);
     }
