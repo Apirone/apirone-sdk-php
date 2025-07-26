@@ -1,5 +1,5 @@
-ARG VERSION=8.1
-FROM php:${VERSION}-apache-buster
+ARG VERSION=8.3
+FROM php:${VERSION}-apache
 
 ARG UID=13344
 ARG GID=13344
