@@ -95,11 +95,15 @@ To save the local currency changes to the account, use the `saveCurrencies()` me
 
 Use the `meta` property to store additional parameters. This is a `stdClass` with key-value parameters.
 
-To add and update items, use `addMeta(‘key’, ‘value’)`.
-To get or delete an item by key, use `getMeta(‘key’)` and `deleteMeta(‘key’)` respectively.
+To get item by key, use `$settings->meta(‘key’)`.
+To add or update items, use `$settings->meta(‘key’, ‘value’)`.
+To delete an item by key, use `$settings->meta(‘key’, null)`.
 
-To get the entire object, use `$settings->getMeta()`.
-The `$settings->meta($json)` method sets the entire object.
+To get the entire object, use `$settings->meta`.
+The `$settings->meta($meta_object)` method sets the entire object, where `$meta_object` valid JSON or php stdClass.
+
+IMPORTANT!
+The methods `getMeta()`, `setMeta()` and `deleteMeta()` are deprecated and will be removed in next versions.
 
 ### Predefined and Extra props
 
