@@ -168,7 +168,7 @@ class Settings extends AbstractModel
         if (\property_exists($this, $name)) {
 
             $class = new \ReflectionClass(static::class);
-            
+
             $property = $class->getProperty($name);
             $property->setAccessible(true);
 
@@ -414,8 +414,8 @@ class Settings extends AbstractModel
 
     /**
      * Get the networks only
-     * 
-     * @return array 
+     *
+     * @return array
      * @deprecated Use as property $class->network
      */
     public function networks()
@@ -451,6 +451,7 @@ class Settings extends AbstractModel
      *
      * @param string|null $key
      * @return mixed
+     * @deprecated Use $class->meta for the entire meta object, or $class->meta('meta-key') for a single key value.
      */
     public function getMeta(string $key = null)
     {
@@ -465,15 +466,28 @@ class Settings extends AbstractModel
     }
 
     /**
-     * Set the value of meta
+     * Get or set meta values. Also you can set meta as entire stdClass or json string
      *
-     * @return self
+     * @param string $meta
+     * @param string $value
+     * @return mixed
      */
-    public function meta($json = '{}')
+    public function meta($meta = '{}', $value = '')
     {
-        $json = gettype($json) == 'string' ? json_decode($json) : $json;
-
-        $this->meta = $json;
+        $json = gettype($meta) == 'string' ? json_decode($meta) : $meta;
+        if (json_last_error() == JSON_ERROR_NONE) {
+            $this->meta = $json;
+            return $this;
+        }
+        if ($meta && $value === '') {
+            return (property_exists($this->meta, $meta)) ? $this->meta->{$meta} : null;
+        }
+        if ($meta && !empty($value)) {
+            $this->meta->{$meta} = $value;
+        }
+        if ($meta && is_null($value)) {
+            unset($this->meta->{$meta});
+        }
 
         return $this;
     }
@@ -482,6 +496,7 @@ class Settings extends AbstractModel
      * Add/edit meta item
      *
      * @return self
+     * @deprecated Use $class->meta('meta-key', 'meta-value')
      */
     public function addMeta($key, $value)
     {
@@ -494,6 +509,7 @@ class Settings extends AbstractModel
      * Delete meta item
      *
      * @return self
+     * @deprecated Use $class->meta('meta-key', null)
      */
     public function deleteMeta($key)
     {
@@ -522,7 +538,7 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of account
-     * 
+     *
      * @return null|string
      * @deprecated Use $class->account
      */
@@ -533,10 +549,10 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of transferKey
-     * 
+     *
      * @return null|string
      * @deprecated Use $class->transferKey
-     */ 
+     */
     public function getTransferKey()
     {
         return $this->transferKey;
@@ -556,7 +572,7 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of currencies
-     * 
+     *
      * @return array
      * @deprecated Use $class->currencies
      */
@@ -567,8 +583,8 @@ class Settings extends AbstractModel
 
     /**
      * Alias to networks()
-     * 
-     * @return array 
+     *
+     * @return array
      * @deprecated Use $class->networks
      */
     public function getNetworks()
@@ -604,7 +620,7 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of merchant
-     * 
+     *
      * @return string
      * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
      */
@@ -653,8 +669,8 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of timeout
-     * 
-     * @return int 
+     *
+     * @return int
      * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
      */
     public function getTimeout()
@@ -677,8 +693,8 @@ class Settings extends AbstractModel
 
     /**
      * Get the value of factor
-     * 
-     * @return float 
+     *
+     * @return float
      * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
      */
     public function getFactor()
