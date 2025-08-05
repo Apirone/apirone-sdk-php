@@ -163,6 +163,16 @@ class Settings extends AbstractModel
 
     public function __call($name, $value)
     {
+        if ($name = 'meta') {
+            switch (count($value)) {
+                case 0:
+                    return $this->metaGet();
+                case 1:
+                    return $this->metaGet($value[0]);
+                case 2:
+                    return $this->metaSet($value[0], $value[1]);
+            }
+        }
         $name = static::convertToCamelCase($name);
 
         if (\property_exists($this, $name)) {
@@ -466,31 +476,40 @@ class Settings extends AbstractModel
     }
 
     /**
-     * Get or set meta values. Also you can set meta as entire stdClass or json string
+     * Get meta value via $class->meta('key')
+     * Use $class->meta() to clear all meta
      *
-     * @param string $meta
-     * @param string $value
+     * @param string $key
      * @return mixed
      */
-    public function meta($meta = '{}', $value = '')
-    {
-        $json = gettype($meta) == 'string' ? json_decode($meta) : $meta;
+    protected function metaGet($key = '{}') {
+        $json = gettype($key) == 'string' ? json_decode($key) : $key;
         if (json_last_error() == JSON_ERROR_NONE) {
             $this->meta = $json;
             return $this;
         }
-        if ($meta && $value === '') {
-            return (property_exists($this->meta, $meta)) ? $this->meta->{$meta} : null;
-        }
-        if ($meta && !empty($value)) {
-            $this->meta->{$meta} = $value;
-        }
-        if ($meta && is_null($value)) {
-            unset($this->meta->{$meta});
-        }
 
-        return $this;
+        return (property_exists($this->meta, $key)) ? $this->meta->{$key} : null;
     }
+
+    /**
+     * Set or unset meta via meta('key', 'value')
+     * Unset meta key in case when value is empty (false, 0, null, empty string, etc)
+     *
+     * @param mixed $key
+     * @param mixed $value
+     * @return $this
+     */
+    protected function metaSet($key, $value) {
+        if (empty($value)) {
+            unset($this->meta->{$key});
+            return $this;
+        }
+        $this->meta->{$key} = $value;
+        return $this;
+
+    }
+
 
     /**
      * Add/edit meta item
