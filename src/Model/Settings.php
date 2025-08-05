@@ -154,8 +154,17 @@ class Settings extends AbstractModel
     }
 
     public function __get($name) {
+
         if ($name == 'networks') {
             return $this->networks();
+        }
+
+        // Currencies lazy loading
+        if ($name == 'currencies') {
+            if(empty($this->currencies)) {
+                $this->loadCurrencies();
+            }
+            return $this->currencies;
         }
 
         return parent::__get($name);
@@ -163,6 +172,9 @@ class Settings extends AbstractModel
 
     public function __call($name, $value)
     {
+        $name = static::convertToCamelCase($name);
+
+        // Process meta property
         if ($name = 'meta') {
             switch (count($value)) {
                 case 0:
@@ -173,7 +185,6 @@ class Settings extends AbstractModel
                     return $this->metaSet($value[0], $value[1]);
             }
         }
-        $name = static::convertToCamelCase($name);
 
         if (\property_exists($this, $name)) {
 
@@ -233,9 +244,9 @@ class Settings extends AbstractModel
         $class = new static();
         $class->classLoader($json);
 
-        if (empty($class->currencies)) {
-            $class->loadCurrencies();
-        }
+        // if (empty($class->currencies)) {
+        //     $class->loadCurrencies();
+        // }
 
         return $class;
     }
@@ -313,6 +324,8 @@ class Settings extends AbstractModel
     public function toArray(): array
     {
         $data = parent::toArray();
+
+        unset($data['currencies']);
 
         if(empty($data['extra']))
         {
