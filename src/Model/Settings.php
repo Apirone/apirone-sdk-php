@@ -55,6 +55,8 @@ class Settings extends AbstractModel
      */
     private array   $currencies = [];
 
+    private array   $coins = [];
+
     /**
      * Metadata
      *
@@ -166,7 +168,9 @@ class Settings extends AbstractModel
             }
             return $this->currencies;
         }
-
+        if (property_exists($this->meta, $name)) {
+            return $this->meta->{$name};
+        }
         return parent::__get($name);
     }
 
@@ -174,36 +178,25 @@ class Settings extends AbstractModel
     {
         $name = static::convertToCamelCase($name);
 
-        // Process meta property
-        if ($name = 'meta') {
-            switch (count($value)) {
-                case 0:
-                    return $this->metaGet();
-                case 1:
-                    return $this->metaGet($value[0]);
-                case 2:
-                    return $this->metaSet($value[0], $value[1]);
-            }
-        }
-
         if (\property_exists($this, $name)) {
 
             $class = new \ReflectionClass(static::class);
 
             $property = $class->getProperty($name);
             $property->setAccessible(true);
-
             $property->setValue($this, $value[0]);
 
             return $this;
         }
-        $trace = \debug_backtrace();
-        \trigger_error(
-            'Call to undefined method ' . $name .
-            ' in ' . $trace[0]['file'] .
-            ' on line ' . $trace[0]['line'],
-            \E_USER_ERROR
-        );
+
+        if (empty($value) || $value[0] == false) {
+            unset($this->meta->{$name});
+            return $this;
+        }
+
+        $this->meta->{$name} = $value[0];
+
+        return $this;
     }
 
     /**
@@ -221,8 +214,6 @@ class Settings extends AbstractModel
     public static function init()
     {
         $class = new static();
-
-        return $class->loadCurrencies();
     }
 
     /**
@@ -243,10 +234,6 @@ class Settings extends AbstractModel
     {
         $class = new static();
         $class->classLoader($json);
-
-        // if (empty($class->currencies)) {
-        //     $class->loadCurrencies();
-        // }
 
         return $class;
     }
@@ -317,27 +304,98 @@ class Settings extends AbstractModel
     }
 
     /**
-     * Convert instance to array
+     * Convert instance to array and skip currency property
      *
      * @return array
      */
-    public function toArray(): array
+    public function toArray($unsetDeprecated = false): array
     {
-        $data = parent::toArray();
+        $settings = [];
+        $class = new \ReflectionClass(static::class);
 
-        unset($data['currencies']);
+        foreach ($class->getProperties() as $property) {
+            $prop = $property->getName();
+            if ($prop == 'currency') {
+                continue;
+            }
 
-        if(empty($data['extra']))
-        {
-            unset($data['extra']);
+            $type = gettype($this->{$prop});
+
+            if ($type !== 'object' || $type !== 'array') {
+                $settings[self::convertToSnakeCase($prop)] = $this->{$prop};
+            }
+
+            if ($type == 'object') {
+                $settings[self::convertToSnakeCase($prop)] = (get_class($this->{$prop}) !== 'stdClass') ? $this->{$prop}->toArray() : json_decode(json_encode($this->{$prop}), true);
+
+                continue;
+            }
+            if ($type == 'array') {
+                $items = [];
+                foreach($this->{$prop} as $key => $item) {
+                    if(gettype($item) == 'object') {
+                        $items[] = (get_class($item) !== 'stdClass') ? $item->toArray() : json_decode(json_encode($item), true);
+                    }
+                    else {
+                        $items[$key] = $item;
+                    }
+                }
+                $settings[self::convertToSnakeCase($prop)] = $items;
+            }
         }
 
-        if(empty($data['meta']))
-        {
-            unset($data['meta']);
+        // $settings = parent::toArray();
+
+        if(empty($settings['extra'])) {
+            unset($settings['extra']);
         }
 
-        return $data;
+        if(empty($settings['meta'])) {
+            unset($settings['meta']);
+        }
+
+        if ($unsetDeprecated) {
+            foreach ($settings as $key => $v) {
+                if (in_array($key, ['account', 'transfer-key', 'meta'])) {
+                    continue;
+                }
+                unset($settings[$key]);
+            }
+        }
+
+        return $settings;
+    }
+
+    protected function classLoader($json)
+    {
+        $json = gettype($json) == 'string' ? json_decode($json) : $json;
+
+        $class = new \ReflectionClass(static::class);
+
+        foreach ($json as $key => $value) {
+            $name = static::convertToCamelCase($key);
+            if ($name == 'currencies')
+                continue;
+
+            if (\property_exists($this, $name)) {
+                $property = $class->getProperty($name);
+                $property->setAccessible(true);
+                if (gettype($value) == 'object' || gettype($value) == 'array') {
+                    $parser = 'parse' . ucfirst($name);
+                    if ($class->hasMethod($parser)) {
+                        $property->setValue($this, $this->$parser($value));
+                    }
+                    else {
+                        $property->setValue($this, $value);
+                    }
+                }
+                else {
+                    $property->setValue($this, $value);
+                }
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -398,7 +456,7 @@ class Settings extends AbstractModel
                 $currency->address($address);
                 $currency->policy($accountItem->{'processing-fee-policy'});
             }
-            $this->currencies[] = $currency;
+            $this->currencies[$serviceItem->abbr] = $currency;
         }
 
         return $this;
@@ -436,37 +494,42 @@ class Settings extends AbstractModel
     }
 
     /**
-     * Get the networks only
+     * Set meta
+     * Use $class->meta() to clear all meta
      *
-     * @return array
-     * @deprecated Use as property $class->network
+     * @param string $key
+     * @return mixed
      */
-    public function networks()
-    {
-        $networks = [];
-        foreach ($this->currencies as $currency) {
-            if (!$currency->isToken()) {
-                $networks[] = $currency;
-            }
-        }
-        return $networks;
+    protected function meta($key = '{}') {
+        $json = gettype($key) == 'string' ? json_decode($key) : $key;
+        $this->meta = $json;
+
+        return $this;
     }
 
     /**
-     * Currencies list parser
+     * Get the networks with tokens
      *
-     * @param mixed $array Array of json currency objects
      * @return array
-     * @throws ReflectionException
+     * @deprecated Use as property $class->networks
      */
-    public function parseCurrencies($array)
+    public function networks()
     {
-        $items = [];
-        foreach ($array as $item) {
-            $items[] = Currency::init($item);
+        if (empty($this->currencies)) {
+            $this->loadCurrencies();
         }
-
-        return $items;
+        $networks = [];
+        foreach ($this->currencies as $currency) {
+            if (!$currency->isToken()) {
+                $networks[$currency->abbr] = \Apirone\SDK\Model\Settings\Network::init($currency);
+            }
+        }
+        foreach ($this->currencies as $currency) {
+            if ($currency->isToken()) {
+                $networks[$currency->network]->token($currency);
+            }
+        }
+        return $networks;
     }
 
     /**
@@ -474,7 +537,7 @@ class Settings extends AbstractModel
      *
      * @param string|null $key
      * @return mixed
-     * @deprecated Use $class->meta for the entire meta object, or $class->meta('meta-key') for a single key value.
+     * @deprecated Use $class->MyParamName directly
      */
     public function getMeta(string $key = null)
     {
@@ -489,46 +552,10 @@ class Settings extends AbstractModel
     }
 
     /**
-     * Get meta value via $class->meta('key')
-     * Use $class->meta() to clear all meta
-     *
-     * @param string $key
-     * @return mixed
-     */
-    protected function metaGet($key = '{}') {
-        $json = gettype($key) == 'string' ? json_decode($key) : $key;
-        if (json_last_error() == JSON_ERROR_NONE) {
-            $this->meta = $json;
-            return $this;
-        }
-
-        return (property_exists($this->meta, $key)) ? $this->meta->{$key} : null;
-    }
-
-    /**
-     * Set or unset meta via meta('key', 'value')
-     * Unset meta key in case when value is empty (false, 0, null, empty string, etc)
-     *
-     * @param mixed $key
-     * @param mixed $value
-     * @return $this
-     */
-    protected function metaSet($key, $value) {
-        if (empty($value)) {
-            unset($this->meta->{$key});
-            return $this;
-        }
-        $this->meta->{$key} = $value;
-        return $this;
-
-    }
-
-
-    /**
      * Add/edit meta item
      *
      * @return self
-     * @deprecated Use $class->meta('meta-key', 'meta-value')
+     * @deprecated Use $class->myParamName('My Param Value')
      */
     public function addMeta($key, $value)
     {
@@ -628,7 +655,7 @@ class Settings extends AbstractModel
      * Get invoice title
      *
      * @return string
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function getTitle()
     {
@@ -641,7 +668,7 @@ class Settings extends AbstractModel
      * @param  string  $title  Invoice title
      *
      * @return self
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function setTitle(string $title)
     {
@@ -654,7 +681,7 @@ class Settings extends AbstractModel
      * Get the value of merchant
      *
      * @return string
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function getMerchant()
     {
@@ -665,7 +692,7 @@ class Settings extends AbstractModel
      * Set the value of merchant
      *
      * @return self
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function setMerchant($merchant)
     {
@@ -678,7 +705,7 @@ class Settings extends AbstractModel
      * Get merchant Url
      *
      * @return string
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function getMerchantUrl()
     {
@@ -690,7 +717,7 @@ class Settings extends AbstractModel
      *
      * @param  string  $merchantUrl  Merchant Url
      * @return self
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function setMerchantUrl(string $merchantUrl)
     {
@@ -703,7 +730,7 @@ class Settings extends AbstractModel
      * Get the value of timeout
      *
      * @return int
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function getTimeout()
     {
@@ -714,7 +741,7 @@ class Settings extends AbstractModel
      * Set the value of timeout
      *
      * @return self
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function setTimeout($timeout)
     {
@@ -727,7 +754,7 @@ class Settings extends AbstractModel
      * Get the value of factor
      *
      * @return float
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function getFactor()
     {
@@ -743,7 +770,7 @@ class Settings extends AbstractModel
      * 100% * 0.99 = 99%
      * 100% * 1.01 = 101%
      * @return self
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function setFactor($factor)
     {
@@ -755,7 +782,7 @@ class Settings extends AbstractModel
     /**
      * Get the value of backlink
      *
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function getBacklink()
     {
@@ -778,7 +805,7 @@ class Settings extends AbstractModel
     /**
      * Get the value of logo
      *
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function getLogo(): bool
     {
@@ -789,7 +816,7 @@ class Settings extends AbstractModel
      * Set the value of logo
      *
      * @return self
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function setLogo(bool $logo)
     {
@@ -802,7 +829,7 @@ class Settings extends AbstractModel
      * Get qR Template
      *
      * @return bool
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function getQrOnly()
     {
@@ -814,7 +841,7 @@ class Settings extends AbstractModel
      *
      * @param  bool  $qrOnly  QR Template
      * @return self
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function setQrOnly(bool $qrOnly)
     {
@@ -827,7 +854,7 @@ class Settings extends AbstractModel
      * Get debug
      *
      * @return bool
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function getDebug()
     {
@@ -838,7 +865,7 @@ class Settings extends AbstractModel
      * Set debug
      *
      * @param  bool  $debug Debug
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      * @return self
      */
     public function setDebug(bool $debug)
@@ -853,7 +880,7 @@ class Settings extends AbstractModel
      *
      * @param string|null $key
      * @return mixed
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function getExtra(string $key = null)
     {
@@ -871,7 +898,7 @@ class Settings extends AbstractModel
      * Set the value of extra
      *
      * @return self
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
+     * @deprecated Use $class->meta() method. The method will be removed in future versions.
      */
     public function setExtra(string $key, string $value)
     {
