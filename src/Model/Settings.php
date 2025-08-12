@@ -283,7 +283,7 @@ class Settings extends AbstractModel
      */
     public function toArray(array $skip = []): array
     {
-        $settings = parent::toArray($skip);
+        $settings = parent::toArray(['currencies']);
 
         if(empty($settings['extra'])) {
             unset($settings['extra']);
@@ -293,6 +293,11 @@ class Settings extends AbstractModel
             unset($settings['meta']);
         }
 
+        foreach ($settings as $key => $val) {
+            if (!in_array($key, ['account', 'transfer-key', 'coins', 'meta'])) {
+                unset($settings[$key]);
+            }
+        }
         return $settings;
     }
 
@@ -387,13 +392,11 @@ class Settings extends AbstractModel
      */
     public function currency($abbr)
     {
-        foreach($this->currencies as $currency) {
-            if ($currency->abbr == $abbr) {
-                return $currency;
-            }
+        if (empty($this->currencies)) {
+            $this->loadCurrencies();
         }
 
-        return false;
+        return array_key_exists($abbr, $this->currencies) ? $this->currencies[$abbr] : false;
     }
 
     /**
