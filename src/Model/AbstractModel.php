@@ -39,6 +39,10 @@ abstract class AbstractModel
             return $property->getValue($this);
         }
 
+        if (property_exists($this->meta, $name)) {
+            return $this->meta->{$name};
+        }
+
         $trace = \debug_backtrace();
         \trigger_error(
             'Undefined property ' . $name .
@@ -50,6 +54,43 @@ abstract class AbstractModel
         return null;
     }
 
+    public function __call($name, $value) {
+
+        $name = static::convertToCamelCase($name);
+
+        if (\property_exists($this, $name)) {
+
+            $class = new \ReflectionClass(static::class);
+
+            $property = $class->getProperty($name);
+            $property->setAccessible(true);
+            $property->setValue($this, $value[0]);
+
+            return $this;
+        }
+
+        if (\property_exists($this, 'meta')) {
+            if (empty($value) || $value[0] == false) {
+                unset($this->meta->{$name});
+
+                return $this;
+            }
+            $this->meta->{$name} = $value[0];
+
+            return $this;
+        }
+
+        $trace = \debug_backtrace();
+        \trigger_error(
+            'Undefined method ' . $name .
+            ' in ' . $trace[0]['file'] .
+            ' on line ' . $trace[0]['line'],
+            \E_USER_NOTICE
+        );
+
+        return $this;
+    }
+
     /**
      * Load class from json data
      *
@@ -57,7 +98,7 @@ abstract class AbstractModel
      * @return $this
      * @throws ReflectionException
      */
-    protected function classLoader($json)
+    protected function classLoader($json, $skip = [])
     {
         $json = gettype($json) == 'string' ? json_decode($json) : $json;
 
@@ -65,6 +106,10 @@ abstract class AbstractModel
 
         foreach ($json as $key => $value) {
             $name = static::convertToCamelCase($key);
+            if (in_array($name, $skip)) {
+                continue;
+            }
+
             if (\property_exists($this, $name)) {
                 $property = $class->getProperty($name);
                 $property->setAccessible(true);
@@ -91,13 +136,17 @@ abstract class AbstractModel
      *
      * @return array
      */
-    public function toArray(): array
+    public function toArray(array $skip = []): array
     {
         $settings = [];
         $class = new \ReflectionClass(static::class);
 
         foreach ($class->getProperties() as $property) {
             $prop = $property->getName();
+            if (in_array($prop, $skip)) {
+                continue;
+            }
+
             $type = gettype($this->{$prop});
 
             if ($type !== 'object' || $type !== 'array') {

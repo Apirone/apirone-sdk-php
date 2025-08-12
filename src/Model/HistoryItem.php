@@ -53,7 +53,7 @@ class HistoryItem extends AbstractModel
      *
      * @return array
      */
-    public function toArray(): array
+    public function toArray(array $skip = []): array
     {
         $item = parent::toArray();
 

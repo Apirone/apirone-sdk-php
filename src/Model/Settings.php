@@ -168,35 +168,8 @@ class Settings extends AbstractModel
             }
             return $this->currencies;
         }
-        if (property_exists($this->meta, $name)) {
-            return $this->meta->{$name};
-        }
+
         return parent::__get($name);
-    }
-
-    public function __call($name, $value)
-    {
-        $name = static::convertToCamelCase($name);
-
-        if (\property_exists($this, $name)) {
-
-            $class = new \ReflectionClass(static::class);
-
-            $property = $class->getProperty($name);
-            $property->setAccessible(true);
-            $property->setValue($this, $value[0]);
-
-            return $this;
-        }
-
-        if (empty($value) || $value[0] == false) {
-            unset($this->meta->{$name});
-            return $this;
-        }
-
-        $this->meta->{$name} = $value[0];
-
-        return $this;
     }
 
     /**
@@ -308,43 +281,9 @@ class Settings extends AbstractModel
      *
      * @return array
      */
-    public function toArray($unsetDeprecated = false): array
+    public function toArray(array $skip = []): array
     {
-        $settings = [];
-        $class = new \ReflectionClass(static::class);
-
-        foreach ($class->getProperties() as $property) {
-            $prop = $property->getName();
-            if ($prop == 'currency') {
-                continue;
-            }
-
-            $type = gettype($this->{$prop});
-
-            if ($type !== 'object' || $type !== 'array') {
-                $settings[self::convertToSnakeCase($prop)] = $this->{$prop};
-            }
-
-            if ($type == 'object') {
-                $settings[self::convertToSnakeCase($prop)] = (get_class($this->{$prop}) !== 'stdClass') ? $this->{$prop}->toArray() : json_decode(json_encode($this->{$prop}), true);
-
-                continue;
-            }
-            if ($type == 'array') {
-                $items = [];
-                foreach($this->{$prop} as $key => $item) {
-                    if(gettype($item) == 'object') {
-                        $items[] = (get_class($item) !== 'stdClass') ? $item->toArray() : json_decode(json_encode($item), true);
-                    }
-                    else {
-                        $items[$key] = $item;
-                    }
-                }
-                $settings[self::convertToSnakeCase($prop)] = $items;
-            }
-        }
-
-        // $settings = parent::toArray();
+        $settings = parent::toArray($skip);
 
         if(empty($settings['extra'])) {
             unset($settings['extra']);
@@ -354,48 +293,12 @@ class Settings extends AbstractModel
             unset($settings['meta']);
         }
 
-        if ($unsetDeprecated) {
-            foreach ($settings as $key => $v) {
-                if (in_array($key, ['account', 'transfer-key', 'meta'])) {
-                    continue;
-                }
-                unset($settings[$key]);
-            }
-        }
-
         return $settings;
     }
 
-    protected function classLoader($json)
+    protected function classLoader($json, $skip = [])
     {
-        $json = gettype($json) == 'string' ? json_decode($json) : $json;
-
-        $class = new \ReflectionClass(static::class);
-
-        foreach ($json as $key => $value) {
-            $name = static::convertToCamelCase($key);
-            if ($name == 'currencies')
-                continue;
-
-            if (\property_exists($this, $name)) {
-                $property = $class->getProperty($name);
-                $property->setAccessible(true);
-                if (gettype($value) == 'object' || gettype($value) == 'array') {
-                    $parser = 'parse' . ucfirst($name);
-                    if ($class->hasMethod($parser)) {
-                        $property->setValue($this, $this->$parser($value));
-                    }
-                    else {
-                        $property->setValue($this, $value);
-                    }
-                }
-                else {
-                    $property->setValue($this, $value);
-                }
-            }
-        }
-
-        return $this;
+        return parent::classLoader($json, ['currencies']);
     }
 
     /**
