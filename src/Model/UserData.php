@@ -59,7 +59,7 @@ class UserData extends AbstractModel
         if (\property_exists($this, $name)) {
 
             $class = new \ReflectionClass(static::class);
-            
+
             $property = $class->getProperty($name);
             $property->setAccessible(true);
 
@@ -188,7 +188,7 @@ class UserData extends AbstractModel
     /**
      * Get the value of title
      *
-     * @deprecated Use $class->title
+     * @deprecated Will be removed in 2.0. Use $class->title
      */
     public function getTitle()
     {
@@ -200,7 +200,7 @@ class UserData extends AbstractModel
      *
      * @param null|string $title
      * @return $this
-     * @deprecated Use $class->title()
+     * @deprecated Will be removed in 2.0. Use $class->title()
      */
     public function setTitle(?string $title = null)
     {
@@ -212,7 +212,7 @@ class UserData extends AbstractModel
     /**
      * Get the value of merchant
      *
-     * @deprecated Use $class->merchant
+     * @deprecated Will be removed in 2.0. Use $class->merchant
      */
     public function getMerchant()
     {
@@ -224,7 +224,7 @@ class UserData extends AbstractModel
      *
      * @param null|string $merchant
      * @return $this
-     * @deprecated Use $class->merchant()
+     * @deprecated Will be removed in 2.0. Use $class->merchant()
      */
     public function setMerchant(?string $merchant = null)
     {
@@ -236,7 +236,7 @@ class UserData extends AbstractModel
     /**
      * Get the value of url
      *
-     * @deprecated Use $class->url
+     * @deprecated Will be removed in 2.0. Use $class->url
      */
     public function getUrl()
     {
@@ -248,7 +248,7 @@ class UserData extends AbstractModel
      *
      * @param null|string $url
      * @return $this
-     * @deprecated Use $class->url()
+     * @deprecated Will be removed in 2.0. Use $class->url()
      */
     public function setUrl(?string $url = null)
     {
@@ -260,7 +260,7 @@ class UserData extends AbstractModel
     /**
      * Get the value of price
      *
-     * @deprecated Use $class->price
+     * @deprecated Will be removed in 2.0. Use $class->price
      */
     public function getPrice()
     {
@@ -272,7 +272,7 @@ class UserData extends AbstractModel
      *
      * @param null|string $value
      * @return $this
-     * @deprecated Use $class->price()
+     * @deprecated Will be removed in 2.0. Use $class->price()
      */
     public function setPrice(?string $value = null)
     {
@@ -284,7 +284,7 @@ class UserData extends AbstractModel
     /**
      * Get the value of subPrice
      *
-     * @deprecated Use $class->subPrice
+     * @deprecated Will be removed in 2.0. Use $class->subPrice
      */
     public function getSubPrice()
     {
@@ -296,7 +296,7 @@ class UserData extends AbstractModel
      *
      * @param null|string $value
      * @return $this
-     * @deprecated Use $class->subPrice()
+     * @deprecated Will be removed in 2.0. Use $class->subPrice()
      */
     public function setSubPrice(?string $value = null)
     {
@@ -308,7 +308,7 @@ class UserData extends AbstractModel
      * Get the value of items
      *
      * @return null|array
-     * @deprecated Use $class->items
+     * @deprecated Will be removed in 2.0. Use $class->items
      */
     public function getItems()
     {
@@ -319,7 +319,7 @@ class UserData extends AbstractModel
      * Set the value of items
      *
      * @return $this
-     * @deprecated Use $class->items()
+     * @deprecated Will be removed in 2.0. Use $class->items()
      */
     public function setItems(array $items = [])
     {
@@ -332,7 +332,7 @@ class UserData extends AbstractModel
      * Get the value of extras
      *
      * @return null|array
-     * @deprecated Use $class->extras
+     * @deprecated Will be removed in 2.0. Use $class->extras
      */
     public function getExtras()
     {
@@ -342,7 +342,7 @@ class UserData extends AbstractModel
      * Set the value of extras
      *
      * @return null|array
-     * @deprecated Use $class->extras()
+     * @deprecated Will be removed in 2.0. Use $class->extras()
      */
     public function setExtras(array $extras = [])
     {

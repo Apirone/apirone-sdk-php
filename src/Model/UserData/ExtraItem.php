@@ -48,7 +48,7 @@ class ExtraItem extends AbstractModel
         if (\property_exists($this, $name)) {
 
             $class = new \ReflectionClass(static::class);
-            
+
             $property = $class->getProperty($name);
             $property->setAccessible(true);
 
@@ -107,7 +107,7 @@ class ExtraItem extends AbstractModel
     /**
      * Get the value of name
      *
-     * @deprecated Use $class->name
+     * @deprecated Will be removed in 2.0. Use $class->name
      */
     public function getName()
     {
@@ -118,7 +118,7 @@ class ExtraItem extends AbstractModel
      * Set the value of name
      *
      * @return self
-     * @deprecated Use $class->name()
+     * @deprecated Will be removed in 2.0. Use $class->name()
      */
     public function setName($name)
     {
@@ -131,7 +131,7 @@ class ExtraItem extends AbstractModel
      * Get the value of price
      *
      * @return null|string
-     * @deprecated Use $class->price
+     * @deprecated Will be removed in 2.0. Use $class->price
      */
     public function getPrice()
     {
@@ -142,7 +142,7 @@ class ExtraItem extends AbstractModel
      * Set the value of price
      *
      * @return self
-     * @deprecated Use $class->price()
+     * @deprecated Will be removed in 2.0. Use $class->price()
      */
     public function setPrice($price)
     {

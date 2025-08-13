@@ -68,7 +68,7 @@ class HistoryItem extends AbstractModel
     /**
      * Get the value of date
      *
-     * @deprecated Use $class->date
+     * @deprecated Will be removed in 2.0. Use $class->date
      */
     public function getDate()
     {
@@ -78,7 +78,7 @@ class HistoryItem extends AbstractModel
     /**
      * Get the value of status
      *
-     * @deprecated Use $class->status
+     * @deprecated Will be removed in 2.0. Use $class->status
      */
     public function getStatus()
     {
@@ -88,7 +88,7 @@ class HistoryItem extends AbstractModel
     /**
      * Get the value of txid
      *
-     * @deprecated Use $class->txid
+     * @deprecated Will be removed in 2.0. Use $class->txid
      */
     public function getTxid()
     {
@@ -98,7 +98,7 @@ class HistoryItem extends AbstractModel
     /**
      * Get the value of amount
      *
-     * @deprecated Use $class->amount
+     * @deprecated Will be removed in 2.0. Use $class->amount
      */
     public function getAmount()
     {

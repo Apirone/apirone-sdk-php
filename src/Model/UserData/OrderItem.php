@@ -65,7 +65,7 @@ class OrderItem extends AbstractModel
         if (\property_exists($this, $name)) {
 
             $class = new \ReflectionClass(static::class);
-            
+
             $property = $class->getProperty($name);
             $property->setAccessible(true);
 
@@ -125,7 +125,7 @@ class OrderItem extends AbstractModel
     /**
      * Get the value of name
      *
-     * @deprecated Use $class->name
+     * @deprecated Will be removed in 2.0. Use $class->name
      */
     public function getName()
     {
@@ -136,7 +136,7 @@ class OrderItem extends AbstractModel
      * Set the value of name
      *
      * @return self
-     * @deprecated Use $class->name()
+     * @deprecated Will be removed in 2.0. Use $class->name()
      */
     public function setName($name)
     {
@@ -148,7 +148,7 @@ class OrderItem extends AbstractModel
     /**
      * Get the value of cost
      *
-     * @deprecated Use $class->cost
+     * @deprecated Will be removed in 2.0. Use $class->cost
      */
     public function getCost()
     {
@@ -159,7 +159,7 @@ class OrderItem extends AbstractModel
      * Set the value of cost
      *
      * @return self
-     * @deprecated Use $class->cost()
+     * @deprecated Will be removed in 2.0. Use $class->cost()
      */
     public function setCost($cost)
     {
@@ -172,7 +172,7 @@ class OrderItem extends AbstractModel
      * Get the value of qty
      *
      * @return null|int
-     * @deprecated Use $class->qty
+     * @deprecated Will be removed in 2.0. Use $class->qty
      */
     public function getQty()
     {
@@ -183,7 +183,7 @@ class OrderItem extends AbstractModel
      * Set the value of qty
      *
      * @return  self
-     * @deprecated Use $class->qty()
+     * @deprecated Will be removed in 2.0. Use $class->qty()
      */
     public function setQty($qty)
     {
@@ -196,7 +196,7 @@ class OrderItem extends AbstractModel
      * Get the value of total
      *
      * @return null|string
-     * @deprecated Use $class->total
+     * @deprecated Will be removed in 2.0. Use $class->total
      */
     public function getTotal()
     {
@@ -207,7 +207,7 @@ class OrderItem extends AbstractModel
      * Set the value of total
      *
      * @return self
-     * @deprecated Use $class->total()
+     * @deprecated Will be removed in 2.0. Use $class->total()
      */
     public function setTotal($total)
     {

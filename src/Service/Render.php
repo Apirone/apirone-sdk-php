@@ -23,6 +23,9 @@ use Exception;
 use ReflectionClass;
 use stdClass;
 
+/**
+ * @deprecated Will be removed in 2.0
+ */
 class Render
 {
     /**
@@ -85,8 +88,8 @@ class Render
     /**
      * Magic method for getting values of a private props by its name
      *
-     * @param string $name 
-     * @return mixed 
+     * @param string $name
+     * @return mixed
      */
     public function __get($name)
     {
@@ -95,7 +98,7 @@ class Render
         }
         if (\property_exists($this, $name)) {
             $class = new \ReflectionClass(static::class);
-            
+
             return $class->getStaticProperties()[$name];
         }
 
@@ -121,8 +124,8 @@ class Render
     /**
      * Restopre render parameters from json
      *
-     * @param mixed $json 
-     * @return static 
+     * @param mixed $json
+     * @return static
      */
     public static function fromJson($json)
     {
@@ -143,8 +146,8 @@ class Render
     /**
      * Restore paremeters from file
      *
-     * @param mixed $abspath 
-     * @return static|null 
+     * @param mixed $abspath
+     * @return static|null
      */
     public static function fromFile($abspath)
     {
@@ -159,8 +162,8 @@ class Render
 
     /**
      * Export parameters to json
-     * 
-     * @return \stdClass 
+     *
+     * @return \stdClass
      */
     public static function toJson()
     {
@@ -202,9 +205,9 @@ class Render
 
     /**
      * Set idParam value
-     * 
-     * @param string $param 
-     * @return $this 
+     *
+     * @param string $param
+     * @return $this
      */
     public function idParam($param = "invoice")
     {
@@ -215,9 +218,9 @@ class Render
 
     /**
      * Set dataUrl value
-     * 
-     * @param string $url 
-     * @return $this 
+     *
+     * @param string $url
+     * @return $this
      */
     public function dataUrl($url = "")
     {
@@ -228,9 +231,9 @@ class Render
 
     /**
      * set backlink value
-     * 
-     * @param string $url 
-     * @return $this 
+     *
+     * @param string $url
+     * @return $this
      */
     public function backlink($url = "")
     {
@@ -272,9 +275,9 @@ class Render
 
     /**
      * Set qrOnly value
-     * 
-     * @param bool $qrOnly 
-     * @return $this 
+     *
+     * @param bool $qrOnly
+     * @return $this
      */
     public function qrOnly($qrOnly = false)
     {
@@ -285,9 +288,9 @@ class Render
 
     /**
      * Set logo value
-     * 
-     * @param bool $logo 
-     * @return $this 
+     *
+     * @param bool $logo
+     * @return $this
      */
     public function logo($logo = true)
     {
@@ -298,9 +301,9 @@ class Render
 
     /**
      * Set template value
-     * 
-     * @param mixed $absolutePath 
-     * @return $this 
+     *
+     * @param mixed $absolutePath
+     * @return $this
      */
     public function template($absolutePath = null)
     {
@@ -311,9 +314,9 @@ class Render
 
     /**
      * Set locales value
-     * 
-     * @param mixed $locales 
-     * @return $this 
+     *
+     * @param mixed $locales
+     * @return $this
      */
     public function locales($locales = null)
     {
@@ -428,7 +431,7 @@ class Render
         if ($invoice == null) {
             return $status;
         }
-        
+
         switch ($invoice->status) {
             case 'created':
             case 'partpaid':
@@ -531,14 +534,14 @@ class Render
 
     /**
      * Return locales for template.
-     * 
-     * @return array 
+     *
+     * @return array
      */
     public static function getLocales()
     {
         // Return locales cache if set
         if (self::$_localesCache !== null) {
-            return self::$_localesCache; 
+            return self::$_localesCache;
         }
 
         $default = require(__DIR__ . '/tpl/locales.php');
@@ -581,7 +584,7 @@ class Render
      * @return void
      * @throws DivisionByZeroError
      * @throws ArithmeticError
-     * @deprecated Use timezoneByOffset()
+     * @deprecated Will be removed in 2.0. Use timezoneByOffset()
      */
     public static function setTimeZoneByOffset(int $offset = 0)
     {

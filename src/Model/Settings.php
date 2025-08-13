@@ -70,7 +70,7 @@ class Settings extends AbstractModel
      * Invoice title
      *
      * @var string
-     * @deprecated Use meta object. The property will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use meta object. The property will be removed in future versions.
      */
     private string  $title = '';
 
@@ -78,7 +78,7 @@ class Settings extends AbstractModel
      * Merchant name
      *
      * @var string
-     * @deprecated Use meta object. The property will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use meta object. The property will be removed in future versions.
      */
     private string  $merchant = '';
 
@@ -86,7 +86,7 @@ class Settings extends AbstractModel
      * Merchant Url
      *
      * @var string
-     * @deprecated Use meta object. The property will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use meta object. The property will be removed in future versions.
      */
     private string  $merchantUrl = '';
 
@@ -94,7 +94,7 @@ class Settings extends AbstractModel
      * Invoice timeout
      *
      * @var int
-     * @deprecated Use meta object. The property will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use meta object. The property will be removed in future versions.
      */
     private int     $timeout = 1800;
 
@@ -102,7 +102,7 @@ class Settings extends AbstractModel
      * Price adjustment factor
      *
      * @var float
-     * @deprecated Use meta object. The property will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use meta object. The property will be removed in future versions.
      */
     private float   $factor = 1;
 
@@ -110,7 +110,7 @@ class Settings extends AbstractModel
      * Backlink
      *
      * @var string
-     * @deprecated Use meta object. The property will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use meta object. The property will be removed in future versions.
      */
     private string  $backlink = '';
 
@@ -118,7 +118,7 @@ class Settings extends AbstractModel
      * QR Template
      *
      * @var bool
-     * @deprecated Use meta object. The property will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use meta object. The property will be removed in future versions.
      */
     private bool    $qrOnly = false;
 
@@ -126,7 +126,7 @@ class Settings extends AbstractModel
      * Logo
      *
      * @var bool
-     * @deprecated Use meta object. The property will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use meta object. The property will be removed in future versions.
      */
     private bool    $logo = true;
 
@@ -134,7 +134,7 @@ class Settings extends AbstractModel
      * Debug
      *
      * @var bool
-     * @deprecated Use meta object. The property will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use meta object. The property will be removed in future versions.
      */
     private bool    $debug = false;
 
@@ -142,7 +142,7 @@ class Settings extends AbstractModel
      * Extra settings values object
      *
      * @var stdClass
-     * @deprecated Use meta object. The property will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use meta object. The property will be removed in future versions.
      */
     private \stdClass $extra;
 
@@ -419,7 +419,7 @@ class Settings extends AbstractModel
      * Get the networks with tokens
      *
      * @return array
-     * @deprecated Use as property $class->networks
+     * @deprecated Will be removed in 2.0. Use as property $class->networks
      */
     public function networks()
     {
@@ -462,7 +462,7 @@ class Settings extends AbstractModel
      *
      * @param string|null $key
      * @return mixed
-     * @deprecated Use $class->MyParamName directly
+     * @deprecated Will be removed in 2.0. Use $class->MyParamName directly
      */
     public function getMeta(string $key = null)
     {
@@ -480,7 +480,7 @@ class Settings extends AbstractModel
      * Add/edit meta item
      *
      * @return self
-     * @deprecated Use $class->myParamName('My Param Value')
+     * @deprecated Will be removed in 2.0. Use $class->myParamName('My Param Value')
      */
     public function addMeta($key, $value)
     {
@@ -493,7 +493,7 @@ class Settings extends AbstractModel
      * Delete meta item
      *
      * @return self
-     * @deprecated Use $class->meta('meta-key', null)
+     * @deprecated Will be removed in 2.0. Use $class->meta('meta-key', null)
      */
     public function deleteMeta($key)
     {
@@ -524,7 +524,7 @@ class Settings extends AbstractModel
      * Get the value of account
      *
      * @return null|string
-     * @deprecated Use $class->account
+     * @deprecated Will be removed in 2.0. Use $class->account
      */
     public function getAccount()
     {
@@ -535,7 +535,7 @@ class Settings extends AbstractModel
      * Get the value of transferKey
      *
      * @return null|string
-     * @deprecated Use $class->transferKey
+     * @deprecated Will be removed in 2.0. Use $class->transferKey
      */
     public function getTransferKey()
     {
@@ -547,7 +547,7 @@ class Settings extends AbstractModel
      *
      * @param mixed $abbr
      * @return Currency | false
-     * @deprecated Use $class->currency() method
+     * @deprecated Will be removed in 2.0. Use $class->currency() method
      */
     public function getCurrency($abbr)
     {
@@ -558,7 +558,7 @@ class Settings extends AbstractModel
      * Get the value of currencies
      *
      * @return array
-     * @deprecated Use $class->currencies
+     * @deprecated Will be removed in 2.0. Use $class->currencies
      */
     public function getCurrencies()
     {
@@ -569,7 +569,7 @@ class Settings extends AbstractModel
      * Alias to networks()
      *
      * @return array
-     * @deprecated Use $class->networks
+     * @deprecated Will be removed in 2.0. Use $class->networks
      */
     public function getNetworks()
     {
@@ -580,7 +580,7 @@ class Settings extends AbstractModel
      * Get invoice title
      *
      * @return string
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function getTitle()
     {
@@ -593,7 +593,7 @@ class Settings extends AbstractModel
      * @param  string  $title  Invoice title
      *
      * @return self
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function setTitle(string $title)
     {
@@ -606,7 +606,7 @@ class Settings extends AbstractModel
      * Get the value of merchant
      *
      * @return string
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function getMerchant()
     {
@@ -617,7 +617,7 @@ class Settings extends AbstractModel
      * Set the value of merchant
      *
      * @return self
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function setMerchant($merchant)
     {
@@ -630,7 +630,7 @@ class Settings extends AbstractModel
      * Get merchant Url
      *
      * @return string
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function getMerchantUrl()
     {
@@ -642,7 +642,7 @@ class Settings extends AbstractModel
      *
      * @param  string  $merchantUrl  Merchant Url
      * @return self
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function setMerchantUrl(string $merchantUrl)
     {
@@ -655,7 +655,7 @@ class Settings extends AbstractModel
      * Get the value of timeout
      *
      * @return int
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function getTimeout()
     {
@@ -666,7 +666,7 @@ class Settings extends AbstractModel
      * Set the value of timeout
      *
      * @return self
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function setTimeout($timeout)
     {
@@ -679,7 +679,7 @@ class Settings extends AbstractModel
      * Get the value of factor
      *
      * @return float
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function getFactor()
     {
@@ -695,7 +695,7 @@ class Settings extends AbstractModel
      * 100% * 0.99 = 99%
      * 100% * 1.01 = 101%
      * @return self
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function setFactor($factor)
     {
@@ -707,7 +707,7 @@ class Settings extends AbstractModel
     /**
      * Get the value of backlink
      *
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function getBacklink()
     {
@@ -730,7 +730,7 @@ class Settings extends AbstractModel
     /**
      * Get the value of logo
      *
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function getLogo(): bool
     {
@@ -741,7 +741,7 @@ class Settings extends AbstractModel
      * Set the value of logo
      *
      * @return self
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function setLogo(bool $logo)
     {
@@ -754,7 +754,7 @@ class Settings extends AbstractModel
      * Get qR Template
      *
      * @return bool
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function getQrOnly()
     {
@@ -766,7 +766,7 @@ class Settings extends AbstractModel
      *
      * @param  bool  $qrOnly  QR Template
      * @return self
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function setQrOnly(bool $qrOnly)
     {
@@ -779,7 +779,7 @@ class Settings extends AbstractModel
      * Get debug
      *
      * @return bool
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function getDebug()
     {
@@ -790,7 +790,7 @@ class Settings extends AbstractModel
      * Set debug
      *
      * @param  bool  $debug Debug
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      * @return self
      */
     public function setDebug(bool $debug)
@@ -805,7 +805,7 @@ class Settings extends AbstractModel
      *
      * @param string|null $key
      * @return mixed
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function getExtra(string $key = null)
     {
@@ -823,7 +823,7 @@ class Settings extends AbstractModel
      * Set the value of extra
      *
      * @return self
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function setExtra(string $key, string $value)
     {
@@ -836,7 +836,7 @@ class Settings extends AbstractModel
      * Set the value of extra
      *
      * @return self
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
+     * @deprecated Will be removed in 2.0. Use $class->meta() method. The method will be removed in future versions.
      */
     public function setExtraObj(\stdClass $obj)
     {

@@ -30,9 +30,9 @@ use ReflectionException;
  * @property-read string $name
  * @property-read string $abbr
  * @property-read string $alias
- * @property-read string $units
- * @property-read string $unitsFactor
- * @property-read int    $dustRate
+//  * @property-read string $units
+//  * @property-read string $unitsFactor
+//  * @property-read int    $dustRate
  * @property-read string $address
  * @property-read string $policy
  * @property-read string $network
@@ -50,10 +50,19 @@ class Currency extends AbstractModel
 
     private ?string $alias = null;
 
+    /**
+     * @deprecated Will be removed in 2.0
+     */
     private ?string $units = null;
+    /**
+     * @deprecated Will be removed in 2.0
+     */
 
     private ?float $unitsFactor = null;
 
+    /**
+     * @deprecated Will be removed in 2.0
+     */
     private ?int $dustRate = null;
 
     private ?string $address = null;
@@ -268,7 +277,7 @@ class Currency extends AbstractModel
      *
      * @param array $currencies
      * @return \Apirone\SDK\Model\Settings\Currency[]
-     * @deprecated Use $class->tokens() function
+     * @deprecated Will be removed in 2.0. Use $class->tokens() function
      */
     public function getTokens(array $currencies)
     {
@@ -278,7 +287,7 @@ class Currency extends AbstractModel
     /**
      * Create currency instance from JSON
      *
-     * @deprecated use Currency::init($json)
+     * @deprecated Will be removed in 2.0. Use Currency::init($json)
      * @param mixed $json
      * @return $this
      * @throws ReflectionException
@@ -294,7 +303,7 @@ class Currency extends AbstractModel
      * Get the value of name
      *
      * @return null|string
-     * @deprecated Use $class->name
+     * @deprecated Will be removed in 2.0. Use $class->name
      */
     public function getName()
     {
@@ -305,7 +314,7 @@ class Currency extends AbstractModel
      * Get the value of abbr
      *
      * @return null|string
-     * @deprecated Use $class->abbr
+     * @deprecated Will be removed in 2.0. Use $class->abbr
      */
     public function getAbbr()
     {
@@ -316,7 +325,7 @@ class Currency extends AbstractModel
      * Get the value of units
      *
      * @return null|string
-     * @deprecated Use $class->units
+     * @deprecated Will be removed in 2.0. Use $class->units
      */
     public function getUnits()
     {
@@ -327,7 +336,7 @@ class Currency extends AbstractModel
      * Get the value of unitsFactor
      *
      * @return null|float
-     * @deprecated Use $class->unitsFactor
+     * @deprecated Will be removed in 2.0. Use $class->unitsFactor
      */
     public function getUnitsFactor()
     {
@@ -338,7 +347,7 @@ class Currency extends AbstractModel
      * Get the value of dustRate
      *
      * @return null|int
-     * @deprecated Use $class->dustRate
+     * @deprecated Will be removed in 2.0. Use $class->dustRate
      */
     public function getDustRate()
     {
@@ -349,7 +358,7 @@ class Currency extends AbstractModel
      * Get the currency destination address
      *
      * @return null|string
-     * @deprecated Use $class->address
+     * @deprecated Will be removed in 2.0. Use $class->address
      */
     public function getAddress()
     {
@@ -361,7 +370,7 @@ class Currency extends AbstractModel
      *
      * @param null|string $address
      * @return $this
-     * @deprecated Use $class->address()
+     * @deprecated Will be removed in 2.0. Use $class->address()
      */
     public function setAddress(?string $address = null)
     {
@@ -372,7 +381,7 @@ class Currency extends AbstractModel
      * Get the value of policy
      *
      * @return string
-     * @deprecated Use $class->policy
+     * @deprecated Will be removed in 2.0. Use $class->policy
      */
     public function getPolicy()
     {
@@ -384,7 +393,7 @@ class Currency extends AbstractModel
      *
      * @param string $policy `fixed` or `percentage`
      * @return $this
-     * @deprecated Use $class->policy()
+     * @deprecated Will be removed in 2.0. Use $class->policy()
      */
     public function setPolicy(string $policy)
     {
@@ -395,7 +404,7 @@ class Currency extends AbstractModel
      * Get the value of error
      *
      * @return null|string
-     * @deprecated Use $class->error
+     * @deprecated Will be removed in 2.0. Use $class->error
      */
     public function getError()
     {
