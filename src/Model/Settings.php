@@ -21,7 +21,9 @@ use Apirone\API\Exceptions\UnauthorizedException;
 use Apirone\API\Exceptions\ForbiddenException;
 use Apirone\API\Exceptions\NotFoundException;
 use Apirone\API\Exceptions\MethodNotAllowedException;
+use Apirone\SDK\Model\Settings\Coin;
 use Apirone\SDK\Model\Settings\Currency;
+use Apirone\SDK\Model\Settings\Network;
 use ReflectionException;
 use stdClass;
 
@@ -267,9 +269,9 @@ class Settings extends AbstractModel
      * @param string $filename
      * @return bool
      */
-    public function toFile($abspath)
+    public function toFile($absFilePath, $flag = JSON_PRETTY_PRINT)
     {
-        if (file_put_contents($abspath, json_encode($this->toJson(), JSON_PRETTY_PRINT))) {
+        if (file_put_contents($absFilePath, json_encode($this->toJson(), $flag))) {
             return true;
         }
 
@@ -436,6 +438,23 @@ class Settings extends AbstractModel
             }
         }
         return $networks;
+    }
+
+    /**
+     * Coins list parser
+     *
+     * @param mixed $array Array of json coin objects
+     * @return array
+     * @throws ReflectionException
+     */
+    public function parseCoins($array)
+    {
+        $items = [];
+        foreach ($array as $item) {
+            $items[] = Coin::init($item);
+        }
+
+        return $items;
     }
 
     /**

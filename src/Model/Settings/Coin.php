@@ -19,20 +19,27 @@ class Coin extends AbstractModel
 {
     private ?string $abbr = null;
 
-    private ?string $name = null;
-
     private ?string $alias = null;
+
+    private ?bool $test = false;
 
     private function __construct() {}
 
-    public static function init(Currency $currency)
+    public static function init($coin)
     {
-        $coin = new static();
+        $class = new static();
 
-        $coin->abbr = $currency->abbr;
-        $coin->name = $coin->name;
-        $coin->abbr = $coin->abbr;
+        $class->abbr = $coin->abbr;
+        $class->alias = $coin->alias;
+        switch (get_class($coin)) {
+            case 'stdClass':
+                $class->test = $coin->test;
+                break;
+            case 'Currency':
+                $class->test = $coin->isTestnet();
+                break;
+        }
 
-        return $coin;
+        return $class;
     }
 }
