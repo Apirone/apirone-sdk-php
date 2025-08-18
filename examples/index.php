@@ -74,7 +74,7 @@ require_once('helpers/common.php');
             </div>
             <div>
                 <h2>Create an invoice</h2>
-                <?php echo load_file_content('./invoice.php'); ?>
+                <?php echo load_file_content('./create-invoice.php'); ?>
             </div>
             <div>
                 <h2>Show invoice</h2>

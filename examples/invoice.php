@@ -1,36 +1,36 @@
 <?php
 
-/**
- * This file is part of the Apirone SDK.
- *
- * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// require_once('helpers/common.php');
+// require_once('db.php');
 
-require_once('../vendor/autoload.php');
-require_once('db.php');
-require_once('log.php');
+// use Apirone\SDK\Invoice;
+// use Apirone\SDK\Model\Settings;
 
-use Apirone\SDK\Invoice;
-use Apirone\SDK\Model\Settings;
+// // Config & DB
+// Invoice::db($db_handler, $table_prefix);
+// Invoice::settings(Settings::fromFile('/var/www/storage/settings.json'));
+// $invoiceDataUrl = 'render_ajax_response.php';
 
-// Setup DB and Settings into invoice object
-Invoice::db($db_handler, $table_prefix);
-Invoice::settings(Settings::fromFile('/var/www/storage/settings.json'));
+// if (array_key_exists('qr-only', $_GET)) {
+//     $invoiceDataUrl .= '?qr-only=' . $_GET['qr-only'];
+//     Render::$qrOnly = $_GET['qr-only'];
+// }
 
-// For example you need to pay in btc 25000 satoshi
-$invoice = Invoice::init('btc', 25000);
+// Invoice::dataUrl($invoiceDataUrl);
+?>
 
-// Set invoice lifetime 300s
-$invoice->lifetime(300);
-
-// Set callback URL
-$invoice->callbackUrl('https://yourhost.com/invoice_callback.php');
-
-// Create invoice
-$invoice->create();
-
-// Print invoice info
-print_r($invoice->details->toJson());
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    <title>Invoice</title>
+  <script type="module" crossorigin src="/assets/script.min.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/style.min.css">
+</head>
+<body>
+<div id="app"></div>
+</body>
+</html>
