@@ -242,7 +242,8 @@ require_once('helpers/common.php');
                             <div class="border-t-2 mt-6 pt-4">
                                 <span class="block mb-8"><span class="text-red-500">*</span> - Required fields</span>
                                 <button type="submit" :disabled="!data.currency" class="text-white rounded-md md:w-48 w-full bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-4 mr-2 my-2" @click="$event.prevent; create" x-text="label"></button>
-                                <button type="button" x-show="invoice && !invoice.message" class="text-white rounded-md md:w-48 w-full bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-4 my-2" @click="render">Show invoice</button>
+                                <button type="button" x-show="invoice && !invoice.message" class="text-white rounded-md md:w-48 w-full bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-4 my-2" @click="render">Show render</button>
+                                <button type="button" x-show="invoice && !invoice.message" class="text-white rounded-md md:w-48 w-full bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-4 my-2" @click="front">Show invoice</button>
                                 <label x-show="invoice && !invoice.message">QR Only<input class="mx-2" type="checkbox" x-model="qrOnly" /></label>
                             </div>
                             <h3>Invoice details</h3>

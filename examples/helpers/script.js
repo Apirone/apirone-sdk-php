@@ -60,12 +60,17 @@ function playground() {
       }
       result = await ajax('/helpers/action_invoice.php', form);
       if(result) { this.invoice = result; this.content = JSON.stringify(result, null, 2); }
-      this.label = 'Create'; 
+      this.label = 'Create';
     },
     render() {
       if (this.invoice == null) {return;}
       qr = this.qrOnly ? '&qr-only=1' : '';
       window.open('/render.php?invoice=' + this.invoice.invoice + qr, '_blank').focus();
+    },
+    front() {
+      if (this.invoice == null) {return;}
+      qr = this.qrOnly ? '&qr-only=1' : '';
+      window.open('/invoice.php?id=' + this.invoice.invoice + qr, '_blank').focus();
     },
     toggle() {
       this.expand = !this.expand;
@@ -82,7 +87,7 @@ function playground() {
 async function ajax(url, form=false) {
   data = false;
   if (!form) {
-    form = new FormData();                                  
+    form = new FormData();
   }
   // console.log(JSON.stringify(Object.fromEntries(form)));
   await fetch(url, {
@@ -90,7 +95,7 @@ async function ajax(url, form=false) {
       headers: {
           'X-Requested-With': 'XMLHttpRequest',
           'charset':'UTF-8',
-      }, 
+      },
       body: form
   })
   .then(response => response.json())

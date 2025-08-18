@@ -4,7 +4,6 @@ services:
       context: ./
       dockerfile: ./docker/Dockerfile
       args:
-        VERSION: 7.4
         GID: 1000
         UID: 1000
     volumes:
