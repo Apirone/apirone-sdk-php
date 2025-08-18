@@ -20,6 +20,7 @@ use Apirone\API\Exceptions\UnauthorizedException;
 use Apirone\API\Exceptions\ForbiddenException;
 use Apirone\API\Exceptions\NotFoundException;
 use Apirone\API\Exceptions\MethodNotAllowedException;
+use Apirone\API\Http\Request;
 use Apirone\Lib\PhpQRCode\QRCode;
 use Apirone\SDK\Model\Settings\Currency;
 
@@ -163,6 +164,15 @@ class Utils
         return substr($hash, 0, $size) . '......' . substr($hash, -$size);
     }
 
+    public static function estimate($account, $amount, $fiat, $currencies)
+    {
+        $path = sprintf('v2/accounts/%s/fwd-fee', $account);
+        $options['amount'] = $amount;
+        $options['fiat'] = $fiat;
+        $options['currencies'] = (is_array($currencies) ? implode(',', $currencies) : $currencies);
+
+        return Request::get($path, $options);
+    }
     /**
      * Convert to decimal and trim trailing zeros if $zeroTrim set true
      *
