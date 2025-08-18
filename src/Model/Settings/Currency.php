@@ -285,18 +285,15 @@ class Currency extends AbstractModel
     }
 
     /**
-     * Create currency instance from JSON
+     * Create currency instance from JSON. Alias to init()
      *
-     * @deprecated Will be removed in 2.0. Use Currency::init($json)
      * @param mixed $json
      * @return $this
      * @throws ReflectionException
      */
     public static function fromJson($json)
     {
-        $class = new static();
-
-        return $class->classLoader($json);
+        return self::init($json);
     }
 
     /**
