@@ -283,9 +283,9 @@ class Settings extends AbstractModel
      *
      * @return array
      */
-    public function toArray(array $skip = []): array
+    public function toArray(): array
     {
-        $settings = parent::toArray(['currencies']);
+        $settings = parent::toArray();
 
         if(empty($settings['extra'])) {
             unset($settings['extra']);
@@ -303,9 +303,9 @@ class Settings extends AbstractModel
         return $settings;
     }
 
-    protected function classLoader($json, $skip = [])
+    protected function classLoader($json)
     {
-        return parent::classLoader($json, ['currencies']);
+        return parent::classLoader($json);
     }
 
     /**
@@ -401,27 +401,14 @@ class Settings extends AbstractModel
         return array_key_exists($abbr, $this->currencies) ? $this->currencies[$abbr] : false;
     }
 
-    /**
-     * Set meta
-     * Use $class->meta() to clear all meta
-     *
-     * @param string $key
-     * @return mixed
-     */
-    protected function meta($key = '{}') {
-        $json = gettype($key) == 'string' ? json_decode($key) : $key;
-        $this->meta = $json;
-
-        return $this;
-    }
 
     /**
      * Get the networks with tokens
      *
      * @return array
-     * @deprecated Will be removed in 2.0. Use as property $class->networks
+     * @deprecated Will be set to private method in 2.0. Use as property $class->networks
      */
-    public function networks()
+    private function networks()
     {
         if (empty($this->currencies)) {
             $this->loadCurrencies();

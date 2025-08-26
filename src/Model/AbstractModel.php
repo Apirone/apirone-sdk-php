@@ -98,17 +98,13 @@ abstract class AbstractModel
      * @return $this
      * @throws ReflectionException
      */
-    protected function classLoader($json, $skip = [])
+    protected function classLoader($json)
     {
         $json = gettype($json) == 'string' ? json_decode($json) : $json;
 
         $class = new \ReflectionClass(static::class);
-
         foreach ($json as $key => $value) {
             $name = static::convertToCamelCase($key);
-            if (in_array($name, $skip)) {
-                continue;
-            }
 
             if (\property_exists($this, $name)) {
                 $property = $class->getProperty($name);
@@ -136,16 +132,13 @@ abstract class AbstractModel
      *
      * @return array
      */
-    public function toArray(array $skip = []): array
+    public function toArray(): array
     {
         $settings = [];
         $class = new \ReflectionClass(static::class);
 
         foreach ($class->getProperties() as $property) {
             $prop = $property->getName();
-            if (in_array($prop, $skip)) {
-                continue;
-            }
 
             $type = gettype($this->{$prop});
 
