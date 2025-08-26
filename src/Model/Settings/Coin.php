@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Apirone\SDK\Model\Settings;
 
 use Apirone\SDK\Model\AbstractModel;
+use Apirone\SDK\Model\Settings\Currency;
 
 class Coin extends AbstractModel
 {
@@ -31,11 +32,12 @@ class Coin extends AbstractModel
 
         $class->abbr = $coin->abbr;
         $class->alias = $coin->alias;
+
         switch (get_class($coin)) {
             case 'stdClass':
                 $class->test = $coin->test;
                 break;
-            case 'Currency':
+            case 'Apirone\SDK\Model\Settings\Currency':
                 $class->test = $coin->isTestnet();
                 break;
         }
