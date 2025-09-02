@@ -189,6 +189,8 @@ class Settings extends AbstractModel
     public static function init()
     {
         $class = new static();
+
+        return $class;
     }
 
     /**
