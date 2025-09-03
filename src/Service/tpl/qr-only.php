@@ -22,6 +22,9 @@ use Apirone\SDK\Service\Utils;
                         <figure class="qr">
                             <img src="<?php echo Utils::renderQr($currency, $details->address, $amount); ?>" />
                             <span class="qr__logo <?php echo str_replace('@', '-', $details->currency); ?>" title="<?php echo $currency->name; ?>"></span>
+                            <?php if (substr_count($details->currency, '@') > 0) : ?>
+                            <span class="qr__network <?php echo str_replace('@', '-', $details->currency); ?>"></span>
+                            <?php endif; ?>
                         </figure>
                         <?php else : ?>
                         <div class="qr__<?php echo strtolower($status->title); ?>"></div>
