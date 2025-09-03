@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.7](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.7) (2025-09-03)
+
+- Added BNB support;
+- Styles refactored;
+- Added networks logo;
+- Removed duplicate currency icons;
+- Invoice template updated;
+
 ## [1.2.6](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.6) (2025-07-01)
 
 - Updated Invoice::fromFiatAmount() method;

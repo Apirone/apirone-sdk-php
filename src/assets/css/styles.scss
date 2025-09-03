@@ -147,11 +147,15 @@ $color-bg-white: #fff;
             top: 50%;
             transform: translate(-50%, -50%);
             width: 15%;
-            &.bch, 
+            &.bch,
             &.tbch {
                 background-image: url('icons/crypto/bch.svg'), url('icons/crypto/aprn.svg');
             }
-            &.btc, 
+            &.bnb,
+            &.tbnb {
+                background-image: url('icons/crypto/bnb.svg'), url('icons/crypto/aprn.svg');
+            }
+            &.btc,
             &.tbtc {
                 background-image: url('icons/crypto/btc.svg'), url('icons/crypto/aprn.svg');
             }
@@ -159,21 +163,13 @@ $color-bg-white: #fff;
             &.tdoge {
                 background-image: url('icons/crypto/doge.svg'), url('icons/crypto/aprn.svg');
             }
-            &.ltc, 
+            &.ltc,
             &.tltc {
                 background-image: url('icons/crypto/ltc.svg'), url('icons/crypto/aprn.svg');
             }
             &.trx,
             &.ttrx {
                 background-image: url('icons/crypto/trx.svg'), url('icons/crypto/aprn.svg');
-            }
-            &.usdc-trx,
-            &.usdc-ttrx {
-                background-image: url('icons/crypto/usdc_trx.svg'), url('icons/crypto/aprn.svg');
-            }
-            &.usdt-trx,
-            &.usdt-ttrx {
-                background-image: url('icons/crypto/usdt_trx.svg'), url('icons/crypto/aprn.svg');
             }
             &.eth,
             &.teth {
@@ -183,21 +179,65 @@ $color-bg-white: #fff;
             &.link-teth {
                 background-image: url('icons/crypto/link_eth.svg'), url('icons/crypto/aprn.svg');
             }
+            &.usdc-trx,
+            &.usdc-ttrx,
             &.usdc-eth,
-            &.usdc-teth {
-                background-image: url('icons/crypto/usdc_eth.svg'), url('icons/crypto/aprn.svg');
+            &.usdc-teth,
+            &.usdc-bnb,
+            &.usdc-tbnb {
+                background-image: url('icons/crypto/usdc.svg'), url('icons/crypto/aprn.svg');
             }
+            &.usdt-trx,
+            &.usdt-ttrx,
             &.usdt-eth,
-            &.usdt-teth {
-                background-image: url('icons/crypto/usdt_eth.svg'), url('icons/crypto/aprn.svg');
+            &.usdt-teth,
+            &.usdt-bnb,
+            &.usdt-tbnb {
+                background-image: url('icons/crypto/usdt.svg'), url('icons/crypto/aprn.svg');
             }
             &.tbch, &.tbtc, &.tdoge, &.tltc,
             &.ttrx, &.usdc-ttrx, &.usdt-ttrx,
-            &.teth, &.link-teth, &.usdc-teth, &.usdt-teth {
+            &.teth, &.link-teth, &.usdc-teth, &.usdt-teth,
+            &.tbnb, &.usdc-tbnb, &.usdt-tbnb {
                 filter:grayscale(1);
             }
             &.tcn-trx, &.tcn-ttrx {
                 background-image: url('icons/crypto/aprn.svg');
+            }
+        }
+        .qr__network {
+            background-color: $color-bg-white;
+            background-size: cover;
+            border: 0.2rem solid $color-bg-white;
+            border-radius: 50%;
+            height: 11%;
+            left: 58%;
+            overflow: hidden;
+            position: absolute;
+            top: 57%;
+            transform: translate(-50%, -50%);
+            width: 11%;
+            &.link-eth,
+            &.link-teth,
+            &.usdc-eth,
+            &.usdc-teth,
+            &.usdt-eth,
+            &.usdt-teth {
+                background-image: url('icons/crypto/eth.svg');
+            }
+            &.usdc-trx,
+            &.usdc-ttrx,
+            &.usdt-trx,
+            &.usdt-ttrx,
+            &.tcn-trx,
+            &.tcn-ttrx {
+                background-image: url('icons/crypto/trx.svg');
+            }
+            &.usdc-bnb,
+            &.usdc-tbnb,
+            &.usdt-bnb,
+            &.usdt-tbnb {
+                background-image: url('icons/crypto/bnb.svg');
             }
         }
     }
@@ -339,7 +379,7 @@ $color-bg-white: #fff;
                 justify-content: space-between;
                 flex-grow: 1;
             }
-        }    
+        }
     }
     .invoice__qr-only .icon-status.icon-refresh,
     .status.refresh .status__icon {
@@ -462,19 +502,19 @@ $color-bg-white: #fff;
         margin-left: .5rem;
     }
 
-    @-moz-keyframes spin { 
-        100% { -moz-transform: rotate(-360deg); } 
+    @-moz-keyframes spin {
+        100% { -moz-transform: rotate(-360deg); }
     }
 
-    @-webkit-keyframes spin { 
-        100% { -webkit-transform: rotate(-360deg); } 
+    @-webkit-keyframes spin {
+        100% { -webkit-transform: rotate(-360deg); }
     }
 
-    @keyframes spin { 
-        100% { 
-            -webkit-transform: rotate(-360deg); 
-            transform: rotate(-360deg); 
-        } 
+    @keyframes spin {
+        100% {
+            -webkit-transform: rotate(-360deg);
+            transform: rotate(-360deg);
+        }
     }
 
     @keyframes shimmer {
@@ -539,7 +579,7 @@ $color-bg-white: #fff;
                 width: 1.25rem;
                 height: 1.25rem;
             }
-        }    
+        }
         &.historyFlag {
             .toggler {
                 margin-top: -.75rem;
@@ -603,7 +643,7 @@ $color-bg-white: #fff;
             &.copied::after {
                 background-color: $color-success;
             }
-            
+
         }
 
     }
@@ -708,12 +748,12 @@ $color-bg-white: #fff;
         background-color: $color-success;
         -webkit-mask-image: url('icons/success.svg');
         mask-image: url('icons/success.svg');
-    } 
+    }
     .qr__expired::before {
         background-color: $color-gray;
         -webkit-mask-image: url('icons/expired.svg');
         mask-image: url('icons/expired.svg');
-    } 
+    }
 
     .details__wrapper {
         display: flex;
