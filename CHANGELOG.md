@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.9](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.9) (2025-09-05)
+
+- Improved Currency::alias() and Currency::ithTestnet() methods
+
+
 ## [1.2.8](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.8) (2025-09-04)
 
 - Added Binance explorer link
