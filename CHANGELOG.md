@@ -1,16 +1,33 @@
 # Changelog
 
+## [1.2.9](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.9) (2025-09-05)
+
+- Improved Currency::alias() and Currency::ithTestnet() methods
+
+
+## [1.2.8](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.8) (2025-09-04)
+
+- Added Binance explorer link
+
+## [1.2.7](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.7) (2025-09-03)
+
+- Added BNB coin, USDT and USDC stable coins on Binance smart chain
+- Styles refactored
+- Added networks logo
+- Removed duplicate currency icons
+- Invoice template updated
+
 ## [1.2.6](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.6) (2025-07-01)
 
-- Updated Invoice::fromFiatAmount() method;
+- Updated Invoice::fromFiatAmount() method
 
 ## [1.2.5](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.5) (2025-06-04)
 
-- Fixed currency isTestnet() method;
+- Fixed currency isTestnet() method
 
 ## [1.2.4](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.4) (2025-06-03)
 
-- Added currency alias property and method;
+- Added currency alias property and method
 
 ## [1.2.3](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.3) (2025-05-14)
 

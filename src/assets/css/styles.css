@@ -131,6 +131,9 @@
 #__apn-invoice .qr__wrapper .qr__logo.bch, #__apn-invoice .qr__wrapper .qr__logo.tbch {
   background-image: url("icons/crypto/bch.svg"), url("icons/crypto/aprn.svg");
 }
+#__apn-invoice .qr__wrapper .qr__logo.bnb, #__apn-invoice .qr__wrapper .qr__logo.tbnb {
+  background-image: url("icons/crypto/bnb.svg"), url("icons/crypto/aprn.svg");
+}
 #__apn-invoice .qr__wrapper .qr__logo.btc, #__apn-invoice .qr__wrapper .qr__logo.tbtc {
   background-image: url("icons/crypto/btc.svg"), url("icons/crypto/aprn.svg");
 }
@@ -143,29 +146,45 @@
 #__apn-invoice .qr__wrapper .qr__logo.trx, #__apn-invoice .qr__wrapper .qr__logo.ttrx {
   background-image: url("icons/crypto/trx.svg"), url("icons/crypto/aprn.svg");
 }
-#__apn-invoice .qr__wrapper .qr__logo.usdc-trx, #__apn-invoice .qr__wrapper .qr__logo.usdc-ttrx {
-  background-image: url("icons/crypto/usdc_trx.svg"), url("icons/crypto/aprn.svg");
-}
-#__apn-invoice .qr__wrapper .qr__logo.usdt-trx, #__apn-invoice .qr__wrapper .qr__logo.usdt-ttrx {
-  background-image: url("icons/crypto/usdt_trx.svg"), url("icons/crypto/aprn.svg");
-}
 #__apn-invoice .qr__wrapper .qr__logo.eth, #__apn-invoice .qr__wrapper .qr__logo.teth {
   background-image: url("icons/crypto/eth.svg"), url("icons/crypto/aprn.svg");
 }
 #__apn-invoice .qr__wrapper .qr__logo.link-eth, #__apn-invoice .qr__wrapper .qr__logo.link-teth {
   background-image: url("icons/crypto/link_eth.svg"), url("icons/crypto/aprn.svg");
 }
-#__apn-invoice .qr__wrapper .qr__logo.usdc-eth, #__apn-invoice .qr__wrapper .qr__logo.usdc-teth {
-  background-image: url("icons/crypto/usdc_eth.svg"), url("icons/crypto/aprn.svg");
+#__apn-invoice .qr__wrapper .qr__logo.usdc-trx, #__apn-invoice .qr__wrapper .qr__logo.usdc-ttrx, #__apn-invoice .qr__wrapper .qr__logo.usdc-eth, #__apn-invoice .qr__wrapper .qr__logo.usdc-teth, #__apn-invoice .qr__wrapper .qr__logo.usdc-bnb, #__apn-invoice .qr__wrapper .qr__logo.usdc-tbnb {
+  background-image: url("icons/crypto/usdc.svg"), url("icons/crypto/aprn.svg");
 }
-#__apn-invoice .qr__wrapper .qr__logo.usdt-eth, #__apn-invoice .qr__wrapper .qr__logo.usdt-teth {
-  background-image: url("icons/crypto/usdt_eth.svg"), url("icons/crypto/aprn.svg");
+#__apn-invoice .qr__wrapper .qr__logo.usdt-trx, #__apn-invoice .qr__wrapper .qr__logo.usdt-ttrx, #__apn-invoice .qr__wrapper .qr__logo.usdt-eth, #__apn-invoice .qr__wrapper .qr__logo.usdt-teth, #__apn-invoice .qr__wrapper .qr__logo.usdt-bnb, #__apn-invoice .qr__wrapper .qr__logo.usdt-tbnb {
+  background-image: url("icons/crypto/usdt.svg"), url("icons/crypto/aprn.svg");
 }
-#__apn-invoice .qr__wrapper .qr__logo.tbch, #__apn-invoice .qr__wrapper .qr__logo.tbtc, #__apn-invoice .qr__wrapper .qr__logo.tdoge, #__apn-invoice .qr__wrapper .qr__logo.tltc, #__apn-invoice .qr__wrapper .qr__logo.ttrx, #__apn-invoice .qr__wrapper .qr__logo.usdc-ttrx, #__apn-invoice .qr__wrapper .qr__logo.usdt-ttrx, #__apn-invoice .qr__wrapper .qr__logo.teth, #__apn-invoice .qr__wrapper .qr__logo.link-teth, #__apn-invoice .qr__wrapper .qr__logo.usdc-teth, #__apn-invoice .qr__wrapper .qr__logo.usdt-teth {
+#__apn-invoice .qr__wrapper .qr__logo.tbch, #__apn-invoice .qr__wrapper .qr__logo.tbtc, #__apn-invoice .qr__wrapper .qr__logo.tdoge, #__apn-invoice .qr__wrapper .qr__logo.tltc, #__apn-invoice .qr__wrapper .qr__logo.ttrx, #__apn-invoice .qr__wrapper .qr__logo.usdc-ttrx, #__apn-invoice .qr__wrapper .qr__logo.usdt-ttrx, #__apn-invoice .qr__wrapper .qr__logo.teth, #__apn-invoice .qr__wrapper .qr__logo.link-teth, #__apn-invoice .qr__wrapper .qr__logo.usdc-teth, #__apn-invoice .qr__wrapper .qr__logo.usdt-teth, #__apn-invoice .qr__wrapper .qr__logo.tbnb, #__apn-invoice .qr__wrapper .qr__logo.usdc-tbnb, #__apn-invoice .qr__wrapper .qr__logo.usdt-tbnb {
   filter: grayscale(1);
 }
 #__apn-invoice .qr__wrapper .qr__logo.tcn-trx, #__apn-invoice .qr__wrapper .qr__logo.tcn-ttrx {
   background-image: url("icons/crypto/aprn.svg");
+}
+#__apn-invoice .qr__wrapper .qr__network {
+  background-color: #fff;
+  background-size: cover;
+  border: 0.2rem solid #fff;
+  border-radius: 50%;
+  height: 11%;
+  left: 58%;
+  overflow: hidden;
+  position: absolute;
+  top: 57%;
+  transform: translate(-50%, -50%);
+  width: 11%;
+}
+#__apn-invoice .qr__wrapper .qr__network.link-eth, #__apn-invoice .qr__wrapper .qr__network.link-teth, #__apn-invoice .qr__wrapper .qr__network.usdc-eth, #__apn-invoice .qr__wrapper .qr__network.usdc-teth, #__apn-invoice .qr__wrapper .qr__network.usdt-eth, #__apn-invoice .qr__wrapper .qr__network.usdt-teth {
+  background-image: url("icons/crypto/eth.svg");
+}
+#__apn-invoice .qr__wrapper .qr__network.usdc-trx, #__apn-invoice .qr__wrapper .qr__network.usdc-ttrx, #__apn-invoice .qr__wrapper .qr__network.usdt-trx, #__apn-invoice .qr__wrapper .qr__network.usdt-ttrx, #__apn-invoice .qr__wrapper .qr__network.tcn-trx, #__apn-invoice .qr__wrapper .qr__network.tcn-ttrx {
+  background-image: url("icons/crypto/trx.svg");
+}
+#__apn-invoice .qr__wrapper .qr__network.usdc-bnb, #__apn-invoice .qr__wrapper .qr__network.usdc-tbnb, #__apn-invoice .qr__wrapper .qr__network.usdt-bnb, #__apn-invoice .qr__wrapper .qr__network.usdt-tbnb {
+  background-image: url("icons/crypto/bnb.svg");
 }
 #__apn-invoice .qr {
   display: inline-block;

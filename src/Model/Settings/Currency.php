@@ -176,25 +176,17 @@ class Currency extends AbstractModel
             $this->alias = $this->name;
             return $this;
         }
-        switch ($this->network) {
-            case 'trx':
-            case 'ttrx':
-                $suffix = 'trc20';
-                break;
-            case 'eth':
-            case 'teth':
-                $suffix = 'erc20';
-                break;
-            default:
-                $suffix = '';
-        }
 
-        $format = ($this->isTestnet()) ? '%s (t%s)' : '%s (%s)';
+        preg_match('#\((.*?)\)#', $this->name, $match);
+        $suffix = count($match) > 0 ? $match[1] : '';
+
+        $format = ($this->isTestnet()) ? '%s (%s - testnet)' : '%s (%s)';
 
         $this->alias = strtoupper(sprintf($format, $this->token, $suffix));
 
         return $this;
     }
+
 
     /**
      * Checks is the currency has an error
@@ -213,8 +205,8 @@ class Currency extends AbstractModel
      */
     public function isTestnet()
     {
-        if ($this->isToken() && ($this->network == 'ttrx' || $this->network == 'teth')) {
-            return true;
+        if ($this->isToken()) {
+            return (substr($this->network, 0, 1) == 't' && strlen($this->network) > 3) ? true : false;
         }
 
         return (substr_count(strtolower($this->name), 'testnet') > 0) ? true : false;

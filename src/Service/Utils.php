@@ -75,6 +75,11 @@ class Utils
                 $type = ($type == 'transaction') ? 'tx' : $type;
                 $path = implode('/', [$type, $hash]);
                 break;
+            case (substr_count($currency->abbr, 'bnb') > 0 ):
+                $explorer = $currency->isTestnet() ? 'testnet.bscscan.com' : 'bscscan.com';
+                $type = ($type == 'transaction') ? 'tx' : $type;
+                $path = implode('/', [$type, $hash]);
+                break;
             case 'btc':
                 $explorer = 'explorer.apirone.com';
                 $type = ($type == 'transaction') ? 'tx' : $type;
