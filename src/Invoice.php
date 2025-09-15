@@ -677,40 +677,4 @@ class Invoice extends AbstractModel
     {
         return (array) $value;
     }
-
-    /**
-     * Set log handler
-     *
-     * @param mixed $logger
-     * @return void
-     * @deprecated Will be removed in 2.0. Use Invoice::logger()
-     */
-    public static function setLogger($logger): void
-    {
-        LoggerWrapper::setLogger($logger);
-    }
-
-    /**
-     * @param null|string $invoice
-     * @return null|\Apirone\SDK\Invoice
-     * @throws \ReflectionException
-     * @deprecated Will be removed in 2.0. Use Invoice::get()
-     */
-    public static function getInvoice(?string $invoice): ?Invoice
-    {
-        return static::get($invoice);
-    }
-
-    /**
-     * Get invoices objects array for order with orderID
-     *
-     * @param int $order - Order ID in your system
-     * @return array
-     * @deprecated Will be removed in 2.0. Use Invoice::getByOrder
-     */
-
-    public static function getOrderInvoices(int $order): array
-    {
-        return static::getByOrder($order);
-    }
 }

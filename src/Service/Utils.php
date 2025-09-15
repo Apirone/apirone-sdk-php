@@ -28,14 +28,8 @@ class Utils
 {
     public const FROM = '?from=apirone';
 
-    /**
-     * @deprecated Will be removed in 2.0
-     */
     public const THRESHOLD = 1.0E-8;
 
-    /**
-     * @deprecated Will be removed in 2.0
-     */
     public const SUFFIX = '0000000000';
 
     /**
@@ -125,40 +119,6 @@ class Utils
     }
 
     /**
-     * Return chart.googleapis.com QR-code link
-     *
-     * @param mixed $currency
-     * @param mixed $input_address
-     * @param mixed $amount
-     * @deprecated Will be removed in 2.0. Use renderQr() to get base64 encoded PNG
-     * @return string
-     */
-    public static function getQrLink($currency, $input_address, $amount = null)
-    {
-        $prefix = (substr_count($input_address, ':') > 0) ? '' : strtolower(str_replace([' ', '(', ')'], ['-', '', ''], $currency->name)) . ':';
-        $amount = ($amount !== null && $amount > 0) ? '?amount=' . $amount : '';
-
-        return 'https://chart.googleapis.com/chart?chs=256x256&cht=qr&chld=H|0&chl=' . urlencode($prefix . $input_address . $amount);
-    }
-
-    /**
-     * Return base64 encoded QR png
-     *
-     * @param mixed $currency
-     * @param mixed $input_address
-     * @param mixed $amount
-     * @return string
-     * @deprecated Will be removed in 2.0
-     */
-    public static function renderQr($currency, $input_address, $amount = null)
-    {
-        $prefix = (substr_count($input_address, ':') > 0) ? '' : strtolower(str_replace([' ', '(', ')'], ['-', '', ''], $currency->name)) . ':';
-        $amount = ($amount !== null && $amount > 0) ? '?amount=' . $amount : '';
-
-        return QRCode::init()->data($prefix . $input_address . $amount)->levelHigh()->quietZone(0)->base64();
-    }
-
-    /**
      * Return masked transaction hash
      *
      * @param mixed $hash
@@ -166,7 +126,7 @@ class Utils
      */
     public static function maskTransactionHash($hash, $size = 8)
     {
-        return substr($hash, 0, $size) . '......' . substr($hash, -$size);
+        return substr($hash, 0, $size) . '.....' . substr($hash, -$size);
     }
 
     public static function estimate($account, $amount, $fiat, $currencies)
@@ -178,23 +138,6 @@ class Utils
 
         return Request::get($path, $options);
     }
-    /**
-     * Convert to decimal and trim trailing zeros if $zeroTrim set true
-     *
-     * @param mixed $value
-     * @param bool $zeroTrim (optional)
-     * @return string
-     * @deprecated Will be removed in 2.0
-     */
-    public static function exp2dec($value, $zeroTrim = false)
-    {
-        if ($zeroTrim) {
-            return rtrim(rtrim(sprintf('%.8f', floatval($value)), 0), '.');
-        }
-
-        return sprintf('%.8f', floatval($value));
-    }
-
 
     /**
      * Convert to decimal and trim trailing zeros if $zeroTrim set true
@@ -203,7 +146,6 @@ class Utils
      * @param Currency $currency
      * @param bool $zeroTrim (optional)
      * @return string
-     * @deprecated Will be removed in 2.0
      */
     public static function humanizeAmount($amount, $currency, $zeroTrim = true)
     {
@@ -232,7 +174,6 @@ class Utils
      * @param mixed $value
      * @param mixed $unitsFactor
      * @return int|float
-     * @deprecated Will be removed in 2.0
      */
     public static function min2cur($value, $unitsFactor)
     {
@@ -245,7 +186,6 @@ class Utils
      * @param mixed $value
      * @param mixed $unitsFactor
      * @return int
-     * @deprecated Will be removed in 2.0
      */
     public static function cur2min($value, $unitsFactor)
     {
@@ -269,7 +209,6 @@ class Utils
      * @throws \Apirone\API\Exceptions\ForbiddenException
      * @throws \Apirone\API\Exceptions\NotFoundException
      * @throws \Apirone\API\Exceptions\MethodNotAllowedException
-     * @deprecated Will be removed in 2.0
      */
     public static function fiat2crypto(float $fiatAmount, string $fiatCode, $currency): float
     {
@@ -302,7 +241,6 @@ class Utils
      * @throws \Apirone\API\Exceptions\ForbiddenException
      * @throws \Apirone\API\Exceptions\NotFoundException
      * @throws \Apirone\API\Exceptions\MethodNotAllowedException
-     * @deprecated Will be removed in 2.0
      */
     public static function fiat2cryptos(float $fiatAmount, string $fiatCode, array $currencies)
     {
@@ -409,19 +347,5 @@ class Utils
 
         header('Content-Type: application/json; charset=utf-8');
         echo $json;
-    }
-
-    /**
-     * Send JSON response
-     *
-     * @param mixed $data
-     * @param int $code
-     * @return false|void
-     * @deprecated Will be removed in 2.0. Use sendJson()
-     * @deprecated Will be removed in 2.0
-     */
-    public function send_json($data, $code = 200)
-    {
-        return self::sendJson($data, $code = 200);
     }
 }

@@ -63,45 +63,4 @@ class HistoryItem extends AbstractModel
 
         return $item;
     }
-
-
-    /**
-     * Get the value of date
-     *
-     * @deprecated Will be removed in 2.0. Use $class->date
-     */
-    public function getDate()
-    {
-        return $this->date;
-    }
-
-    /**
-     * Get the value of status
-     *
-     * @deprecated Will be removed in 2.0. Use $class->status
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * Get the value of txid
-     *
-     * @deprecated Will be removed in 2.0. Use $class->txid
-     */
-    public function getTxid()
-    {
-        return $this->txid;
-    }
-
-    /**
-     * Get the value of amount
-     *
-     * @deprecated Will be removed in 2.0. Use $class->amount
-     */
-    public function getAmount()
-    {
-        return $this->amount;
-    }
 }

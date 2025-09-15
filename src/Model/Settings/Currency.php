@@ -30,9 +30,9 @@ use ReflectionException;
  * @property-read string $name
  * @property-read string $abbr
  * @property-read string $alias
-//  * @property-read string $units
-//  * @property-read string $unitsFactor
-//  * @property-read int    $dustRate
+ * @property-read string $units
+ * @property-read string $unitsFactor
+ * @property-read int    $dustRate
  * @property-read string $address
  * @property-read string $policy
  * @property-read string $network
@@ -50,19 +50,10 @@ class Currency extends AbstractModel
 
     private ?string $alias = null;
 
-    /**
-     * @deprecated Will be removed in 2.0
-     */
     private ?string $units = null;
-    /**
-     * @deprecated Will be removed in 2.0
-     */
 
     private ?float $unitsFactor = null;
 
-    /**
-     * @deprecated Will be removed in 2.0
-     */
     private ?int $dustRate = null;
 
     private ?string $address = null;
@@ -265,18 +256,6 @@ class Currency extends AbstractModel
     }
 
     /**
-     * Alias to tokens();
-     *
-     * @param array $currencies
-     * @return \Apirone\SDK\Model\Settings\Currency[]
-     * @deprecated Will be removed in 2.0. Use $class->tokens() function
-     */
-    public function getTokens(array $currencies)
-    {
-        return $this->tokens($currencies);
-    }
-
-    /**
      * Create currency instance from JSON. Alias to init()
      *
      * @param mixed $json
@@ -286,140 +265,5 @@ class Currency extends AbstractModel
     public static function fromJson($json)
     {
         return self::init($json);
-    }
-
-    /**
-     * Get the value of name
-     *
-     * @return null|string
-     * @deprecated Will be removed in 2.0. Use $class->name
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Get the value of abbr
-     *
-     * @return null|string
-     * @deprecated Will be removed in 2.0. Use $class->abbr
-     */
-    public function getAbbr()
-    {
-        return $this->abbr;
-    }
-
-    /**
-     * Get the value of units
-     *
-     * @return null|string
-     * @deprecated Will be removed in 2.0. Use $class->units
-     */
-    public function getUnits()
-    {
-        return $this->units;
-    }
-
-    /**
-     * Get the value of unitsFactor
-     *
-     * @return null|float
-     * @deprecated Will be removed in 2.0. Use $class->unitsFactor
-     */
-    public function getUnitsFactor()
-    {
-        return $this->unitsFactor;
-    }
-
-    /**
-     * Get the value of dustRate
-     *
-     * @return null|int
-     * @deprecated Will be removed in 2.0. Use $class->dustRate
-     */
-    public function getDustRate()
-    {
-        return $this->dustRate;
-    }
-
-    /**
-     * Get the currency destination address
-     *
-     * @return null|string
-     * @deprecated Will be removed in 2.0. Use $class->address
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
-
-    /**
-     * Set currency destination address
-     *
-     * @param null|string $address
-     * @return $this
-     * @deprecated Will be removed in 2.0. Use $class->address()
-     */
-    public function setAddress(?string $address = null)
-    {
-        return $this->address($address);
-    }
-
-    /**
-     * Get the value of policy
-     *
-     * @return string
-     * @deprecated Will be removed in 2.0. Use $class->policy
-     */
-    public function getPolicy()
-    {
-        return $this->policy;
-    }
-
-    /**
-     * Set the value of policy
-     *
-     * @param string $policy `fixed` or `percentage`
-     * @return $this
-     * @deprecated Will be removed in 2.0. Use $class->policy()
-     */
-    public function setPolicy(string $policy)
-    {
-        return $this->policy($policy);
-    }
-
-    /**
-     * Get the value of error
-     *
-     * @return null|string
-     * @deprecated Will be removed in 2.0. Use $class->error
-     */
-    public function getError()
-    {
-        return $this->error;
-    }
-
-    /**
-     * Parses currency abbr to set network & token
-     *
-     * @deprecated Since the API now supports network and token properties
-     * @return self
-     */
-    public function parseAbbr()
-    {
-        $parts = explode('@', $this->abbr);
-        switch (count($parts)) {
-            case 1:
-                $this->network = $parts[0];
-                $this->token = null;
-                break;
-            case 2:
-                $this->network = $parts[1];
-                $this->token = $parts[0];
-                break;
-        }
-
-        return $this;
     }
 }
