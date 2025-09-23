@@ -34,7 +34,6 @@
     },
     "minimum-stability": "RC",
     "require": {
-        "apirone/apirone-api-php": "^1.1",
-        "apirone/php-qr-code": "^1.0"
+        "apirone/apirone-api-php": "^1.1"
     }
 }
