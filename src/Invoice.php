@@ -54,11 +54,15 @@ class Invoice extends AbstractModel
 
     private ?InvoiceDetails $details;
 
-    private ?array $meta = null;
+    // private \stdClass $meta;
+    private ?\stdClass $meta = null;
 
     private ?array $createParams;
 
-    private function __construct() {}
+    private function __construct()
+    {
+        $this->meta = new \stdClass();
+    }
 
     /**
      * Set settings to Invoice object
@@ -648,7 +652,7 @@ class Invoice extends AbstractModel
     {
         $json = parent::toJson();
         unset($json->{'create-params'});
-        unset($json->{'template'});
+        unset($json->settings);
 
         return $json;
     }

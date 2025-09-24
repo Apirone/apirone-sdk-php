@@ -58,6 +58,7 @@ abstract class AbstractModel
 
         $name = static::convertToCamelCase($name);
 
+
         if (\property_exists($this, $name)) {
 
             $class = new \ReflectionClass(static::class);

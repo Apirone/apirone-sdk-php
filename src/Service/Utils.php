@@ -129,15 +129,15 @@ class Utils
         return substr($hash, 0, $size) . '.....' . substr($hash, -$size);
     }
 
-    public static function estimate($account, $amount, $fiat, $currencies, $with_fee = false, $factor = 1)
+    public static function estimate($account, $amount, $fiat, $currencies, $fee = false, $factor = 1)
     {
-        $path = sprintf('v2/accounts/%s/fwd-fee', $account);
+        $path = sprintf('v2/accounts/%s/tocrypto', $account);
         $options['amount'] = $amount;
         $options['fiat'] = $fiat;
         $options['currencies'] = (is_array($currencies) ? implode(',', $currencies) : $currencies);
 
-        if ($with_fee !== false) {
-            $options['with_fee'] = (bool) $with_fee;
+        if ($fee !== false) {
+            $options['fee'] = (bool) $fee;
         }
         if ($factor !== 1) {
             $options['factor'] = $factor;

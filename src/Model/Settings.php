@@ -25,7 +25,6 @@ use Apirone\SDK\Model\Settings\Coin;
 use Apirone\SDK\Model\Settings\Currency;
 use Apirone\SDK\Model\Settings\Network;
 use ReflectionException;
-use stdClass;
 
 /**
  * @property-read string $account
@@ -64,11 +63,10 @@ class Settings extends AbstractModel
      *
      * @var stdClass
      */
-    private stdClass   $meta;
+    private \stdClass   $meta;
 
     private function __construct()
     {
-        $this->extra = new \stdClass();
         $this->meta = new \stdClass();
     }
 
@@ -358,5 +356,21 @@ class Settings extends AbstractModel
         }
 
         return $items;
+    }
+
+    /**
+     * Check is coin exist
+     * @param mixed $abbr
+     * @return bool
+     */
+    public function hasCoin($abbr)
+    {
+        foreach ($this->coins as $coin) {
+            if ($coin->abbr == $abbr) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
