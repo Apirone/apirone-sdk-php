@@ -352,7 +352,7 @@ class Settings extends AbstractModel
     {
         $items = [];
         foreach ($array as $item) {
-            $items[] = Coin::init($item);
+            $items[$item->abbr] = Coin::init($item);
         }
 
         return $items;
@@ -365,12 +365,6 @@ class Settings extends AbstractModel
      */
     public function hasCoin($abbr)
     {
-        foreach ($this->coins as $coin) {
-            if ($coin->abbr == $abbr) {
-                return true;
-            }
-        }
-
-        return false;
+        return (array_key_exists($abbr, $this->coins)) ? true : false;
     }
 }
