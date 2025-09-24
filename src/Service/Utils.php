@@ -129,12 +129,19 @@ class Utils
         return substr($hash, 0, $size) . '.....' . substr($hash, -$size);
     }
 
-    public static function estimate($account, $amount, $fiat, $currencies)
+    public static function estimate($account, $amount, $fiat, $currencies, $with_fee = false, $factor = 1)
     {
         $path = sprintf('v2/accounts/%s/fwd-fee', $account);
         $options['amount'] = $amount;
         $options['fiat'] = $fiat;
         $options['currencies'] = (is_array($currencies) ? implode(',', $currencies) : $currencies);
+
+        if ($with_fee !== false) {
+            $options['with_fee'] = (bool) $with_fee;
+        }
+        if ($factor !== 1) {
+            $options['factor'] = $factor;
+        }
 
         return Request::get($path, $options);
     }
