@@ -670,15 +670,4 @@ class Invoice extends AbstractModel
 
         return $details;
     }
-
-    /**
-     * Invoice meta parser
-     *
-     * @param mixed $value
-     * @return array
-     */
-    protected function parseMeta($value)
-    {
-        return (array) $value;
-    }
 }
