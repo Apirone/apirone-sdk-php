@@ -54,15 +54,11 @@ class Invoice extends AbstractModel
 
     private ?InvoiceDetails $details;
 
-    // private \stdClass $meta;
     private ?\stdClass $meta = null;
 
     private ?array $createParams;
 
-    private function __construct()
-    {
-        $this->meta = new \stdClass();
-    }
+    private function __construct() {}
 
     /**
      * Set settings to Invoice object
@@ -199,7 +195,7 @@ class Invoice extends AbstractModel
         $json->invoice = $row['invoice'];
         $json->status = $row['status'];
         $json->details = json_decode($row['details']);
-        $json->meta = json_decode($row['meta']);
+        $json->meta = $row['meta'] !== NULL ? json_decode($row['meta']) : null;
 
         return Invoice::fromJson($json);
     }
@@ -512,124 +508,6 @@ class Invoice extends AbstractModel
         }
 
         return false;
-    }
-
-    /**
-     * Render html invoice loader
-     *
-     * @param null|string $invoice_id
-     * @return string
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     */
-    public static function renderLoader(?Invoice $invoice = null)
-    {
-        if(Render::isAjaxRequest()) {
-            return Invoice::renderAjax();
-        }
-
-        return Render::show($invoice);
-    }
-
-    /**
-     * Echo invoice data or status ajax response
-     *
-     * @return never
-     * @throws DivisionByZeroError
-     * @throws ArithmeticError
-     */
-    public static function renderAjax()
-    {
-        if (Render::isAjaxRequest()) {
-            $data = file_get_contents('php://input');
-            $params = ($data) ? json_decode(Utils::sanitize($data)) : null;
-
-            if ($params) {
-                $id = property_exists($params, 'invoice') ? (string) $params->invoice : '';
-                $offset = property_exists($params, 'offset') ? (int) $params->offset : null;
-                header("Content-Type: text/plain");
-                $invoice = Invoice::get($id);
-                if ($offset === null) {
-                    echo $invoice->id ? $invoice->details->statusNum() : 0;
-                    exit;
-                }
-                Render::timeZoneByOffset($offset);
-                echo $invoice->render();
-            }
-            exit;
-        }
-        echo 0;
-        exit;
-    }
-
-    /**
-     * Render Invoice object html
-     *
-     * @return string
-     */
-    public function render()
-    {
-        return Render::show($this);
-    }
-
-    /**
-     * Set invoice meta value
-     *
-     * @param mixed $key
-     * @param mixed $value
-     * @return $this
-     */
-    public function setMeta($key, $value)
-    {
-        if ($this->meta === null) {
-            $this->meta = [];
-        }
-
-        $this->meta[$key] = $value;
-
-        $this->save();
-
-        return $this;
-    }
-
-    /**
-     * Get invoice meta value by key
-     *
-     * @param mixed $key
-     * @return mixed
-     */
-    public function getMeta($key)
-    {
-        if ($this->meta == null) {
-            return null;
-        }
-
-        return array_key_exists($key, $this->meta) ? $this->meta[$key] : null;
-    }
-
-    /**
-     * Delete meta value from invoice
-     *
-     * @param mixed $key
-     * @return $this
-     */
-    public function deleteMeta($key)
-    {
-        if($this->meta === null) {
-            return $this;
-        }
-        unset($this->meta[$key]);
-        if (count($this->meta) == 0) {
-            $this->meta = null;
-        }
-
-        $this->save();
-
-        return $this;
     }
 
     /**

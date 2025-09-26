@@ -113,6 +113,7 @@ class InvoiceQuery
         $table = $prefix . self::TABLE_INVOICE;
 
         $invoice = $invoice->toJson();
+        $meta = property_exists($invoice, 'meta') ? sprintf("'%s'", json_encode($invoice->meta)) : "NULL";
 
         $query = "INSERT INTO `" . $table . "` " .
             "SET " .
@@ -120,7 +121,7 @@ class InvoiceQuery
             "`invoice` = '" . $invoice->invoice . "', " .
             "`status` = '" . $invoice->status . "', " .
             "`details` = '" . json_encode($invoice->details) . "', " .
-            "`meta` = '" . json_encode($invoice->meta) . "';";
+            "`meta` = " . $meta . ";";
 
         return $query;
     }
@@ -137,13 +138,14 @@ class InvoiceQuery
         $table = $prefix . self::TABLE_INVOICE;
 
         $invoice = $invoice->toJson();
+        $meta = property_exists($invoice, 'meta') ? sprintf("'%s'", json_encode($invoice->meta)) : "NULL";
 
         $query = "UPDATE `" . $table . "` " .
             "SET " .
             "`status` = '" . $invoice->status . "', " .
             "`details` = '" . json_encode($invoice->details) . "', " .
-            "`meta` = '" . json_encode($invoice->meta) . "' " .
-            "WHERE `invoice` = '" . $invoice->invoice . "';";
+            "`meta` = " . $meta .
+            " WHERE `invoice` = '" . $invoice->invoice . "';";
 
         return $query;
 

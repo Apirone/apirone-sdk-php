@@ -54,21 +54,18 @@ class Settings extends AbstractModel
      *
      * @var array
      */
-    private array   $currencies = [];
+    private array $currencies = [];
 
-    private array   $coins = [];
+    private array $coins = [];
 
     /**
      * Metadata
      *
      * @var stdClass
      */
-    private \stdClass   $meta;
+    private ?\stdClass $meta = null;
 
-    private function __construct()
-    {
-        $this->meta = new \stdClass();
-    }
+    private function __construct() {}
 
     public function __get($name) {
 
@@ -215,6 +212,7 @@ class Settings extends AbstractModel
                 unset($settings[$key]);
             }
         }
+
         return $settings;
     }
 

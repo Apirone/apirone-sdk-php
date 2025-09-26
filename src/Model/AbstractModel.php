@@ -58,14 +58,17 @@ abstract class AbstractModel
 
         $name = static::convertToCamelCase($name);
 
-
-        if (\property_exists($this, $name)) {
-
+        $setProperty = function ($name, $value) {
             $class = new \ReflectionClass(static::class);
+            $value = is_array($value) ? $value[0] : $value;
 
             $property = $class->getProperty($name);
             $property->setAccessible(true);
-            $property->setValue($this, $value[0]);
+            $property->setValue($this, $value);
+        };
+
+        if (\property_exists($this, $name)) {
+            $setProperty($name, $value);
 
             return $this;
         }
@@ -74,7 +77,15 @@ abstract class AbstractModel
             if (empty($value) || $value[0] == false) {
                 unset($this->meta->{$name});
 
+                if (empty((array) $this->meta)) {
+                    $setProperty('meta', null);
+                }
+
                 return $this;
+            }
+
+            if ($this->meta == null) {
+                $setProperty('meta', new \stdClass());
             }
             $this->meta->{$name} = $value[0];
 
@@ -135,7 +146,7 @@ abstract class AbstractModel
      */
     public function toArray(): array
     {
-        $settings = [];
+        $result = [];
         $class = new \ReflectionClass(static::class);
 
         foreach ($class->getProperties() as $property) {
@@ -144,29 +155,29 @@ abstract class AbstractModel
             $type = gettype($this->{$prop});
 
             if ($type !== 'object' || $type !== 'array') {
-                $settings[self::convertToSnakeCase($prop)] = $this->{$prop};
+                $result[self::convertToSnakeCase($prop)] = $this->{$prop};
             }
 
             if ($type == 'object') {
-                $settings[self::convertToSnakeCase($prop)] = (get_class($this->{$prop}) !== 'stdClass') ? $this->{$prop}->toArray() : json_decode(json_encode($this->{$prop}), true);
-
+                $result[self::convertToSnakeCase($prop)] = (get_class($this->{$prop}) !== 'stdClass') ? $this->{$prop}->toArray() : json_decode(json_encode($this->{$prop}));
                 continue;
             }
+
             if ($type == 'array') {
                 $items = [];
                 foreach($this->{$prop} as $key => $item) {
                     if(gettype($item) == 'object') {
-                        $items[] = (get_class($item) !== 'stdClass') ? $item->toArray() : json_decode(json_encode($item), true);
+                        $items[] = (get_class($item) !== 'stdClass') ? $item->toArray() : json_decode(json_encode($item));
                     }
                     else {
                         $items[$key] = $item;
                     }
                 }
-                $settings[self::convertToSnakeCase($prop)] = $items;
+                $result[self::convertToSnakeCase($prop)] = $items;
             }
         }
 
-        return $settings;
+        return $result;
     }
 
     /**
@@ -176,7 +187,6 @@ abstract class AbstractModel
      */
     public function toJson(): \stdClass
     {
-
         return json_decode(json_encode($this->toArray()));
     }
 
