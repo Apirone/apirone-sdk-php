@@ -152,6 +152,10 @@ abstract class AbstractModel
         foreach ($class->getProperties() as $property) {
             $prop = $property->getName();
 
+            if ($this->{$prop} == null || $this->{$prop} == false) {
+                continue;
+            }
+
             $type = gettype($this->{$prop});
 
             if ($type !== 'object' || $type !== 'array') {

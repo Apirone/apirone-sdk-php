@@ -166,22 +166,4 @@ class UserData extends AbstractModel
 
         return $items;
     }
-
-    /**
-     * Convert instance to JSON
-     *
-     * @return stdClass
-     */
-    public function toJson(): stdClass
-    {
-        $json = parent::toJson();
-
-        foreach ($json as $key => $value) {
-            if ($value === null) {
-                unset($json->$key);
-            }
-        }
-
-        return $json;
-    }
 }

@@ -169,7 +169,6 @@ class Settings extends AbstractModel
 
         $class->account = $account;
         $class->transferKey = $transferKey;
-        $class->loadCurrencies();
 
         return $class;
     }
@@ -198,14 +197,6 @@ class Settings extends AbstractModel
     public function toArray(): array
     {
         $settings = parent::toArray();
-
-        if(empty($settings['extra'])) {
-            unset($settings['extra']);
-        }
-
-        if(empty($settings['meta'])) {
-            unset($settings['meta']);
-        }
 
         foreach ($settings as $key => $val) {
             if (!in_array($key, ['account', 'transfer-key', 'coins', 'meta'])) {
