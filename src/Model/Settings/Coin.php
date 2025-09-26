@@ -37,6 +37,7 @@ class Coin extends AbstractModel
             case 'stdClass':
                 $class->test = $coin->test;
                 break;
+            case 'Apirone\SDK\Model\Settings\Network':
             case 'Apirone\SDK\Model\Settings\Currency':
                 $class->test = $coin->isTestnet();
                 break;

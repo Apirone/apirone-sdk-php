@@ -313,13 +313,14 @@ class Settings extends AbstractModel
      */
     private function networks()
     {
-        if (empty($this->currencies)) {
+        if (empty($this->currencies) || get_class($this->currencies[0]) == 'stdClass') {
             $this->loadCurrencies();
         }
+
         $networks = [];
         foreach ($this->currencies as $currency) {
             if (!$currency->isToken()) {
-                $networks[$currency->abbr] = \Apirone\SDK\Model\Settings\Network::init($currency);
+                $networks[$currency->abbr] = Network::init($currency);
             }
         }
         foreach ($this->currencies as $currency) {
