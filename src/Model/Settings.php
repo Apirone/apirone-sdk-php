@@ -75,9 +75,10 @@ class Settings extends AbstractModel
 
         // Currencies lazy loading
         if ($name == 'currencies') {
-            if(empty($this->currencies)) {
+            if (empty($this->currencies) || get_class($this->currencies[array_key_first($this->currencies)]) == 'stdClass') {
                 $this->loadCurrencies();
             }
+
             return $this->currencies;
         }
 
@@ -313,7 +314,7 @@ class Settings extends AbstractModel
      */
     private function networks()
     {
-        if (empty($this->currencies) || get_class($this->currencies[0]) == 'stdClass') {
+        if (empty($this->currencies) || get_class($this->currencies[array_key_first($this->currencies)]) == 'stdClass') {
             $this->loadCurrencies();
         }
 

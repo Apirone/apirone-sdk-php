@@ -39,7 +39,7 @@ abstract class AbstractModel
             return $property->getValue($this);
         }
 
-        if (property_exists($this->meta, $name)) {
+        if (property_exists($this, 'meta') && $this->meta !== null && property_exists($this->meta, $name)) {
             return $this->meta->{$name};
         }
 
