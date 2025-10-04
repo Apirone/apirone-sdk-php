@@ -497,17 +497,21 @@ class Invoice extends AbstractModel
      */
     public function update(): bool
     {
-        if(isset($this->details)) {
-            $this->details->update();
-
-            if ($this->status !== $this->details->status) {
-                $this->status = $this->details->status;
-
-                return $this->save();
-            }
+        if(!isset($this->details)) {
+            return false;
         }
+        $statusNumOld = $this->details->statusNum();
 
-        return false;
+        $this->details->update();
+
+        $statusNew = $this->details->status;
+
+        if ($this->status == $statusNew && $this->details->statusNum() == $statusNumOld) {
+            return false;
+        }
+        $this->status = $statusNew;
+
+        return $this->save();
     }
 
     /**
