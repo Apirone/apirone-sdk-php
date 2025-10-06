@@ -472,8 +472,7 @@ class Invoice extends AbstractModel
             return false;
         }
 
-        $prefix = InvoiceDb::$prefix;
-        $query = ($this->id === null) ? InvoiceQuery::createInvoice($this, $prefix) : InvoiceQuery::updateInvoice($this, $prefix);
+        $query = ($this->id === null) ? InvoiceQuery::createInvoice($this, InvoiceDb::$prefix) : InvoiceQuery::updateInvoice($this, InvoiceDb::$prefix);
         $result = InvoiceDb::execute($query);
 
         if ($result == true) {

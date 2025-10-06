@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Apirone\SDK\Service;
 
 use Apirone\SDK\Invoice;
+use Apirone\SDK\InvoiceDb;
 
 class InvoiceQuery
 {
@@ -31,18 +32,9 @@ class InvoiceQuery
         string $prefix = '',
         string $charset = 'utf8',
         string $collate = 'utf8_general_ci'
-    ): string {
-        $table = $prefix . self::TABLE_INVOICE;
-
-        $charset_collate = '';
-        if (! empty($charset)) {
-            $charset_collate = "DEFAULT CHARACTER SET $charset";
-        }
-        if (! empty($collate)) {
-            $charset_collate .= " COLLATE $collate";
-        }
-
-        $query = "CREATE TABLE IF NOT EXISTS `$table` (
+    ): string
+    {
+        return sprintf("CREATE TABLE IF NOT EXISTS `%s` (
             `id` int NOT NULL AUTO_INCREMENT,
             `time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `order` int NOT NULL DEFAULT '0',
@@ -53,9 +45,7 @@ class InvoiceQuery
             PRIMARY KEY (`id`),
             UNIQUE KEY `invoice` (`invoice`),
             KEY `order` (`order`)
-        ) ENGINE=InnoDB $charset_collate;";
-
-        return $query;
+        ) ENGINE=InnoDB DEFAULT CHARACTER SET %s COLLATE %s;", self::getTable($prefix), $charset, $collate);
     }
 
     /**
@@ -66,11 +56,7 @@ class InvoiceQuery
      */
     public static function dropInvoicesTable(string $prefix = '')
     {
-        $table = $prefix . self::TABLE_INVOICE;
-
-        $query = "DROP TABLE IF EXISTS `$table`;";
-
-        return $query;
+        return sprintf("DROP TABLE IF EXISTS `%s`;", self::getTable($prefix));
     }
 
     /**
@@ -82,9 +68,7 @@ class InvoiceQuery
      */
     public static function selectInvoice(?string $invoice, string $prefix = '')
     {
-        $table = $prefix . self::TABLE_INVOICE;
-
-        return "SELECT * FROM `$table` WHERE `invoice` = \"$invoice\"";
+        return sprintf('SELECT * FROM `%s` WHERE `invoice` = "%s"', self::getTable($prefix), $invoice);
     }
 
     /**
@@ -96,9 +80,7 @@ class InvoiceQuery
      */
     public static function selectOrder(int $order, string $prefix = '')
     {
-        $table = $prefix . self::TABLE_INVOICE;
-
-        return "SELECT * FROM `$table` WHERE `order` = \"$order\" order by time DESC";
+        return sprintf('SELECT * FROM `%s` WHERE `order` = %s order by time DESC', self::getTable($prefix), $order);
     }
 
     /**
@@ -110,20 +92,16 @@ class InvoiceQuery
      */
     public static function createInvoice(Invoice $invoice, string $prefix = '')
     {
-        $table = $prefix . self::TABLE_INVOICE;
-
         $invoice = $invoice->toJson();
         $meta = property_exists($invoice, 'meta') ? sprintf("'%s'", json_encode($invoice->meta)) : "NULL";
 
-        $query = "INSERT INTO `" . $table . "` " .
+        return "INSERT INTO `" . self::getTable($prefix) . "` " .
             "SET " .
             "`order` = " . (int) $invoice->order . "," .
             "`invoice` = '" . $invoice->invoice . "', " .
             "`status` = '" . $invoice->status . "', " .
             "`details` = '" . json_encode($invoice->details) . "', " .
             "`meta` = " . $meta . ";";
-
-        return $query;
     }
 
     /**
@@ -135,19 +113,21 @@ class InvoiceQuery
      */
     public static function updateInvoice(Invoice $invoice, string $prefix = '')
     {
-        $table = $prefix . self::TABLE_INVOICE;
-
         $invoice = $invoice->toJson();
         $meta = property_exists($invoice, 'meta') ? sprintf("'%s'", json_encode($invoice->meta)) : "NULL";
 
-        $query = "UPDATE `" . $table . "` " .
+        return "UPDATE `" . self::getTable($prefix) . "` " .
             "SET " .
             "`status` = '" . $invoice->status . "', " .
             "`details` = '" . json_encode($invoice->details) . "', " .
             "`meta` = " . $meta .
             " WHERE `invoice` = '" . $invoice->invoice . "';";
+    }
 
-        return $query;
+    protected static function getTable($prefix = '')
+    {
+        $prefix = InvoiceDb::$prefix !== false ? InvoiceDb::$prefix : $prefix;
 
+        return $prefix . self::TABLE_INVOICE;
     }
 }
