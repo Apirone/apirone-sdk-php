@@ -21,14 +21,14 @@ class InvoiceDb
     /**
      * Callback handler for database execution
      *
-     * @var false
+     * @var bool
      */
     public static $handler = false;
 
     /**
      * Database table prefix
      *
-     * @var false
+     * @var bool
      */
     public static $prefix = false;
 
@@ -89,10 +89,7 @@ class InvoiceDb
         string $charset = 'utf8mb4',
         string $collate = 'utf8mb4_general_ci'
     ) {
-        $prefix = static::$prefix !== false ? static::$prefix : $prefix;
-        $query = InvoiceQuery::createInvoicesTable($prefix, $charset, $collate);
-
-        return InvoiceDb::execute($query);
+        return InvoiceDb::execute(InvoiceQuery::createInvoicesTable($prefix, $charset, $collate));
     }
 
     /**
@@ -103,9 +100,6 @@ class InvoiceDb
      */
     public static function uninstall(string $prefix = '')
     {
-        $prefix = static::$prefix !== false ? static::$prefix : $prefix;
-        $query = InvoiceQuery::dropInvoicesTable($prefix);
-
-        return InvoiceDb::execute($query);
+        return InvoiceDb::execute(InvoiceQuery::dropInvoicesTable($prefix));
     }
 }

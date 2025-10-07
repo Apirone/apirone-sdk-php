@@ -499,16 +499,15 @@ class Invoice extends AbstractModel
         if(!isset($this->details)) {
             return false;
         }
-        $statusNumOld = $this->details->statusNum();
+        $historyCount = count($this->details->history);
 
         $this->details->update();
 
-        $statusNew = $this->details->status;
-
-        if ($this->status == $statusNew && $this->details->statusNum() == $statusNumOld) {
+        if ($historyCount == count($this->details->history)) {
             return false;
         }
-        $this->status = $statusNew;
+
+        $this->status = $this->details->status;
 
         return $this->save();
     }

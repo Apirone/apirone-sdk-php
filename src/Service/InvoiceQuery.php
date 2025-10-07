@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Apirone\SDK\Service;
 
 use Apirone\SDK\Invoice;
-use Apirone\SDK\InvoiceDb;
+use Apirone\SDK\Service\InvoiceDb;
 
 class InvoiceQuery
 {
@@ -93,6 +93,7 @@ class InvoiceQuery
     public static function createInvoice(Invoice $invoice, string $prefix = '')
     {
         $invoice = $invoice->toJson();
+        $invoice->order = $invoice->order ?? 0;
         $meta = property_exists($invoice, 'meta') ? sprintf("'%s'", json_encode($invoice->meta)) : "NULL";
 
         return "INSERT INTO `" . self::getTable($prefix) . "` " .
@@ -126,8 +127,8 @@ class InvoiceQuery
 
     protected static function getTable($prefix = '')
     {
-        $prefix = InvoiceDb::$prefix !== false ? InvoiceDb::$prefix : $prefix;
+        $prefix = trim($prefix) !== '' ? $prefix : (string) InvoiceDb::$prefix;
 
-        return $prefix . self::TABLE_INVOICE;
+        return trim($prefix) . self::TABLE_INVOICE;
     }
 }
