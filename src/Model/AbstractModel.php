@@ -67,7 +67,7 @@ abstract class AbstractModel
             $property->setValue($this, $value);
         };
 
-        if (\property_exists($this, $name) && $name !== 'meta') {
+        if (\property_exists($this, $name)) {
             $setProperty($name, $value);
 
             return $this;
