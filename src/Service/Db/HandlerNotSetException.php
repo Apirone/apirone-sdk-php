@@ -1,7 +1,6 @@
 <?php
-
-/**
- * This file is part of the Apirone SDK.
+/*
+ * This file is part of the Apirone API library.
  *
  * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
  *
@@ -13,9 +12,6 @@ declare(strict_types=1);
 
 namespace Apirone\SDK\Service\Db;
 
-use Apirone\SDK\Service\Db\AbstractDb;
-
-class SqliteDb extends AbstractDb
+class HandlerNotSetException extends \RuntimeException
 {
-
 }

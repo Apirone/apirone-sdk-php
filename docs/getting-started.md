@@ -44,9 +44,9 @@ src/
 │  ├─ UserData.php
 │  └─ ...
 ├─ Service/
-|  ├─ tpl/
+|  ├─ Db/
 |  |  └─ ...
-|  ├─ InvoiceDb.php
+|  ├─ Db.php
 |  ├─ Render.php
 |  ├─ Utils.php
 |  └─ ...

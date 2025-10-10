@@ -53,10 +53,10 @@ To do this, just execute the `InvoiceDB::install()` method once.
 
 ```php
 <?php
-use Apirone\SDK\Service\InvoiceDb;
+use Apirone\SDK\Service\Db;
 
 // Create an invoice table
-InvoiceDb::install();
+Db::install();
 ```
 
 ## Step 2. Working with Apirone callbacks

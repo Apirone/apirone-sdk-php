@@ -14,22 +14,22 @@ require_once('../db.php');
 require_once('../log.php');
 
 use Apirone\SDK\Service\Utils;
-use Apirone\SDK\Service\InvoiceDb;
+use Apirone\SDK\Service\Db;
 
-InvoiceDb::$handler = $db_handler;
+Db::$handler = $db_handler;
 
 $table_query = sprintf("SELECT * FROM apirone.%sapirone_invoice LIMIT 1", $table_prefix);
-$table_exists  = gettype(InvoiceDb::execute($table_query))  == 'array' ? true : false;
+$table_exists  = gettype(Db::execute($table_query))  == 'array' ? true : false;
 
 $action = $_GET['action'] ?? false;
 
 switch ($action) {
     case 'create':
-        Utils::sendJson(InvoiceDb::install($table_prefix));
+        Utils::sendJson(Db::install($table_prefix));
 
         break;
     case 'delete':
-        Utils::sendJson(!InvoiceDb::uninstall($table_prefix));
+        Utils::sendJson(!Db::uninstall($table_prefix));
 
         break;
     default:

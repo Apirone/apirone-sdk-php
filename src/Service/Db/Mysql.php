@@ -14,11 +14,15 @@ declare(strict_types=1);
 namespace Apirone\SDK\Service\Db;
 
 use Apirone\SDK\Invoice;
-use Apirone\SDK\Service\InvoiceDb;
+use Apirone\SDK\Service\Db;
+use Apirone\SDK\Service\Db\AdapterInterface;
 
-class Query
+class Mysql implements AdapterInterface
 {
-    public const TABLE_INVOICE = 'apirone_invoice';
+    public static string $charset = 'utf8';
+
+    public static string $collate = 'utf8_general_ci';
+
 
     /**
      * Return create invoice table SQL query
@@ -28,7 +32,7 @@ class Query
      * @param string $collate
      * @return string
      */
-    public static function createInvoicesTable(string $prefix = ''): string
+    public static function createTable(): string
     {
         return sprintf("CREATE TABLE IF NOT EXISTS `%s` (
             `id` int NOT NULL AUTO_INCREMENT,
@@ -41,7 +45,7 @@ class Query
             PRIMARY KEY (`id`),
             UNIQUE KEY `invoice` (`invoice`),
             KEY `order` (`order`)
-        ) ENGINE=InnoDB DEFAULT CHARACTER SET %s COLLATE %s;", self::getTable($prefix), $charset, $collate);
+        ) ENGINE=InnoDB DEFAULT CHARACTER SET %s COLLATE %s;", Db::tableName(), static::$charset, static::$collate);
     }
 
     /**
@@ -50,9 +54,9 @@ class Query
      * @param string $prefix
      * @return string
      */
-    public static function dropInvoicesTable(string $prefix = '')
+    public static function dropTable()
     {
-        return sprintf("DROP TABLE IF EXISTS `%s`;", self::getTable($prefix));
+        return sprintf("DROP TABLE IF EXISTS `%s`;", Db::tableName());
     }
 
     /**
@@ -62,9 +66,9 @@ class Query
      * @param string $prefix
      * @return string
      */
-    public static function selectInvoice(?string $invoice, string $prefix = '')
+    public static function getInvoice(string $invoice)
     {
-        return sprintf('SELECT * FROM `%s` WHERE `invoice` = "%s"', self::getTable($prefix), $invoice);
+        return sprintf('SELECT * FROM `%s` WHERE `invoice` = "%s"', Db::tableName(), $invoice);
     }
 
     /**
@@ -74,9 +78,9 @@ class Query
      * @param string $prefix
      * @return string
      */
-    public static function selectOrder(int $order, string $prefix = '')
+    public static function getOrderInvoices(int $order)
     {
-        return sprintf('SELECT * FROM `%s` WHERE `order` = %s order by time DESC', self::getTable($prefix), $order);
+        return sprintf('SELECT * FROM `%s` WHERE `order` = %s order by time DESC', Db::tableName(), $order);
     }
 
     /**
@@ -86,19 +90,20 @@ class Query
      * @param string $prefix
      * @return string
      */
-    public static function createInvoice(Invoice $invoice, string $prefix = '')
+    public static function createInvoice(Invoice $invoice)
     {
         $invoice = $invoice->toJson();
         $invoice->order = $invoice->order ?? 0;
         $meta = property_exists($invoice, 'meta') ? sprintf("'%s'", json_encode($invoice->meta)) : "NULL";
 
-        return "INSERT INTO `" . self::getTable($prefix) . "` " .
-            "SET " .
-            "`order` = " . (int) $invoice->order . "," .
-            "`invoice` = '" . $invoice->invoice . "', " .
-            "`status` = '" . $invoice->status . "', " .
-            "`details` = '" . json_encode($invoice->details) . "', " .
-            "`meta` = " . $meta . ";";
+        return sprintf("INSERT INTO `%s` SET `order` = %s, `invoice` = '%s', `status` = '%s', `details` = '%s', `meta` = %s;",
+            Db::tableName(),
+            $invoice->order,
+            $invoice->invoice,
+            $invoice->status,
+            $invoice->details,
+            $meta
+        );
     }
 
     /**
@@ -108,23 +113,16 @@ class Query
      * @param string $prefix
      * @return string
      */
-    public static function updateInvoice(Invoice $invoice, string $prefix = '')
+    public static function updateInvoice(Invoice $invoice)
     {
         $invoice = $invoice->toJson();
         $meta = property_exists($invoice, 'meta') ? sprintf("'%s'", json_encode($invoice->meta)) : "NULL";
 
-        return "UPDATE `" . self::getTable($prefix) . "` " .
-            "SET " .
-            "`status` = '" . $invoice->status . "', " .
-            "`details` = '" . json_encode($invoice->details) . "', " .
-            "`meta` = " . $meta .
-            " WHERE `invoice` = '" . $invoice->invoice . "';";
-    }
-
-    protected static function getTable($prefix = '')
-    {
-        $prefix = trim($prefix) !== '' ? $prefix : (string) InvoiceDb::$prefix;
-
-        return trim($prefix) . self::TABLE_INVOICE;
+        return sprintf("UPDATE `%s`SET `status` = '%s', `details` = '%s', `meta` = %s WHERE `invoice` = '%s';",
+            Db::tableName(),
+            $invoice->status,
+            json_decode($invoice->details),
+            $meta,
+            $invoice->invoice);
     }
 }

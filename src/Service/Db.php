@@ -14,10 +14,27 @@ declare(strict_types=1);
 namespace Apirone\SDK\Service;
 
 use Apirone\API\Log\LoggerWrapper;
-use Apirone\SDK\Service\InvoiceQuery;
-
-class InvoiceDb
+use Apirone\SDK\Invoice;
+use Apirone\SDK\Service\Db\HandlerNotSetException;
+class Db
 {
+
+    /**
+     * Database table prefix
+     *
+     * @var bool
+     */
+    public static $table = 'apirone_invoice';
+
+    /**
+     * Database table prefix
+     *
+     * @var bool
+     */
+    public static $prefix = '';
+
+    private static $adapter = 'mysql';
+
     /**
      * Callback handler for database execution
      *
@@ -25,35 +42,98 @@ class InvoiceDb
      */
     public static $handler = false;
 
-    /**
-     * Database table prefix
-     *
-     * @var bool
-     */
-    public static $prefix = false;
+    private function __construct() {}
 
-    /**
-     * Set database callback function
-     *
-     * @param mixed $callback
-     * @return void
-     */
-    public static function setCallback($callback)
+    public function __get($name)
     {
-        $class = new \ReflectionClass(static::class);
-        $class->setStaticPropertyValue('handler', $callback);
+        if (\property_exists($this, $name)) {
+            $class = new \ReflectionClass(static::class);
+
+            return $class->getStaticProperties()[$name];
+        }
+        else {
+            $adapter = new \ReflectionClass(static::adapterClass());
+            if (\property_exists(static::adapterClass(), $name)) {
+                return $adapter->getStaticProperties()[$name];
+            }
+            else {
+                $trace = \debug_backtrace();
+                \trigger_error(
+                    'Undefined property ' . $name .
+                    ' in class ' . static::class .
+                    ' or adapter class ' .  $adapter->name .
+                    ' in ' . $trace[0]['file'] .
+                    ' on line ' . $trace[0]['line'],
+                    \E_USER_NOTICE
+                );
+            }
+        }
+
+        return null;
+    }
+
+    public function __call($name, $args = [])
+    {
+        return static::__callStatic($name, $args);
+    }
+
+    public static function __callStatic($name, $args = [])
+    {
+        if (\property_exists(static::class, $name)) {
+            $class = new \ReflectionClass(static::class);
+            $class->setStaticPropertyValue($name, $args[0] ?? $class->getDefaultProperties()[$name]);
+        }
+        else {
+            $adapter = new \ReflectionClass(static::adapterClass());
+            if (\property_exists(static::adapterClass(), $name)) {
+                $adapter->setStaticPropertyValue($name, $args[0] ?? $adapter->getDefaultProperties()[$name]);
+            }
+            else {
+                $trace = \debug_backtrace();
+                \trigger_error(
+                    'Undefined property ' . $name .
+                    ' in class ' . $trace[0]['file'] .
+                    ' or adapter class ' .  $adapter->name,
+                    \E_USER_NOTICE
+                );
+            }
+        }
+
+        return new static();
+    }
+    /**
+     * Returns adapter class namespace
+     *
+     * @return string
+     */
+    private static function adapterClass()
+    {
+        $adapters = ['mysql','sqlite','postgres'];
+        $class = in_array(static::$adapter, $adapters) ? sprintf('Apirone\SDK\Service\Db\%s', ucfirst(static::$adapter)) : static::$adapter;
+
+        return $class;
+    }
+    /**
+     * Returns the full name of the invoice table.
+     *
+     * @return string
+     */
+    public static function tableName(): string
+    {
+        return static::$prefix . static::$table;
     }
 
     /**
-     * Set database table prefix
+     * Throws an exception if the handler is not set.
      *
-     * @param mixed $prefix
      * @return void
+     * @throws \Apirone\SDK\Service\Db\HandlerNotSetException
      */
-    public static function setPrefix($prefix)
+    public static function checkHandler(): void
     {
-        $class = new \ReflectionClass(static::class);
-        $class->setStaticPropertyValue('prefix', $prefix);
+        if (!is_callable(static::$handler)) {
+            throw new HandlerNotSetException('Db handler not set');
+        }
     }
 
     /**
@@ -64,14 +144,10 @@ class InvoiceDb
      */
     public static function execute($query)
     {
-        if (!self::$handler) {
-            return false;
-        }
+        static::checkHandler();
 
-        $result = call_user_func(self::$handler, $query);
-        if (LoggerWrapper::$handler) {
-            LoggerWrapper::debug("InvoiceDB::execute", ['query' => $query, 'result' => $result]);
-        }
+        $result = call_user_func(static::$handler, $query);
+        LoggerWrapper::debug("Db::execute()", ['query' => $query, 'result' => $result]);
 
         return $result;
     }
@@ -84,22 +160,42 @@ class InvoiceDb
      * @param string $collate
      * @return mixed
      */
-    public static function install(
-        string $prefix = '',
-        string $charset = 'utf8mb4',
-        string $collate = 'utf8mb4_general_ci'
-    ) {
-        return InvoiceDb::execute(InvoiceQuery::createInvoicesTable($prefix, $charset, $collate));
+    public static function install()
+    {
+        return Db::execute(DB::adapterClass()::createInvoicesTable());
     }
 
     /**
      * Uninstall invoice table from database
      *
-     * @param string $prefix
      * @return mixed
      */
-    public static function uninstall(string $prefix = '')
+    public static function uninstall()
     {
-        return InvoiceDb::execute(InvoiceQuery::dropInvoicesTable($prefix));
+        return Db::execute(DB::adapterClass()::dropInvoicesTable());
+    }
+
+    /**
+     * Save created
+     * @param \Apirone\SDK\Invoice $invoice
+     * @return mixed
+     * @throws \Apirone\SDK\Service\Db\HandlerNotSetException
+     */
+    public static function saveInvoice(Invoice $invoice)
+    {
+        $adapter = DB::adapterClass();
+        $query = ($invoice->id === null) ? $adapter::createInvoice($invoice) : $adapter::updateInvoice($invoice);
+
+        return Db::execute($query);
+    }
+
+    public static function getInvoice(string $invoice)
+    {
+        return Db::execute(DB::adapterClass()::getInvoice($invoice));
+    }
+
+    public static function getOrderInvoices(int $order)
+    {
+        return Db::execute(DB::adapterClass()::getOrderInvoices($order));
     }
 }
