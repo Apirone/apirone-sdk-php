@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Apirone\SDK\Model\Settings;
 
 use Apirone\SDK\Model\AbstractModel;
-use Apirone\SDK\Model\Settings\Currency;
 
 class Coin extends AbstractModel
 {
@@ -44,5 +43,23 @@ class Coin extends AbstractModel
         }
 
         return $class;
+    }
+
+    public function toArray(): array
+    {
+        $coin = parent::toArray();
+
+        $abbr = $this->abbr;
+        if (!$abbr) {
+            return $coin;
+        }
+        $parts = explode('@', $abbr, 2);
+        if (count($parts) == 1) {
+            $coin['network'] = $abbr;
+            return $coin;
+        }
+        $coin['token'] = $parts[0];
+        $coin['network'] = $parts[1];
+        return $coin;
     }
 }
