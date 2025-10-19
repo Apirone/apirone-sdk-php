@@ -45,21 +45,26 @@ class Coin extends AbstractModel
         return $class;
     }
 
-    public function toArray(): array
+    public function toStd(): \stdClass
     {
-        $coin = parent::toArray();
+        $std = new \stdClass();
 
         $abbr = $this->abbr;
+
+        $std->abbr = $abbr;
+        $std->alias = $this->alias;
+        $std->test = $this->test;
+
         if (!$abbr) {
-            return $coin;
+            return $std;
         }
         $parts = explode('@', $abbr, 2);
         if (count($parts) == 1) {
-            $coin['network'] = $abbr;
-            return $coin;
+            $std->network = $abbr;
+            return $std;
         }
-        $coin['token'] = $parts[0];
-        $coin['network'] = $parts[1];
-        return $coin;
+        $std->token = $parts[0];
+        $std->network = $parts[1];
+        return $std;
     }
 }
