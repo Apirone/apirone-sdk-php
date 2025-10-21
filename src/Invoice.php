@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Apirone\SDK;
 
-use Apirone\SDK\Service\InvoiceDb;
+use Apirone\SDK\Service\Db;
 use Apirone\SDK\Service\InvoiceQuery;
 use Apirone\SDK\Model\AbstractModel;
 use Apirone\SDK\Model\InvoiceDetails;
@@ -69,19 +69,6 @@ class Invoice extends AbstractModel
     public static function settings(\Apirone\SDK\Model\Settings $settings): void
     {
         static::$settings = $settings;
-    }
-
-    /**
-     * Set DB handler & table prefix for InvoiceDb class
-     *
-     * @param Closure $handler
-     * @param string $prefix
-     * @return void
-     */
-    public static function db(\Closure $handler, string $prefix = ''): void
-    {
-        InvoiceDb::setCallback($handler);
-        InvoiceDb::setPrefix($prefix);
     }
 
     /**
@@ -180,10 +167,7 @@ class Invoice extends AbstractModel
      */
     public static function get(?string $invoice): ?Invoice
     {
-        $prefix = InvoiceDb::$prefix;
-        $query = InvoiceQuery::selectInvoice((string)$invoice, $prefix);
-
-        $result = InvoiceDb::execute($query);
+        $result = Db::getInvoice($invoice);
 
         if (empty($result)) {
             return new static();
@@ -208,10 +192,7 @@ class Invoice extends AbstractModel
      */
     public static function getByOrder(int $order): array
     {
-        $prefix = InvoiceDb::$prefix;
-        $query = InvoiceQuery::selectOrder($order, $prefix);
-
-        $result = InvoiceDb::execute($query);
+        $result = Db::selectOrder($order);
 
         $invoices = [];
 
@@ -432,6 +413,8 @@ class Invoice extends AbstractModel
      */
     public function create(?string $account = null)
     {
+        Db::checkHandler();
+
         if ($this->invoice !== null || !isset($this->createParams)) {
             return $this;
         }
@@ -472,8 +455,7 @@ class Invoice extends AbstractModel
             return false;
         }
 
-        $query = ($this->id === null) ? InvoiceQuery::createInvoice($this, InvoiceDb::$prefix) : InvoiceQuery::updateInvoice($this, InvoiceDb::$prefix);
-        $result = InvoiceDb::execute($query);
+        $result = Db::saveInvoice($invoice);
 
         if ($result == true) {
             $this->id = ($this->id === null) ? 0 : $this->id;
