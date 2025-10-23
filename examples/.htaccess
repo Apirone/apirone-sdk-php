@@ -1,0 +1,5 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule . - [E=REWRITEBASE:/]
+  RewriteRule ^white-label-api(?:/(.*))?$ %{ENV:REWRITEBASE}white-label-api.php?url=$1 [QSA,L]
+</IfModule>
