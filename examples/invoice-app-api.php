@@ -15,10 +15,10 @@ require_once('log.php');
 
 use Apirone\SDK\Invoice;
 use Apirone\SDK\Service\Db;
-use Apirone\SDK\Service\WhiteLabelApi;
+use Apirone\SDK\Service\InvoiceAppApi;
 use Apirone\SDK\Service\Utils;
 
 // Config & DB
 Db::handler($db_handler)->prefix($table_prefix);
 
-WhiteLabelApi::start();
+InvoiceAppApi::start();

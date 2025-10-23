@@ -17,7 +17,7 @@ namespace Apirone\SDK\Service;
 use Apirone\API\Endpoints\Service;
 use Apirone\SDK\Invoice;
 use Apirone\SDK\Service\Utils;
-class WhiteLabelApi
+class InvoiceAppApi
 {
     public static function start()
     {
