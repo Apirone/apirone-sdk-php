@@ -115,7 +115,7 @@ class Sqlite implements AdapterInterface
         return sprintf("UPDATE %s SET status = '%s', details = '%s', meta = %s WHERE invoice = '%s';",
             Db::tableName(),
             $invoice->status,
-            json_decode($invoice->details),
+            json_encode($invoice->details),
             $meta,
             $invoice->invoice);
 

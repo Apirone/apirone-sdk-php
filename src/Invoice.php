@@ -72,17 +72,6 @@ class Invoice extends AbstractModel
     }
 
     /**
-     * Set Render invoice dataUrl
-     *
-     * @param string $dataUrl
-     * @return void
-     */
-    public static function dataUrl(string $dataUrl)
-    {
-        Render::$dataUrl = $dataUrl;
-    }
-
-    /**
      * Set log handler
      * Alias to setLogger()
      *
@@ -455,7 +444,7 @@ class Invoice extends AbstractModel
             return false;
         }
 
-        $result = Db::saveInvoice($invoice);
+        $result = Db::saveInvoice($this);
 
         if ($result == true) {
             $this->id = ($this->id === null) ? 0 : $this->id;

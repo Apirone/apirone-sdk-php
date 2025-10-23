@@ -16,6 +16,15 @@ namespace Apirone\SDK\Service;
 use Apirone\API\Log\LoggerWrapper;
 use Apirone\SDK\Invoice;
 use Apirone\SDK\Service\Db\HandlerNotSetException;
+
+/**
+ * @package Apirone\SDK\Service
+ *
+ * @method public adapter(string $adapter)
+ * @method public handler(Callable $handler)
+ * @method public prefix(string $prefix)
+ * @method public table(string $table)
+ */
 class Db
 {
 

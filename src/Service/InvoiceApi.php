@@ -21,7 +21,7 @@ class InvoiceApi
 {
     public static function invoice($id)
     {
-        $invoice = Invoice::get($invoice);
+        $invoice = Invoice::get($id);
         if ($invoice) {
             Utils::sendJson($invoice->details);
             exit;
