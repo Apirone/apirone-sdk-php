@@ -45,7 +45,7 @@ class InvoiceAppApi
             Utils::sendJson($invoice->details->toJson());
             exit;
         }
-        $json = '{"message": "Incorrect invoice id." }';
+        $json = json_decode('{"message": "Incorrect invoice id." }');
 
         Utils::sendJson($json, 400);
         exit;

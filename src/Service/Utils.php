@@ -339,7 +339,7 @@ class Utils
         }
 
         http_response_code($code);
-        $json = gettype($data) == 'object' ? json_encode($data) : $data;
+        $json = json_encode($data);
         if ($json === false) {
             // Avoid echo of empty string (which is invalid JSON), and
             // JSONify the error message instead:
