@@ -171,7 +171,7 @@ class Db
      */
     public static function install()
     {
-        return Db::execute(DB::adapterClass()::createInvoicesTable());
+        return Db::execute(DB::adapterClass()::createTable());
     }
 
     /**
@@ -181,7 +181,7 @@ class Db
      */
     public static function uninstall()
     {
-        return Db::execute(DB::adapterClass()::dropInvoicesTable());
+        return Db::execute(DB::adapterClass()::dropTable());
     }
 
     /**
