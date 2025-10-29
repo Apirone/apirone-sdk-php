@@ -27,13 +27,13 @@ class Postgres implements AdapterInterface
     public static function createTable(): string
     {
         return sprintf('CREATE TABLE IF NOT EXISTS %1$s (
-                id SERIAL PRIMARY KEY,
+                "id" SERIAL PRIMARY KEY,
                 "time" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 "order" INTEGER NOT NULL DEFAULT 0,
-                invoice VARCHAR(64) NOT NULL,
-                status VARCHAR(10) NOT NULL,
-                details TEXT,
-                meta TEXT,
+                "invoice" VARCHAR(64) NOT NULL,
+                "status" VARCHAR(10) NOT NULL,
+                "details" TEXT,
+                "meta" TEXT,
                 UNIQUE (invoice)
             );
 
@@ -58,7 +58,7 @@ class Postgres implements AdapterInterface
      */
     public static function getInvoice(string $invoice)
     {
-        return sprintf('SELECT * FROM %s WHERE invoice = "%s"', Db::tableName(), $invoice);
+        return sprintf('SELECT * FROM %s WHERE "invoice" = "%s"', Db::tableName(), $invoice);
     }
 
     /**
@@ -84,7 +84,7 @@ class Postgres implements AdapterInterface
         $invoice->order = $invoice->order ?? 0;
         $meta = property_exists($invoice, 'meta') ? sprintf("'%s'", json_encode($invoice->meta)) : "NULL";
 
-        return sprintf('INSERT INTO %s (order, invoice, status, details, meta) VALUES (%s, "%s", "%s", "%s", %s);',
+        return sprintf('INSERT INTO %s ("order", "invoice", "status", "details", "meta") VALUES (%s, "%s", "%s", "%s", %s);',
                 Db::tableName(),
                 (int) $invoice->order,
                 $invoice->invoice,

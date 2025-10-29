@@ -181,7 +181,7 @@ class Invoice extends AbstractModel
      */
     public static function getByOrder(int $order): array
     {
-        $result = Db::selectOrder($order);
+        $result = Db::getOrderInvoices($order);
 
         $invoices = [];
 
@@ -195,7 +195,7 @@ class Invoice extends AbstractModel
             $json->invoice = $data['invoice'];
             $json->status = $data['status'];
             $json->details = json_decode($data['details']);
-            $json->meta = json_decode($data['meta']);
+            $json->meta = $row['meta'] !== NULL ? json_decode($row['meta']) : null;
 
             $invoices[] = Invoice::fromJson($json);
         }

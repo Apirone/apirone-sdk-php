@@ -31,13 +31,13 @@ class Sqlite implements AdapterInterface
     public static function createTable(): string
     {
         return sprintf('CREATE TABLE IF NOT EXISTS %s (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+            "time" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             "order" INTEGER NOT NULL DEFAULT 0,
-            invoice VARCHAR(64) NOT NULL,
-            status VARCHAR(10) NOT NULL,
-            details TEXT NULL,
-            meta TEXT NULL,
+            "invoice" VARCHAR(64) NOT NULL,
+            "status" VARCHAR(10) NOT NULL,
+            "details" TEXT NULL,
+            "meta" TEXT NULL,
             UNIQUE (invoice)
         );', Db::tableName());
 
@@ -91,7 +91,7 @@ class Sqlite implements AdapterInterface
         $invoice->order = $invoice->order ?? 0;
         $meta = property_exists($invoice, 'meta') ? sprintf("'%s'", json_encode($invoice->meta)) : "NULL";
 
-        return sprintf('INSERT INTO %s (order, invoice, status, details, meta) VALUES (%s, "%s", "%s", "%s", %s);',
+        return sprintf('INSERT INTO %s ("order", "invoice", "status", "details", "meta") VALUES (%s, "%s", "%s", \'%s\', %s);',
                 Db::tableName(),
                 (int) $invoice->order,
                 $invoice->invoice,

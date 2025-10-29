@@ -303,9 +303,10 @@ class Utils
      * @param mixed $string
      * @return mixed
      */
-    public static function sanitize($string)
+    public static function sanitize($string = '')
     {
-        if (is_object($string) || is_array($string)) {
+
+        if (empty($string) || is_object($string) || is_array($string)) {
             return '';
         }
 
