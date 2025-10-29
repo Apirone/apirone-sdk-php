@@ -79,6 +79,12 @@ require_once('helpers/common.php');
             <div>
                 <h2>Show invoice</h2>
                 <p>
+                    Starting with SDK 2.0, server-side rendering is no longer used. Instead, we now use
+                    <a href="https://github.com/Apirone/invoice-app" target="_blank">Apirone Invoice App</a>.
+                    This app, written in Vue, combines the ease of integration with the usability of modern front-end apps.
+                </p>
+                <h3>Invoice APP</h3>
+                <p>
                     To display an invoice, use <code>Invoice::renderLoader()</code>.<br />
                     You can pass an optional <code>$invoice_id</code> parameter to display an invoice by its ID.
                     If the parameter is not set, the function will try to get it from the GET request parameter "invoice".
@@ -90,6 +96,13 @@ require_once('helpers/common.php');
                     The request is made using the POST method and also has an additional header <code>HTTP_X_REQUESTED_WITH = XMLHttpRequest</code>
                 </p>
                 <?php echo load_file_content('./render_ajax_response.php'); ?>
+                <h3>White label API</h3>
+                <p>
+                    By default, Invoice-App uses the Apirone API to retrieve data.
+                    To fully implement White Label on your server, you need to implement your own API with two endpoints: invoices and wallets.
+                    You can see an example implementation in the white-label-api.php file.
+                </p>
+                <?php echo load_file_content('./white-label-api.php'); ?>
             </div>
             <div id="step_5">
                 <h2>Playground</h2>
@@ -242,7 +255,6 @@ require_once('helpers/common.php');
                             <div class="border-t-2 mt-6 pt-4">
                                 <span class="block mb-8"><span class="text-red-500">*</span> - Required fields</span>
                                 <button type="submit" :disabled="!data.currency" class="text-white rounded-md md:w-48 w-full bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-4 mr-2 my-2" @click="$event.prevent; create" x-text="label"></button>
-                                <button type="button" x-show="invoice && !invoice.message" class="text-white rounded-md md:w-48 w-full bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-4 my-2" @click="render">Show render</button>
                                 <button type="button" x-show="invoice && !invoice.message" class="text-white rounded-md md:w-48 w-full bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-4 my-2" @click="front">Show invoice</button>
                                 <label x-show="invoice && !invoice.message">QR Only<input class="mx-2" type="checkbox" x-model="qrOnly" /></label>
                             </div>
