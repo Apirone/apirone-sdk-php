@@ -10,34 +10,13 @@
  */
 
 use Apirone\SDK\Service\Db;
+
+// Configure SQLite PDO connection
 $db_path = '/var/www/storage/sqlite.db';
-// $sqlite = new SQLite3($db_path);
-
-// $db_handler = static function ($query) {
-//     global $sqlite;
-
-//     $select = (str_contains(strtoupper($query), 'SELECT')) ? true : false;
-
-//     try {
-//         $result = $select ? $sqlite->query($query) : $sqlite->exec($query);
-//     }
-//     catch (\Exception $e) {
-//         return $e->getMessage();
-//     }
-
-//     if (!$select) {
-//         return (bool) $result;
-//     }
-
-//     while ($rows[] = $result->fetchArray(SQLITE3_ASSOC)) {}
-//     unset($rows[count($rows)]);
-
-//     return $rows;
-// };
-
 $pdo = new \PDO('sqlite:' . $db_path);
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+// Database handler callback function
 $db_handler = static function ($query) {
     global $pdo;
 
@@ -57,6 +36,7 @@ $db_handler = static function ($query) {
     return $result->fetchAll(PDO::FETCH_ASSOC);
 };
 
+// Configure SDK Db class
 Db::handler($db_handler)
     ->adapter('sqlite') // Also available mysql & postgres. By default used `mysql` adapter
     ->prefix('prefix_') // By default prefix is empty string
