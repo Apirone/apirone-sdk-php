@@ -14,12 +14,12 @@ require_once('../db.php');
 require_once('../log.php');
 
 use Apirone\SDK\Invoice;
+use Apirone\SDK\Service\Db;
 use Apirone\SDK\Service\Utils;
 use Apirone\SDK\Model\Settings;
 use Apirone\SDK\Model\UserData;
 
-// Config & DB
-Invoice::db($db_handler, $table_prefix);
+// Config
 Invoice::settings(Settings::fromFile('/var/www/storage/settings.json'));
 
 $invoiceJson = json_decode(Utils::sanitize($_POST['data']));

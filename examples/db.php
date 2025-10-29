@@ -9,30 +9,56 @@
  * file that was distributed with this source code.
  */
 
-$host         = 'db';
-$user         = 'root';
-$pass         = 'apirone';
-$database     = 'apirone';
-$table_prefix = 'pfx_';
+use Apirone\SDK\Service\Db;
+$db_path = '/var/www/storage/sqlite.db';
+// $sqlite = new SQLite3($db_path);
 
-// MySQL connection example
-$conn = new mysqli($host, $user, $pass, $database);
-$conn->select_db($database);
+// $db_handler = static function ($query) {
+//     global $sqlite;
 
-// DB MySQL handler example
+//     $select = (str_contains(strtoupper($query), 'SELECT')) ? true : false;
+
+//     try {
+//         $result = $select ? $sqlite->query($query) : $sqlite->exec($query);
+//     }
+//     catch (\Exception $e) {
+//         return $e->getMessage();
+//     }
+
+//     if (!$select) {
+//         return (bool) $result;
+//     }
+
+//     while ($rows[] = $result->fetchArray(SQLITE3_ASSOC)) {}
+//     unset($rows[count($rows)]);
+
+//     return $rows;
+// };
+
+$pdo = new \PDO('sqlite:' . $db_path);
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 $db_handler = static function ($query) {
-    global $conn;
+    global $pdo;
 
-    // Escape \u for utf8 encoding. mysqli->query remove all single backslashes
-    $query = str_replace('\u', '\\\u', $query);
-    $result = $conn->query($query, MYSQLI_STORE_RESULT);
+    $select = (str_contains(strtoupper($query), 'SELECT')) ? true : false;
 
-    if (!$result) {
-        return $conn->error;
+    try {
+        $result = $select ? $pdo->query($query) : $pdo->exec($query);
     }
-    if (gettype($result) == 'boolean') {
-        return $result;
+    catch (\Exception $e) {
+        return $e->getMessage();
     }
 
-    return $result->fetch_all(MYSQLI_ASSOC);
+    if (!$select) {
+        return (bool) $result;
+    }
+
+    return $result->fetchAll(PDO::FETCH_ASSOC);
 };
+
+Db::handler($db_handler)
+    ->adapter('sqlite') // Also available mysql & postgres. By default used `mysql` adapter
+    ->prefix('prefix_') // By default prefix is empty string
+    ->table('my_invoice_table'); // By defailt used `apirone_invoice`
+
