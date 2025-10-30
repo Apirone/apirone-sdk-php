@@ -10,11 +10,11 @@
  */
 
 require_once('../vendor/autoload.php');
-require_once('db.php');
+require_once('db_sqlite.php');
 
 use Apirone\SDK\Service\Db;
 
-// See db.php for configure details
+// See db_sqlite.php for configure details
 
 
 // Call install method to create table

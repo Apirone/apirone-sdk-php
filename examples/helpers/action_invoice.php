@@ -10,7 +10,7 @@
  */
 
 require_once('common.php');
-require_once('../db.php');
+require_once('../db_postgres.php');
 require_once('../log.php');
 
 use Apirone\SDK\Invoice;

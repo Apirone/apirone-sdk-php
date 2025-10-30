@@ -3,7 +3,7 @@ vendor
 docker/data
 docker/storage
 composer.lock
-docker-compose.yml
+docker-compose*.yml
 src/*.php
 src/*.json
 !src/Invoice.php

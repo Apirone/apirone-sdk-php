@@ -35,9 +35,7 @@ class Postgres implements AdapterInterface
                 "details" TEXT,
                 "meta" TEXT,
                 UNIQUE (invoice)
-            );
-
-            CREATE INDEX idx_%1$s_order ON %1$s ("order");', Db::tableName());
+            );', Db::tableName());
     }
 
     /**
@@ -58,7 +56,7 @@ class Postgres implements AdapterInterface
      */
     public static function getInvoice(string $invoice)
     {
-        return sprintf('SELECT * FROM %s WHERE "invoice" = "%s"', Db::tableName(), $invoice);
+        return sprintf('SELECT * FROM %s WHERE "invoice" = \'%s\'', Db::tableName(), $invoice);
     }
 
     /**
@@ -84,7 +82,7 @@ class Postgres implements AdapterInterface
         $invoice->order = $invoice->order ?? 0;
         $meta = property_exists($invoice, 'meta') ? sprintf("'%s'", json_encode($invoice->meta)) : "NULL";
 
-        return sprintf('INSERT INTO %s ("order", "invoice", "status", "details", "meta") VALUES (%s, "%s", "%s", "%s", %s);',
+        return sprintf('INSERT INTO %s ("order", "invoice", "status", "details", "meta") VALUES (%s, \'%s\', \'%s\', \'%s\', %s);',
                 Db::tableName(),
                 (int) $invoice->order,
                 $invoice->invoice,
