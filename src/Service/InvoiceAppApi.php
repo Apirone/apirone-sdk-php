@@ -54,5 +54,6 @@ class InvoiceAppApi
     private static function wallets()
     {
         Utils::sendJson(Service::wallet());
+        exit;
     }
 }

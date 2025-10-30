@@ -10,7 +10,7 @@
     <title>Invoice</title>
         <script>
             window.apirone_config = {
-              service_url: 'https://apirone.com/api/v2/',
+              service_url: 'http://localhost/invoice-app-api/',
               images_relative_path: '/assets/img',
               invoice_id_key: 'id',
             };

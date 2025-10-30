@@ -13,12 +13,6 @@ require_once('helpers/common.php');
 require_once('db_sqlite.php');
 require_once('log.php');
 
-use Apirone\SDK\Invoice;
-use Apirone\SDK\Service\Db;
 use Apirone\SDK\Service\InvoiceAppApi;
-use Apirone\SDK\Service\Utils;
-
-// Config & DB
-Db::handler($db_handler)->prefix($table_prefix);
 
 InvoiceAppApi::start();
