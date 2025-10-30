@@ -1,5 +1,6 @@
 services:
-  apache:
+  php:
+    container_name: apirone_sdk_php_apache
     build:
       context: ./
       dockerfile: ./docker/Dockerfile
@@ -21,13 +22,37 @@ services:
       - "host.docker.internal:host-gateway"
     ports:
       - 80:80
-  # Maria DB container
-  db:
-    image: mariadb:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: apirone
-    volumes:
-      - ./docker/data/mysql:/var/lib/mysql
-      - ./docker/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
-    ports:
-      - '3306:3306'
+
+  ##
+  # To use mysql or postgresql container, uncomment the desired one
+  #
+  # # Maria DB container
+  # db_mysql:
+  #   container_name: apirone_sdk_php_mysql
+  #   image: mariadb:latest
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: apirone
+  #   volumes:
+  #     - ./docker/data/mysql:/var/lib/mysql
+  #     - ./docker/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+  #   ports:
+  #     - '3306:3306'
+
+  # # PostgreSQL DB container
+  # db_pgsql:
+  #   container_name: apirone_sdk_php_pgsql
+  #   image: postgres
+  #   # set shared memory limit when using docker compose
+  #   shm_size: 128mb
+  #   # or set shared memory limit when deploy via swarm stack
+  #   #volumes:
+  #   #  - type: tmpfs
+  #   #    target: /dev/shm
+  #   #    tmpfs:
+  #   #      size: 134217728 # 128*2^20 bytes = 128Mb
+  #   environment:
+  #     POSTGRES_PASSWORD: apirone
+  #     POSTGRES_USER: apirone
+  #     POSTGRES_DB: apirone
+  #   ports:
+  #     - "5432:5432"

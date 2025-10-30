@@ -51,6 +51,9 @@ RUN docker-php-ext-install curl && \
 # Install xdebug
 RUN pecl install xdebug-3.4.0 && docker-php-ext-enable xdebug && mkdir /var/log/xdebug
 
+RUN apt-get update && apt-get install -y libpq-dev \
+&& docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+&& docker-php-ext-install pdo pdo_pgsql pgsql
 
 # CA-Certificates
 RUN apt-get install ca-certificates
