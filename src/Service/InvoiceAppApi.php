@@ -24,7 +24,7 @@ class InvoiceAppApi
         $endpoint = Utils::sanitize($_REQUEST['url']);
 
         switch ($endpoint) {
-            // Invoice request URl looks like this: https://your-white-label-api-root[invoices/{INVOICE_ID}
+            // Invoice request URl looks like this: https://your-white-label-api-root/invoices/{INVOICE_ID}
             // We need to get last part from URL
             case str_contains($endpoint, 'invoices'):
                 $urlParts = explode('/', $endpoint);
@@ -42,6 +42,9 @@ class InvoiceAppApi
     {
         $invoice = Invoice::get($id);
         if ($invoice->id !== null) {
+            if ($invoice->details->isExpired() == true && $invoice->status !="expired") {
+                $invoice->update();
+            }
             Utils::sendJson($invoice->details->toJson());
             exit;
         }
