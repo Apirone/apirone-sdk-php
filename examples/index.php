@@ -20,14 +20,14 @@ require_once('helpers/common.php');
         <div class="container mx-auto max-w-5xl prose prose-base">
             <h1 class="md:pt-16 pt-8 text-center md:text-left">Apirone SDK PHP examples</h1>
             <div>
-                <h2>Install via composer</h2>
+                <h2>Install SDK via composer</h2>
                 <pre><code class="language-bash">composer require apirone-sdk-php</code></pre>
             </div>
             <div>
                 <h2>Create database and logging callback functions</h2>
-                <p>Simple example with <i>mysqli</i> usage.</p>
-                <?php echo load_file_content('db.php'); ?>
-                <p>Simple write to file example</p>
+                <p>Simple example with <i>SQLite</i> usage.</p>
+                <?php echo load_file_content('db_sqlite.php'); ?>
+                <p>Simple <i>write log to file</i> example</p>
                 <?php echo load_file_content('log.php'); ?>
             </div>
             <div x-data="table" x-init="load" id="step_2">
@@ -59,7 +59,7 @@ require_once('helpers/common.php');
 
             </div>
             <div>
-                <h2>Apirone callback handler</h2>
+                <h2>Apirone API callbacks handler</h2>
                 <p>
                     Response processing is important for correct operation of the library.
                     To do this, you need to create a URL that will respond to requests from the apirone service.
@@ -89,20 +89,16 @@ require_once('helpers/common.php');
                     You can pass an optional <code>$invoice_id</code> parameter to display an invoice by its ID.
                     If the parameter is not set, the function will try to get it from the GET request parameter "invoice".
                 </p>
-                <?php echo load_file_content('./render.php'); ?>
+                <?php echo load_file_content('./invoice.html'); ?>
+
+                <h3>Local API for Invoice App</h3>
                 <p>
-                    To process ajax requests from the invoice output page, you need to add a request processing page via
-                    <code>Invoice::dataUrl('/render_ajax_response.php');</code> The required parameters will be added by the JS script.
-                    The request is made using the POST method and also has an additional header <code>HTTP_X_REQUESTED_WITH = XMLHttpRequest</code>
-                </p>
-                <?php echo load_file_content('./render_ajax_response.php'); ?>
-                <h3>White label API</h3>
-                <p>
-                    By default, Invoice-App uses the Apirone API to retrieve data.
+                    By default, Invoice-App uses the <a href="https://apirone.com/docs" target="_blank">Apirone API</a> to retrieve data.
                     To fully implement White Label on your server, you need to implement your own API with two endpoints: invoices and wallets.
-                    You can see an example implementation in the white-label-api.php file.
+                    You can see an example implementation in the <i>invoice-app-api.php</i> and <i>.htaccess</i> files.
                 </p>
-                <?php echo load_file_content('./white-label-api.php'); ?>
+                <?php echo load_file_content('./invoice-app-api.php'); ?>
+                <?php echo load_file_content('.htaccess'); ?>
             </div>
             <div id="step_5">
                 <h2>Playground</h2>
@@ -252,6 +248,7 @@ require_once('helpers/common.php');
                                     <button type="button" class="text-white rounded-md w-20  bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-2 mr-2 my-2" @click="addExtra">Add</button>
                                     <button x-show="userData.extras.length > 0" type="button" class="text-white rounded-md min-w-20  bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-2 mr-2 my-2" @click="userData.extras=[]">Delete All</button>
                                 </div>
+                            </div>
                             <div class="border-t-2 mt-6 pt-4">
                                 <span class="block mb-8"><span class="text-red-500">*</span> - Required fields</span>
                                 <button type="submit" :disabled="!data.currency" class="text-white rounded-md md:w-48 w-full bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-4 mr-2 my-2" @click="$event.prevent; create" x-text="label"></button>

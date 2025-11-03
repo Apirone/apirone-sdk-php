@@ -62,11 +62,6 @@ function playground() {
       if(result) { this.invoice = result; this.content = JSON.stringify(result, null, 2); }
       this.label = 'Create';
     },
-    render() {
-      if (this.invoice == null) {return;}
-      qr = this.qrOnly ? '&qr-only=1' : '';
-      window.open('/render.php?invoice=' + this.invoice.invoice + qr, '_blank').focus();
-    },
     front() {
       if (this.invoice == null) {return;}
       qr = this.qrOnly ? '&qr-only=1' : '';
@@ -89,7 +84,6 @@ async function ajax(url, form=false) {
   if (!form) {
     form = new FormData();
   }
-  // console.log(JSON.stringify(Object.fromEntries(form)));
   await fetch(url, {
       method: 'POST',
       headers: {

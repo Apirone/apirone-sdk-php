@@ -46,8 +46,7 @@ if(!function_exists('load_file_content')) {
         if (!$wrap) {
             return $content;
         }
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
 
-        return sprintf('<pre>%s<code class="language-%s">%s</code></pre>', $filename, $ext, $content);
+        return sprintf('<pre><strong class="!text-white">%s</strong><code>%s</code></pre>', $filename, $content);
     }
 }
