@@ -112,12 +112,11 @@ class Sqlite implements AdapterInterface
         $invoice = $invoice->toJson();
         $meta = property_exists($invoice, 'meta') ? sprintf("'%s'", json_encode($invoice->meta)) : "NULL";
 
-        return sprintf("UPDATE %s SET status = '%s', details = '%s', meta = %s WHERE invoice = '%s';",
+        return sprintf('UPDATE %s SET "time" = CURRENT_TIMESTAMP, "status" = \'%s\', "details" = \'%s\', "meta" = %s WHERE "invoice" = \'%s\';',
             Db::tableName(),
             $invoice->status,
             json_encode($invoice->details),
             $meta,
             $invoice->invoice);
-
     }
 }

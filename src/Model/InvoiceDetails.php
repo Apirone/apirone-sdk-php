@@ -64,27 +64,27 @@ class InvoiceDetails extends AbstractModel
      *
      * @var null|string Invoice creation date. Contains the full date in ISO-8601 format, for example, 2022-02-22T09:00:30
      */
-    private ?string $created;
+    private ?string $created = null;
 
     /**
      * @var null|string Currency type
      */
-    private ?string $currency;
+    private ?string $currency = null;
 
     /**
      * @var null|string The generated cryptocurrency address to receive a payment from a customer
      */
-    private ?string $address;
+    private ?string $address = null;
 
     /**
      * @var null|string Invoice expiration time in ISO-8601 format, for example, 2022-02-22T09:00:30
      */
-    private ?string $expire;
+    private ?string $expire = null;
 
     /**
      * @var null|string Amount in the selected currency
      */
-    private ?string $amount;
+    private ?string $amount = null;
 
     /**
      * @var null|UserData Some additional information about the invoice
@@ -94,7 +94,7 @@ class InvoiceDetails extends AbstractModel
     /**
      * @var null|string Invoice status
      */
-    private ?string $status;
+    private ?string $status = null;
 
     /**
      * @var null|array Invoice status change history

@@ -32,7 +32,6 @@ use Apirone\SDK\Model\Settings;
 use Apirone\SDK\Service\Render;
 use Apirone\SDK\Service\Utils;
 use DivisionByZeroError;
-use ArithmeticError;
 use ReflectionException;
 
 class Invoice extends AbstractModel
@@ -44,19 +43,28 @@ class Invoice extends AbstractModel
      */
     public static Settings $settings;
 
+
+    /**
+     * Invoice update timer
+     *
+     * @var int
+     */
+    public static int $timer = 0;
+
     private ?int $id = null;
 
+    private $time;
     private ?int $order = null;
 
     private ?string $invoice = null;
 
     private ?string $status = null;
 
-    private ?InvoiceDetails $details;
+    private ?InvoiceDetails $details = null;
 
     private ?\stdClass $meta = null;
 
-    private ?array $createParams;
+    private ?array $createParams = null;
 
     private function __construct() {}
 
@@ -69,6 +77,17 @@ class Invoice extends AbstractModel
     public static function settings(\Apirone\SDK\Model\Settings $settings): void
     {
         static::$settings = $settings;
+    }
+
+    /**
+     * Set invoice update timer
+     *
+     * @param int $timer
+     * @return void
+     */
+    public static function timer(int $timer = 0): void
+    {
+        static::$timer = $timer;
     }
 
     /**
@@ -157,13 +176,13 @@ class Invoice extends AbstractModel
     public static function get(?string $invoice): ?Invoice
     {
         $result = Db::getInvoice($invoice);
-
         if (empty($result)) {
             return new static();
         }
         $row = $result[0];
         $json = new \stdClass();
         $json->id = $row['id'];
+        $json->time = strtotime($row['time']);
         $json->order = $row['order'];
         $json->invoice = $row['invoice'];
         $json->status = $row['status'];
@@ -171,10 +190,9 @@ class Invoice extends AbstractModel
         $json->meta = $row['meta'] !== NULL ? json_decode($row['meta']) : null;
 
         $invoice = Invoice::fromJson($json);
-
-        if ($invoice->details->isExpired() == true && $invoice->status !="expired") {
+        // if ($invoice->details->isExpired() == true && $invoice->status !="expired") {
             $invoice->update();
-        }
+        // }
 
         return $invoice;
     }
@@ -482,11 +500,19 @@ class Invoice extends AbstractModel
         if(!isset($this->details)) {
             return false;
         }
-        $historyCount = count($this->details->history);
 
+        if (Invoice::$timer > 0) {
+            $timeout = Invoice::$timer <= 5 ? 5 : Invoice::$timer;
+
+            if (time() - $this->time < $timeout) {
+                return false;
+            }
+        }
+
+        $historyCount = count($this->details->history);
         $this->details->update();
 
-        if ($historyCount == count($this->details->history)) {
+        if (Invoice::$timer <= 0 && $historyCount == count($this->details->history)) {
             return false;
         }
 
@@ -514,8 +540,10 @@ class Invoice extends AbstractModel
     public function toJson(): \stdClass
     {
         $json = parent::toJson();
-        unset($json->{'create-params'});
         unset($json->settings);
+        unset($json->time);
+        unset($json->{'create-params'});
+        unset($json->{'update-timeout'});
 
         return $json;
     }
