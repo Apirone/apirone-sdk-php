@@ -170,7 +170,13 @@ class Invoice extends AbstractModel
         $json->details = json_decode($row['details']);
         $json->meta = $row['meta'] !== NULL ? json_decode($row['meta']) : null;
 
-        return Invoice::fromJson($json);
+        $invoice = Invoice::fromJson($json);
+
+        if ($invoice->details->isExpired() == true && $invoice->status !="expired") {
+            $invoice->update();
+        }
+
+        return $invoice;
     }
 
     /**
@@ -197,8 +203,14 @@ class Invoice extends AbstractModel
             $json->details = json_decode($data['details']);
             $json->meta = $row['meta'] !== NULL ? json_decode($row['meta']) : null;
 
-            $invoices[] = Invoice::fromJson($json);
+            $invoice = Invoice::fromJson($json);
+            if ($invoice->details->isExpired() == true && $invoice->status !="expired") {
+                $invoice->update();
+            }
+
+            $invoices[] = $invoice;
         }
+
 
         return $invoices;
     }

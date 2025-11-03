@@ -42,9 +42,6 @@ class InvoiceAppApi
     {
         $invoice = Invoice::get($id);
         if ($invoice->id !== null) {
-            if ($invoice->details->isExpired() == true && $invoice->status !="expired") {
-                $invoice->update();
-            }
             Utils::sendJson($invoice->details->toJson());
             exit;
         }
