@@ -1,14 +1,5 @@
 <?php
 
-/**
- * This file is part of the Apirone SDK.
- *
- * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 require_once('common.php');
 require_once('../db_postgres.php');
 require_once('../log.php');

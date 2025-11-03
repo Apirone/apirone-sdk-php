@@ -20,7 +20,11 @@ require_once('helpers/common.php');
         <div class="container mx-auto max-w-5xl prose prose-base">
             <h1 class="md:pt-16 pt-8 text-center md:text-left">Apirone SDK PHP examples</h1>
             <div>
-                <h2>Install SDK via composer</h2>
+                <h2>Install SDK</h2>
+                <p>
+                    The easiest way to install the library is via Composer.
+                    Otherwise, you'll need to install the <a href="https://github.com/Apirone/apirone-api-php" target="_blank">apirone-api-php</a> library.
+                </p>
                 <pre><code class="language-bash">composer require apirone-sdk-php</code></pre>
             </div>
             <div>
