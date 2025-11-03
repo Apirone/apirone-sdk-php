@@ -38,6 +38,6 @@ if(!function_exists('load_file_content')) {
             return $content;
         }
 
-        return sprintf('<pre><strong class="!text-white">%s</strong><code>%s</code></pre>', $filename, $content);
+        return sprintf('<pre><strong class="!text-white filename">%s</strong><code>%s</code></pre>', $filename, "\n" . $content);
     }
 }

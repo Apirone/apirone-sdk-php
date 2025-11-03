@@ -14,6 +14,7 @@ require_once('helpers/common.php');
         <script>hljs.highlightAll();</script>
         <link rel="icon" href="/helpers/favicon.ico?v=0.0.1">
         <script src="/helpers/script.js"></script>
+        <style>pre strong.filename {display: block; background-color: #5d8ab9; margin: -12px -15px; padding: 8px 25px;}</style>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body class="flex px-4" x-data>
@@ -52,12 +53,13 @@ require_once('helpers/common.php');
                 </p>
                 <?php echo load_file_content('settings.php'); ?>
 
-                <div x-data="settings" x-init="load" class="mt-20">
+                <div x-data="settings" x-init="load; $watch('file', value => hljs.highlightElement($refs.settingsJson))" class="mt-20">
                     <p>Settings config example</p>
                     <div class="relative">
-                        <button x-show="file" class="absolute top-4 right-10 text-gray-200" @click="toggle" x-text="expand ? 'Collapse' : 'Expand'"></button>
-                        <pre><code class="language-json" :class="{'' : expand, 'max-h-96' : !expand}" x-text="content"></code></pre>
+                        <strong x-show="file" class="absolute top-[12px] right-10 !text-white cursor-pointer font-mono text-sm" @click="toggle" x-text="expand ? 'Collapse' : 'Expand'"></strong>
+                        <pre><strong class="!text-white filename">settings.json</strong><code class="language-json mt-5" :class="{'' : expand, 'max-h-96' : !expand}" x-ref="settingsJson" x-text="content"></code></pre>
                     </div>
+                    <!-- <button class="text-white rounded-md w-48 bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-2" @click="hljs.highlightElement($refs.settings); console.log($refs.settings);" x-text='hljs'></button> -->
                     <button class="text-white rounded-md w-48 bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-2" @click="doAction" x-text="label" :disabled="file"></button>
                 </div>
 
@@ -93,7 +95,7 @@ require_once('helpers/common.php');
                     You can pass an optional <code>$invoice_id</code> parameter to display an invoice by its ID.
                     If the parameter is not set, the function will try to get it from the GET request parameter "invoice".
                 </p>
-                <?php echo load_file_content('./invoice.html'); ?>
+                <?php echo load_file_content('./invoice.php'); ?>
 
                 <h3>Local API for Invoice App</h3>
                 <p>
@@ -111,7 +113,7 @@ require_once('helpers/common.php');
                 </div>
                 <div x-show="$store.table && $store.settings" class="pb-10">
                     <div class="my-8">
-                        <form x-data="playground" @submit.prevent="create">
+                        <form x-data="playground" @submit.prevent="create" x-init="$watch('invoice', value => hljs.highlightElement($refs.invoiceJson))">
                             <div class="grid md:grid-cols-2 gap-6 grid-cols-1">
                                 <label class="block">
                                     <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
@@ -259,10 +261,11 @@ require_once('helpers/common.php');
                                 <button type="button" x-show="invoice && !invoice.message" class="text-white rounded-md md:w-48 w-full bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-4 my-2" @click="front">Show invoice</button>
                                 <label x-show="invoice && !invoice.message">QR Only<input class="mx-2" type="checkbox" x-model="qrOnly" /></label>
                             </div>
+
                             <h3>Invoice details</h3>
                             <div class="relative">
-                                <button x-show="invoice" class="absolute top-4 right-10 text-gray-200" @click.prevent="toggle" x-text="expand ? 'Collapse' : 'Expand'"></button>
-                                <pre><code class="language-json" :class="{'' : expand, 'max-h-96' : !expand}" x-text="content"></code></pre>
+                                <strong x-show="invoice" class="absolute top-[12px] right-10 !text-white cursor-pointer font-mono text-sm" @click.prevent="toggle" x-text="expand ? 'Collapse' : 'Expand'"></strong>
+                                <pre><strong x-show="invoice" class="!text-white filename">invoice.json</strong><code class="language-json mt-5" :class="{'' : expand, 'max-h-96' : !expand}" x-ref="invoiceJson" x-text="content"></code></pre>
                             </div>
                         </form>
                     </div>

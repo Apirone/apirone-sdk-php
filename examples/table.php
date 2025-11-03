@@ -1,7 +1,7 @@
 <?php
 
 require_once('../vendor/autoload.php');
-require_once('db_sqlite.php');
+require_once('db_adapter.php');
 
 use Apirone\SDK\Service\Db;
 
