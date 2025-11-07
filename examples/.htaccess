@@ -1,5 +1,5 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteRule . - [E=REWRITEBASE:/]
-  RewriteRule ^invoice-app-api(?:/(.*))?$ %{ENV:REWRITEBASE}invoice-app-api.php?url=$1 [QSA,L]
+  RewriteRule ^api(?:/(.*))?$ %{ENV:REWRITEBASE}api.php?url=$1 [QSA,L]
 </IfModule>

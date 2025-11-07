@@ -9,7 +9,7 @@
       <!-- Customize Invoice App congig if need: -->
       <script>
           window.apirone_config = {
-            service_url: 'http://localhost/invoice-app-api/',
+            service_url: 'http://localhost/api/',
             images_relative_path: '/assets/img',
             invoice_id_key: 'id',
           };

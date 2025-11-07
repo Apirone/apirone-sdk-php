@@ -202,7 +202,7 @@ abstract class AbstractModel
      */
     public function toJsonString($flag = 0): string
     {
-        return json_encode($this->toArray(), $flag);
+        return json_encode($this->toJson(), $flag);
     }
 
     /**

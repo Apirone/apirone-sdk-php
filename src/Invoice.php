@@ -43,27 +43,75 @@ class Invoice extends AbstractModel
      */
     public static Settings $settings;
 
-
     /**
-     * Invoice update timer
+     * Minimum interval for checking invoice status
      *
      * @var int
      */
-    public static int $timer = 0;
+    public static int $statusCheckInterval = 0;
 
+    /**
+     * Callback input validation function
+     *
+     * @var mixed
+     */
+    public static $callbackInputChecker = null;
+
+    /**
+     * Payment processing when the API callback is triggered
+     *
+     * @var mixed
+     */
+    public static $callbackPaymentProcessing = null;
+
+    /**
+     * Invoice record Id - auto increment
+     * @var null|int
+     */
     private ?int $id = null;
 
+    /**
+     * Last updated time
+     * @var mixed
+     */
     private $time;
+
+    /**
+     * Order ID in the external system
+     * @var null|int
+     */
     private ?int $order = null;
 
+    /**
+     * Invoice ID
+     * @var null|string
+     */
     private ?string $invoice = null;
 
+    /**
+     * Invoice status
+     * @var null|string
+     */
     private ?string $status = null;
 
+    /**
+     * Apirone invoice data object
+     *
+     * @var null|\Apirone\SDK\Model\InvoiceDetails
+     */
     private ?InvoiceDetails $details = null;
 
+    /**
+     * Additional invoice properties 'key->value'storage
+     *
+     * @var null|\stdClass
+     */
     private ?\stdClass $meta = null;
 
+    /**
+     * Parameter storage for invoice creation
+     * @var null|array
+     */
     private ?array $createParams = null;
 
     private function __construct() {}
@@ -82,24 +130,34 @@ class Invoice extends AbstractModel
     /**
      * Set invoice update timer
      *
-     * @param int $timer
+     * @param int $interval
      * @return void
      */
-    public static function timer(int $timer = 0): void
+    public static function statusCheckInterval(int $interval = 0): void
     {
-        static::$timer = $timer;
+        static::$statusCheckInterval = $interval;
     }
 
     /**
-     * Set log handler
-     * Alias to setLogger()
+     * Set callbackInputChecker
      *
-     * @param mixed $logger
+     * @param int $interval
      * @return void
      */
-    public static function logger($logger): void
+    public static function callbackInputChecker(?callable $callbackInputChecker = null): void
     {
-        LoggerWrapper::setLogger($logger);
+        static::$callbackInputChecker = $callbackInputChecker;
+    }
+
+    /**
+     * Set callbackPaymentProcessing
+     *
+     * @param int $interval
+     * @return void
+     */
+    public static function callbackPaymentProcessing(?callable $callbackPaymentProcessing = null): void
+    {
+        static::$callbackInputChecker = $callbackPaymentProcessing;
     }
 
     /**
@@ -190,9 +248,8 @@ class Invoice extends AbstractModel
         $json->meta = $row['meta'] !== NULL ? json_decode($row['meta']) : null;
 
         $invoice = Invoice::fromJson($json);
-        // if ($invoice->details->isExpired() == true && $invoice->status !="expired") {
-            $invoice->update();
-        // }
+
+        $invoice->update();
 
         return $invoice;
     }
@@ -236,7 +293,6 @@ class Invoice extends AbstractModel
     /**
      * Invoice callback handler
      *
-     * @param mixed $order_handler - Callback func to process your order process logic (change status, etc)
      * @return void
      * @throws ReflectionException
      * @throws RuntimeException
@@ -246,11 +302,10 @@ class Invoice extends AbstractModel
      * @throws NotFoundException
      * @throws MethodNotAllowedException
      */
-    public static function callbackHandler($order_handler = null): void
+    public static function callbackHandler(): void
     {
 
         $data = file_get_contents('php://input');
-
         $params = ($data) ? json_decode(Utils::sanitize($data)) : null;
 
         if (!$params) {
@@ -269,7 +324,6 @@ class Invoice extends AbstractModel
             return;
         }
 
-        // $invoice = Invoice::getInvoice($params->invoice);
         $invoice = Invoice::get($params->invoice);
 
         if (!$invoice->invoice) {
@@ -281,8 +335,8 @@ class Invoice extends AbstractModel
         }
 
         if ($invoice->update()) {
-            if ($order_handler !== null) {
-                $order_handler($invoice);
+            if (is_callable(Invoice::$callbackPaymentProcessing)) {
+                call_user_func(Invoice::$callbackPaymentProcessing, $invoice);
             }
         }
         exit;
@@ -501,10 +555,10 @@ class Invoice extends AbstractModel
             return false;
         }
 
-        if (Invoice::$timer > 0) {
-            $timeout = Invoice::$timer <= 5 ? 5 : Invoice::$timer;
+        if (Invoice::$statusCheckInterval > 0) {
+            $interval = Invoice::$statusCheckInterval <= 5 ? 5 : Invoice::$statusCheckInterval;
 
-            if (time() - $this->time < $timeout) {
+            if (time() - $this->time < $interval) {
                 return false;
             }
         }
@@ -512,7 +566,7 @@ class Invoice extends AbstractModel
         $historyCount = count($this->details->history);
         $this->details->update();
 
-        if (Invoice::$timer <= 0 && $historyCount == count($this->details->history)) {
+        if ($historyCount == count($this->details->history)) {
             return false;
         }
 
@@ -540,10 +594,12 @@ class Invoice extends AbstractModel
     public function toJson(): \stdClass
     {
         $json = parent::toJson();
-        unset($json->settings);
-        unset($json->time);
-        unset($json->{'create-params'});
-        unset($json->{'update-timeout'});
+
+        foreach ($json as $key => $val) {
+            if (!in_array($key, ['id', 'order', 'invoice', 'details', 'status', 'meta'])) {
+                unset($json->{$key});
+            }
+        }
 
         return $json;
     }
