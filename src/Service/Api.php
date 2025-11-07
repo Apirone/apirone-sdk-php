@@ -17,12 +17,16 @@ namespace Apirone\SDK\Service;
 use Apirone\API\Endpoints\Service;
 use Apirone\SDK\Invoice;
 use Apirone\SDK\Service\Utils;
+
 class Api
 {
-    public static function invoices($id)
+    public static function invoices($id, ?callable $paymentProcessing = null)
     {
         $invoice = Invoice::get($id);
         if ($invoice->id !== null) {
+            if ($invoice->update() && is_callable($paymentProcessing)) {
+                call_user_func($paymentProcessing, $invoice);
+            }
             Utils::sendJson($invoice->details->toJson());
             exit;
         }

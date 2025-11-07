@@ -48,21 +48,7 @@ class Invoice extends AbstractModel
      *
      * @var int
      */
-    public static int $statusCheckInterval = 0;
-
-    /**
-     * Callback input validation function
-     *
-     * @var mixed
-     */
-    public static $callbackInputChecker = null;
-
-    /**
-     * Payment processing when the API callback is triggered
-     *
-     * @var mixed
-     */
-    public static $callbackPaymentProcessing = null;
+    public static int $checkInterval = 0;
 
     /**
      * Invoice record Id - auto increment
@@ -133,31 +119,9 @@ class Invoice extends AbstractModel
      * @param int $interval
      * @return void
      */
-    public static function statusCheckInterval(int $interval = 0): void
+    public static function checkInterval(int $interval = 0): void
     {
-        static::$statusCheckInterval = $interval;
-    }
-
-    /**
-     * Set callbackInputChecker
-     *
-     * @param int $interval
-     * @return void
-     */
-    public static function callbackInputChecker(?callable $callbackInputChecker = null): void
-    {
-        static::$callbackInputChecker = $callbackInputChecker;
-    }
-
-    /**
-     * Set callbackPaymentProcessing
-     *
-     * @param int $interval
-     * @return void
-     */
-    public static function callbackPaymentProcessing(?callable $callbackPaymentProcessing = null): void
-    {
-        static::$callbackInputChecker = $callbackPaymentProcessing;
+        static::$checkInterval = $interval;
     }
 
     /**
@@ -247,11 +211,7 @@ class Invoice extends AbstractModel
         $json->details = json_decode($row['details']);
         $json->meta = $row['meta'] !== NULL ? json_decode($row['meta']) : null;
 
-        $invoice = Invoice::fromJson($json);
-
-        $invoice->update();
-
-        return $invoice;
+        return Invoice::fromJson($json);
     }
 
     /**
@@ -302,7 +262,7 @@ class Invoice extends AbstractModel
      * @throws NotFoundException
      * @throws MethodNotAllowedException
      */
-    public static function callbackHandler(): void
+    public static function callbackHandler(?callable $paymentProcessing = null, ?callable $callbackChecker = null): void
     {
 
         $data = file_get_contents('php://input');
@@ -334,10 +294,12 @@ class Invoice extends AbstractModel
             return;
         }
 
-        if ($invoice->update()) {
-            if (is_callable(Invoice::$callbackPaymentProcessing)) {
-                call_user_func(Invoice::$callbackPaymentProcessing, $invoice);
-            }
+        if (is_callable($callbackChecker)) {
+            call_user_func($callbackChecker, $invoice);
+        }
+
+        if ($invoice->update() && is_callable($paymentProcessing)) {
+            call_user_func($paymentProcessing, $invoice);
         }
         exit;
     }
@@ -555,8 +517,8 @@ class Invoice extends AbstractModel
             return false;
         }
 
-        if (Invoice::$statusCheckInterval > 0) {
-            $interval = Invoice::$statusCheckInterval <= 5 ? 5 : Invoice::$statusCheckInterval;
+        if (Invoice::$checkInterval > 0) {
+            $interval = Invoice::$checkInterval <= 5 ? 5 : Invoice::$checkInterval;
 
             if (time() - $this->time < $interval) {
                 return false;
