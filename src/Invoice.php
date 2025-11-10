@@ -145,34 +145,6 @@ class Invoice extends AbstractModel
     }
 
     /**
-     * Create new invoice class from fiat amount
-     *
-     * @param float $value
-     * @param string $from
-     * @param string $to
-     * @param float|int $factor
-     * @return static
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     * @throws InternalServerErrorException
-     */
-    public static function fromFiatAmount(float $value, string $from, string $to, float $factor = 1): Invoice
-    {
-        $class = new static();
-        $class->currency($to);
-        $cryptoAmount = Utils::fiat2crypto($value * $factor, $from, $to);
-        $unitFactor = $class->createParams['currency']->{'units-factor'};
-
-        $class->createParams['amount'] = Utils::cur2min($cryptoAmount, $unitFactor);
-
-        return $class;
-    }
-
-    /**
      * Restore invoice from JSON object
      *
      * @param mixed $json
