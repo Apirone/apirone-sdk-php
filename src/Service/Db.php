@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Apirone\SDK\Service;
 
-use Apirone\API\Log\LoggerWrapper;
 use Apirone\SDK\Invoice;
 use Apirone\SDK\Service\Db\HandlerNotSetException;
+use Apirone\SDK\Service\Logger;
 
 /**
  * @package Apirone\SDK\Service
@@ -156,7 +156,7 @@ class Db
         static::checkHandler();
 
         $result = call_user_func(static::$handler, $query);
-        LoggerWrapper::debug("Db::execute()", ['query' => $query, 'result' => $result]);
+        Logger::debug("Db::execute()", ['query' => $query, 'result' => $result]);
 
         return $result;
     }

@@ -26,7 +26,7 @@ use Apirone\API\Exceptions\ForbiddenException;
 use Apirone\API\Exceptions\InternalServerErrorException;
 use Apirone\API\Exceptions\NotFoundException;
 use Apirone\API\Exceptions\MethodNotAllowedException;
-use Apirone\API\Log\LoggerWrapper;
+use Apirone\SDK\Service\Logger;
 use Apirone\SDK\Model\UserData;
 use Apirone\SDK\Model\Settings;
 use Apirone\SDK\Service\Render;
@@ -229,13 +229,13 @@ class Invoice extends AbstractModel
         if ($result === null) {
             return $invoices;
         }
-        foreach($result as $data) {
+        foreach($result as $row) {
             $json = new \stdClass();
-            $json->id = $data['id'];
-            $json->order = $data['order'];
-            $json->invoice = $data['invoice'];
-            $json->status = $data['status'];
-            $json->details = json_decode($data['details']);
+            $json->id = $row['id'];
+            $json->order = $row['order'];
+            $json->invoice = $row['invoice'];
+            $json->status = $row['status'];
+            $json->details = json_decode($row['details']);
             $json->meta = $row['meta'] !== NULL ? json_decode($row['meta']) : null;
 
             $invoice = Invoice::fromJson($json);
@@ -270,7 +270,7 @@ class Invoice extends AbstractModel
 
         if (!$params) {
             $message = 'Data not received';
-            LoggerWrapper::debug($message);
+            Logger::debug($message);
             Utils::sendJson('Data not received', 400);
 
             return;
@@ -278,7 +278,7 @@ class Invoice extends AbstractModel
 
         if (!property_exists($params, 'invoice') || !property_exists($params, 'status')) {
             $message = 'Wrong params received: ' . json_encode($params);
-            LoggerWrapper::debug($message);
+            Logger::debug($message);
             Utils::sendJson('Wrong params received: ' . json_encode($params), 400);
 
             return;
@@ -288,7 +288,7 @@ class Invoice extends AbstractModel
 
         if (!$invoice->invoice) {
             $message = "Invoice not found: " . $params->invoice;
-            LoggerWrapper::debug($message);
+            Logger::debug($message);
             Utils::sendJson($message, 404);
 
             return;

@@ -13,16 +13,15 @@ declare(strict_types=1);
 
 namespace Apirone\SDK\Service;
 
-
 use Apirone\API\Endpoints\Service;
 use Apirone\SDK\Invoice;
 use Apirone\SDK\Service\Utils;
 
 class Api
 {
-    public static function invoices($id, ?callable $paymentProcessing = null)
+    public static function invoices(string $invoice, ?callable $paymentProcessing = null)
     {
-        $invoice = Invoice::get($id);
+        $invoice = Invoice::get($invoice);
         if ($invoice->id !== null) {
             if ($invoice->update() && is_callable($paymentProcessing)) {
                 call_user_func($paymentProcessing, $invoice);
@@ -30,15 +29,23 @@ class Api
             Utils::sendJson($invoice->details->toJson());
             exit;
         }
-        $json = json_decode('{"message": "Incorrect invoice id." }');
+        $json = json_decode('{"message": "Incorrect invoice id."}');
 
-        Utils::sendJson($json, 400);
+        Utils::sendJson($json, 404);
         exit;
     }
 
     public static function wallets()
     {
-        Utils::sendJson(Service::wallet());
+        try {
+            Utils::sendJson(Service::wallet());
+        }
+        catch (\Exception $e) {
+            $json = json_decode(sprintf('{"message": "%s"}', $e->getMessage()));
+            $code = $e->getCode();
+
+            Utils::sendJson($json, $code ? $code : 503);
+        }
         exit;
     }
 }
