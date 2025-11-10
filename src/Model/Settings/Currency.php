@@ -121,12 +121,8 @@ class Currency extends AbstractModel
         $options['processing-fee-policy'] = $this->policy;
 
         $this->error = null;
-        try {
-            Account::init($account, $transferKey)->settings($this->network, $options);
-        }
-        catch(Exception $e) {
-            $this->error = $e->getMessage();
-        }
+
+        Account::init($account, $transferKey)->settings($this->network, $options);
 
         return $this;
     }

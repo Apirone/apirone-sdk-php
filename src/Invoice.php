@@ -464,16 +464,12 @@ class Invoice extends AbstractModel
         $options = $this->createParams;
         $options['currency'] = $this->createParams['currency']->abbr;
 
-        try {
-            $created = $account->invoiceCreate(json_encode($options));
-            $this->details = InvoiceDetails::fromJson($created);
-            $this->invoice = $this->details->invoice;
-            $this->status = $this->details->status;
-            unset($this->createParams);
-        }
-        catch(Exception $e) {
-            throw $e;
-        }
+        $created = $account->invoiceCreate(json_encode($options));
+        $this->details = InvoiceDetails::fromJson($created);
+        $this->invoice = $this->details->invoice;
+        $this->status = $this->details->status;
+        unset($this->createParams);
+
         $this->save();
 
         return $this;
