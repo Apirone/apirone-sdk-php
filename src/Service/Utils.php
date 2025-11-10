@@ -218,4 +218,19 @@ class Utils
         header('Content-Type: application/json; charset=utf-8');
         echo $json;
     }
+
+    /**
+     * Send exception method & code as JSON
+     *
+     * @param mixed $e
+     * @return never
+     */
+    public static function sendException($e)
+    {
+        $json = json_decode(sprintf('{"message": "%s"}', $e->getMessage()));
+        $code = $e->getCode();
+
+        Utils::sendJson($json, $code ? $code : 503);
+        exit;
+    }
 }

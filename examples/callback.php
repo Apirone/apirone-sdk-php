@@ -6,6 +6,7 @@ require_once('log.php');
 
 use Apirone\SDK\Invoice;
 use Apirone\SDK\Model\Settings;
+use Apirone\SDK\Service\Db;
 
 /**
  * Your system Order status handler
@@ -17,7 +18,6 @@ $order_handler = static function ($invoice) {
 };
 
 // Setup DB and Settings into invoice object
-Invoice::db($db_handler, $table_prefix);
 Invoice::settings(Settings::fromFile('/var/www/storage/settings.json'));
 
 Invoice::callbackHandler($order_handler);

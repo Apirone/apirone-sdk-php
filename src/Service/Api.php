@@ -28,11 +28,11 @@ class Api
                 if ($updated && is_callable($paymentProcessing)) {
                     call_user_func($paymentProcessing, $invoice);
                 }
-                Utils::sendJson($invoice->details->toJson());
+                Utils::sendJson($invoice->info());
                 exit;
             }
             catch (\Exception $e) {
-                static::sendException($e);
+                Utils::sendException($e);
             }
         }
         $json = json_decode('{"message": "Incorrect invoice id."}');
@@ -47,17 +47,8 @@ class Api
             Utils::sendJson(Service::wallet());
         }
         catch (\Exception $e) {
-            static::sendException($e);
+            Utils::sendException($e);
         }
-        exit;
-    }
-
-    private static function sendException($e)
-    {
-        $json = json_decode(sprintf('{"message": "%s"}', $e->getMessage()));
-        $code = $e->getCode();
-
-        Utils::sendJson($json, $code ? $code : 503);
         exit;
     }
 }
