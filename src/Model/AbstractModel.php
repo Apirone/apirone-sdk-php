@@ -144,7 +144,7 @@ abstract class AbstractModel
      *
      * @return array
      */
-    public function toArray(): array
+    public function toArray()
     {
         $result = [];
         $class = new \ReflectionClass(static::class);
@@ -189,7 +189,7 @@ abstract class AbstractModel
      *
      * @return stdClass
      */
-    public function toJson(): \stdClass
+    public function toJson()
     {
         return json_decode(json_encode($this->toArray()));
     }
@@ -200,7 +200,7 @@ abstract class AbstractModel
      * @param int $flag - second param for json_encode. For example - JSON_PRETTY_PRINT or 128
      * @return string
      */
-    public function toJsonString($flag = 0): string
+    public function toJsonString($flag = 0)
     {
         return json_encode($this->toJson(), $flag);
     }
@@ -211,9 +211,9 @@ abstract class AbstractModel
      * @param string $str
      * @return string
      */
-    protected static function convertToCamelCase(string $str): string
+    protected static function convertToCamelCase(string $str)
     {
-        $callback = function ($match): string {
+        $callback = function ($match) {
             return strtoupper($match[2]);
         };
 
@@ -232,7 +232,7 @@ abstract class AbstractModel
      * @param string $str
      * @return string
      */
-    protected static function convertToSnakeCase(string $str): string
+    protected static function convertToSnakeCase(string $str)
     {
         $replaced = preg_split('/(?=[A-Z])/', $str);
 

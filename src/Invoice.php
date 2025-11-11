@@ -108,7 +108,7 @@ class Invoice extends AbstractModel
      * @param Settings $settings
      * @return void
      */
-    public static function settings(\Apirone\SDK\Model\Settings $settings): void
+    public static function settings(\Apirone\SDK\Model\Settings $settings)
     {
         static::$settings = $settings;
     }
@@ -119,7 +119,7 @@ class Invoice extends AbstractModel
      * @param int $interval
      * @return void
      */
-    public static function checkInterval(int $interval = 0): void
+    public static function checkInterval(int $interval = 0)
     {
         static::$checkInterval = $interval;
     }
@@ -131,7 +131,7 @@ class Invoice extends AbstractModel
      * @param null|int $amount
      * @return static
      */
-    public static function init(string $currency, $amount = null): Invoice
+    public static function init(string $currency, $amount = null)
     {
         $class = new static();
 
@@ -151,7 +151,7 @@ class Invoice extends AbstractModel
      * @return static
      * @throws ReflectionException
      */
-    public static function fromJson($json): Invoice
+    public static function fromJson($json)
     {
         $class = new static();
 
@@ -167,7 +167,7 @@ class Invoice extends AbstractModel
      * @return null|Invoice
      * @throws ReflectionException
      */
-    public static function get(?string $invoice): ?Invoice
+    public static function get(?string $invoice)
     {
         $result = Db::getInvoice($invoice);
         if (empty($result)) {
@@ -192,7 +192,7 @@ class Invoice extends AbstractModel
      * @param int $order - Order ID in your system
      * @return array
      */
-    public static function getByOrder(int $order): array
+    public static function getByOrder(int $order)
     {
         $result = Db::getOrderInvoices($order);
 
@@ -234,7 +234,7 @@ class Invoice extends AbstractModel
      * @throws NotFoundException
      * @throws MethodNotAllowedException
      */
-    public static function callbackHandler(?callable $paymentProcessing = null, ?callable $callbackChecker = null): void
+    public static function callbackHandler(?callable $paymentProcessing = null, ?callable $callbackChecker = null)
     {
 
         $data = file_get_contents('php://input');
@@ -301,7 +301,7 @@ class Invoice extends AbstractModel
      * @throws NotFoundException
      * @throws MethodNotAllowedException
      */
-    public function currency(string $currency): self
+    public function currency(string $currency)
     {
         $currency = Utils::currency($currency);
         $this->createParams['currency'] = $currency;
@@ -452,7 +452,7 @@ class Invoice extends AbstractModel
      *
      * @return bool
      */
-    public function save(): bool
+    public function save()
     {
         if(!isset($this->details)) {
             return false;
@@ -479,7 +479,7 @@ class Invoice extends AbstractModel
      * @throws MethodNotAllowedException
      * @throws ReflectionException
      */
-    public function update(): bool
+    public function update()
     {
         if(!isset($this->details)) {
             return false;
@@ -509,7 +509,7 @@ class Invoice extends AbstractModel
      * Return public or private invoice info
      *
      * @param bool $private
-     * @return Apirone\SDK\Model\stdClass
+     * @return stdClass
      */
     public function info($private = false)
     {
@@ -519,9 +519,9 @@ class Invoice extends AbstractModel
     /**
      * Convert invoice object to JSON
      *
-     * @return Apirone\SDK\Model\stdClass
+     * @return stdClass
      */
-    public function toJson(): \stdClass
+    public function toJson()
     {
         $json = parent::toJson();
 

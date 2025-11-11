@@ -204,7 +204,7 @@ class InvoiceDetails extends AbstractModel
      * Return invoice public or private invoice info
      *
      * @param bool $private
-     * @return Apirone\SDK\Model\stdClass
+     * @return stdClass
      */
     public function info($private = false)
     {
@@ -230,7 +230,7 @@ class InvoiceDetails extends AbstractModel
      *
      * @return bool
      */
-    public function isExpired(): bool
+    public function isExpired()
     {
         if ($this->status == 'expired') {
             return true;

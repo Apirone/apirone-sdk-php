@@ -127,7 +127,7 @@ class Db
      *
      * @return string
      */
-    public static function tableName(): string
+    public static function tableName()
     {
         return static::$prefix . static::$table;
     }
@@ -138,7 +138,7 @@ class Db
      * @return void
      * @throws \Apirone\SDK\Service\Db\HandlerNotSetException
      */
-    public static function checkHandler(): void
+    public static function checkHandler()
     {
         if (!is_callable(static::$handler)) {
             throw new HandlerNotSetException('Db handler not set');

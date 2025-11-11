@@ -180,7 +180,7 @@ class Currency extends AbstractModel
      *
      * @return bool
      */
-    public function hasError(): bool
+    public function hasError()
     {
         return $this->error ? true : false;
     }

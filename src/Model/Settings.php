@@ -195,7 +195,7 @@ class Settings extends AbstractModel
      *
      * @return array
      */
-    public function toArray(): array
+    public function toArray()
     {
         $settings = parent::toArray();
 

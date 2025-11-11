@@ -24,7 +24,7 @@ class Postgres implements AdapterInterface
      *
      * @return string
      */
-    public static function createTable(): string
+    public static function createTable()
     {
         return sprintf('CREATE TABLE IF NOT EXISTS %1$s (
                 "id" SERIAL PRIMARY KEY,

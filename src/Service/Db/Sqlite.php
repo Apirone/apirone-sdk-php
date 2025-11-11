@@ -28,7 +28,7 @@ class Sqlite implements AdapterInterface
      * @param string $collate
      * @return string
      */
-    public static function createTable(): string
+    public static function createTable()
     {
         return sprintf('CREATE TABLE IF NOT EXISTS %s (
             "id" INTEGER PRIMARY KEY AUTOINCREMENT,
