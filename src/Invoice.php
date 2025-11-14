@@ -181,7 +181,7 @@ class Invoice extends AbstractModel
         $json->invoice = $row['invoice'];
         $json->status = $row['status'];
         $json->details = json_decode($row['details']);
-        $json->meta = $row['meta'] !== NULL ? json_decode($row['meta']) : null;
+        $json->meta = $row['meta'] !== null ? json_decode($row['meta']) : null;
 
         return Invoice::fromJson($json);
     }
@@ -208,7 +208,7 @@ class Invoice extends AbstractModel
             $json->invoice = $row['invoice'];
             $json->status = $row['status'];
             $json->details = json_decode($row['details']);
-            $json->meta = $row['meta'] !== NULL ? json_decode($row['meta']) : null;
+            $json->meta = $row['meta'] !== null ? json_decode($row['meta']) : null;
 
             $invoice = Invoice::fromJson($json);
             if ($invoice->details->isExpired() == true && $invoice->status !="expired") {
@@ -303,7 +303,6 @@ class Invoice extends AbstractModel
      */
     public function currency(string $currency)
     {
-        $currency = Utils::currency($currency);
         $this->createParams['currency'] = $currency;
 
         return $this;
@@ -434,7 +433,7 @@ class Invoice extends AbstractModel
         $account = Account::init($account_id);
         $created = false;
         $options = $this->createParams;
-        $options['currency'] = $this->createParams['currency']->abbr;
+        // $options['currency'] = $this->createParams['currency'];
 
         $created = $account->invoiceCreate(json_encode($options));
         $this->details = InvoiceDetails::fromJson($created);

@@ -21,7 +21,7 @@ use Apirone\API\Exceptions\ForbiddenException;
 use Apirone\API\Exceptions\NotFoundException;
 use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\SDK\Model\AbstractModel;
-use Exception;
+use Apirone\SDK\Service\Utils;
 use ReflectionException;
 
 /**
@@ -159,17 +159,8 @@ class Currency extends AbstractModel
      */
     private function alias()
     {
-        if ($this->token == null) {
-            $this->alias = $this->name;
-            return $this;
-        }
 
-        preg_match('#\((.*?)\)#', $this->name, $match);
-        $suffix = count($match) > 0 ? $match[1] : '';
-
-        $format = ($this->isTestnet()) ? '%s (%s - testnet)' : '%s (%s)';
-
-        $this->alias = strtoupper(sprintf($format, $this->token, $suffix));
+        $this->alias = Utils::getAlias($this->abbr, $this->name);
 
         return $this;
     }
@@ -192,11 +183,7 @@ class Currency extends AbstractModel
      */
     public function isTestnet()
     {
-        if ($this->isToken()) {
-            return (substr($this->network, 0, 1) == 't' && strlen($this->network) > 3) ? true : false;
-        }
-
-        return (substr_count(strtolower($this->name), 'testnet') > 0) ? true : false;
+        return Utils::isTestnet($this->abbr);
     }
 
     /**
@@ -217,16 +204,6 @@ class Currency extends AbstractModel
     public function isToken()
     {
         return ($this->token !== null ) ? $this->network : null;
-    }
-
-    /**
-     * Returns whether the currency is a stablecoin
-     *
-     * @return bool
-     */
-    public function isStablecoin()
-    {
-        return (substr_count(strtolower($this->name), 'usd') > 0) ? true : false;
     }
 
     /**

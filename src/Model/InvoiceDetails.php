@@ -119,7 +119,7 @@ class InvoiceDetails extends AbstractModel
     private function __construct() {}
 
     /**
-     * Create a new instance
+     * Creates a new instance
      *
      * @return static
      */
@@ -131,7 +131,7 @@ class InvoiceDetails extends AbstractModel
     }
 
     /**
-     * Restore instance from JSON
+     * Restores instance from JSON
      *
      * @param mixed $json
      * @return $this
@@ -145,7 +145,7 @@ class InvoiceDetails extends AbstractModel
     }
 
     /**
-     * Get invoice info from apirone and create instance from it
+     * Gets invoice info from apirone and create instance from it
      *
      * @return $this
      * @throws RuntimeException
@@ -201,25 +201,19 @@ class InvoiceDetails extends AbstractModel
     }
 
     /**
-     * Return invoice public or private invoice info
+     * Returns invoice public or private invoice info JSON
      *
      * @param bool $private
      * @return stdClass
      */
     public function info($private = false)
     {
+
         $info = $this->toJson();
-        if (!$private) {
-            unset($info->{'callback-url'}, $info->account);
-        }
         unset($info->{'create-params'});
 
-        if ($info->{'user-data'} !== null) {
-            foreach ($info->{'user-data'} as $key => $value) {
-                if ($value === null) {
-                    unset($info->{'user-data'}->{$key});
-                }
-            }
+        if (!$private) {
+            unset($info->{'callback-url'}, $info->account);
         }
 
         return $info;
