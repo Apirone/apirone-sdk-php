@@ -1,5 +1,5 @@
 <?php
-$cryptos = '
+$coins = '
 {
     "btc": {
         "name": "Bitcoin",

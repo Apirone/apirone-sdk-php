@@ -31,29 +31,29 @@ class Utils
 
     public const SUFFIX = '0000000000';
 
-    public static array $cryptos = [];
+    public static array $coins = [];
 
-    public static function loadCryptos()
+    public static function loadCoins()
     {
         $info = Service::account();
-        $cryptos = [];
+        $coins = [];
 
         foreach ($info->currencies as $item) {
-            $crypto = new \stdClass;
+            $coin = new \stdClass;
 
-            $crypto->abbr = $item->abbr;
-            $crypto->name = $item->name;
-            $crypto->alias = Utils::getAlias($item->abbr,$item->name);
-            $crypto->unitsFactor = $item->{'units-factor'};
+            $coin->abbr = $item->abbr;
+            $coin->name = $item->name;
+            $coin->alias = Utils::getAlias($item->abbr,$item->name);
+            $coin->unitsFactor = $item->{'units-factor'};
             $parts = Utils::getNetworkAndToken($item->abbr);
-            $crypto->network = $parts->network;
-            $crypto->token = $parts->token;
-            $crypto->test = Utils::isTestnet($item->abbr);
+            $coin->network = $parts->network;
+            $coin->token = $parts->token;
+            $coin->testnet = Utils::isTestnet($item->abbr);
 
-            static::$cryptos[$item->abbr] = $crypto;
+            static::$coins[$item->abbr] = $coin;
         }
 
-        return static::$cryptos;
+        return static::$coins;
     }
 
     /**
@@ -68,61 +68,61 @@ class Utils
      * @throws NotFoundException
      * @throws MethodNotAllowedException
      */
-    public static function getCrypto(string $abbr)
+    public static function getCoin(string $abbr)
     {
-        // Loading cryptocurrency mapping prod api on first launch
-        if (static::$cryptos == null) {
-            require_once(__DIR__ . '/cryptos.php');
-            static::$cryptos = (array) json_decode($cryptos);
+        // Loading coins mapping prod api on first launch
+        if (static::$coins == null) {
+            require_once(__DIR__ . '/coins.php');
+            static::$coins = (array) json_decode($coins);
         }
 
-        if (!array_key_exists($abbr, static::$cryptos)) {
-            Utils::loadCryptos();
+        if (!array_key_exists($abbr, static::$coins)) {
+            Utils::loadCoins();
         }
-        if (array_key_exists($abbr, static::$cryptos)) {
-            if (!property_exists(static::$cryptos[$abbr], 'alias')) {
+        if (array_key_exists($abbr, static::$coins)) {
+            if (!property_exists(static::$coins[$abbr], 'alias')) {
                 $parts = Utils::getNetworkAndToken($abbr);
 
-                static::$cryptos[$abbr]->abbr = $abbr;
-                static::$cryptos[$abbr]->alias = Utils::getAlias($abbr, static::$cryptos[$abbr]->name);
-                static::$cryptos[$abbr]->network = $parts->network;
-                static::$cryptos[$abbr]->token = $parts->token;
-                static::$cryptos[$abbr]->test = Utils::isTestnet($abbr);
+                static::$coins[$abbr]->abbr = $abbr;
+                static::$coins[$abbr]->alias = Utils::getAlias($abbr, static::$coins[$abbr]->name);
+                static::$coins[$abbr]->network = $parts->network;
+                static::$coins[$abbr]->token = $parts->token;
+                static::$coins[$abbr]->testnet = Utils::isTestnet($abbr);
             }
 
-            return static::$cryptos[$abbr];
+            return static::$coins[$abbr];
         }
 
         $parts = Utils::getNetworkAndToken($abbr);
 
-        $crypto = new stdClass;
-        $crypto->name =  ucfirst($abbr);
-        $crypto->unitsFactor = 1.0E-8;
-        $crypto->abbr = $abbr;
-        $crypto->alias = $abbr;
-        $crypto->network = $parts->network;
-        $crypto->token = $parts->token;
-        $crypto->testnet = true;
+        $coin = new stdClass;
+        $coin->name =  ucfirst($abbr) . ' Unknown (Testnet)';
+        $coin->unitsFactor = static::THRESHOLD;
+        $coin->abbr = $abbr;
+        $coin->alias = $coin->name;
+        $coin->network = $parts->network;
+        $coin->token = $parts->token;
+        $coin->testnet = true;
 
-        return static::$cryptos[$abbr] = $crypto;
+        return static::$coins[$abbr] = $coin;
     }
 
     public static function getExplorerHref($abbr, $type, $hash = '')
     {
-        $crypto = static::getCrypto($abbr);
+        $coin = static::getCoin($abbr);
         // Explorer switch
-        switch ($crypto->abbr) {
-            case (substr_count($crypto->abbr, 'trx') > 0 ):
-                $explorer = $crypto->isTestnet() ? 'shasta.tronscan.org' : 'tronscan.org';
+        switch ($coin->abbr) {
+            case (substr_count($coin->abbr, 'trx') > 0 ):
+                $explorer = $coin->testnet ? 'shasta.tronscan.org' : 'tronscan.org';
                 $path = implode('/', ['#', $type, $hash]);
                 break;
-            case (substr_count($crypto->abbr, 'eth') > 0 ):
-                $explorer = $crypto->isTestnet() ? 'sepolia.etherscan.io' : 'etherscan.io';
+            case (substr_count($coin->abbr, 'eth') > 0 ):
+                $explorer = $coin->testnet ? 'sepolia.etherscan.io' : 'etherscan.io';
                 $type = ($type == 'transaction') ? 'tx' : $type;
                 $path = implode('/', [$type, $hash]);
                 break;
-            case (substr_count($crypto->abbr, 'bnb') > 0 ):
-                $explorer = $crypto->isTestnet() ? 'testnet.bscscan.com' : 'bscscan.com';
+            case (substr_count($coin->abbr, 'bnb') > 0 ):
+                $explorer = $coin->testnet ? 'testnet.bscscan.com' : 'bscscan.com';
                 $type = ($type == 'transaction') ? 'tx' : $type;
                 $path = implode('/', [$type, $hash]);
                 break;
@@ -133,9 +133,9 @@ class Utils
                 break;
             default:
                 $explorer = 'blockchair.com';
-                $currencyName = strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $crypto->name));
+                $currencyName = strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $coin->name));
                 $from = '?from=apirone';
-                if ($crypto->abbr == 'tbtc') {
+                if ($coin->abbr == 'tbtc') {
                     $currencyName = 'bitcoin/testnet';
                     $from = '';
                 }
@@ -237,15 +237,15 @@ class Utils
      */
     public static function humanizeAmount($amount, $abbr, $zeroTrim = true)
     {
-        $crypto = Utils::getCrypto($abbr);
+        $coin = Utils::getCoin($abbr);
 
-        $amount = Utils::min2cur($amount, $crypto->unitsFactor);
-        $suffix = ($crypto->unitsFactor < static::THRESHOLD) ? static::SUFFIX : '';
-        if($crypto->isStablecoin()) {
+        $amount = Utils::min2cur($amount, $coin->unitsFactor);
+        $suffix = ($coin->unitsFactor < static::THRESHOLD) ? static::SUFFIX : '';
+        if(Utils::isStablecoin($abbr)) {
             $decimals = 2;
         }
         else {
-            $unitsFactor = ($crypto->unitsFactor < static::THRESHOLD) ? static::THRESHOLD : $crypto->unitsFactor;
+            $unitsFactor = ($coin->unitsFactor < static::THRESHOLD) ? static::THRESHOLD : $coin->unitsFactor;
             $decimals = substr((string) $unitsFactor, strpos((string) $unitsFactor, "-") + 1);
         }
 

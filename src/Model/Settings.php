@@ -21,7 +21,6 @@ use Apirone\API\Exceptions\UnauthorizedException;
 use Apirone\API\Exceptions\ForbiddenException;
 use Apirone\API\Exceptions\NotFoundException;
 use Apirone\API\Exceptions\MethodNotAllowedException;
-use Apirone\SDK\Model\Settings\Coin;
 use Apirone\SDK\Model\Settings\Currency;
 use Apirone\SDK\Model\Settings\Network;
 use ReflectionException;
@@ -329,33 +328,7 @@ class Settings extends AbstractModel
                 $networks[$currency->network]->token($currency);
             }
         }
+
         return $networks;
-    }
-
-    /**
-     * Coins list parser
-     *
-     * @param mixed $array Array of json coin objects
-     * @return array
-     * @throws ReflectionException
-     */
-    public function parseCoins($array)
-    {
-        $items = [];
-        foreach ($array as $item) {
-            $items[$item->abbr] = Coin::init($item);
-        }
-
-        return $items;
-    }
-
-    /**
-     * Check is coin exist
-     * @param mixed $abbr
-     * @return bool
-     */
-    public function hasCoin($abbr)
-    {
-        return (array_key_exists($abbr, $this->coins)) ? true : false;
     }
 }
