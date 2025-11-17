@@ -23,6 +23,7 @@ use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\SDK\Model\AbstractModel;
 use Apirone\SDK\Service\Utils;
 use ReflectionException;
+use Exception;
 
 /**
  * Apirone crypto currency
@@ -66,6 +67,8 @@ class Currency extends AbstractModel
 
     private ?string $error = null;
 
+    private bool $changed = false;
+
     private function __construct() {}
 
     /**
@@ -83,7 +86,7 @@ class Currency extends AbstractModel
     }
 
     /**
-     * Load currency settings from account
+     * Load currency from account
      *
      * @param mixed $account
      * @return $this
@@ -94,7 +97,7 @@ class Currency extends AbstractModel
      * @throws NotFoundException
      * @throws MethodNotAllowedException
      */
-    public function loadSettings($account)
+    public function load($account)
     {
         $account = Account::init($account)->info($this->abbr);
 
@@ -102,27 +105,35 @@ class Currency extends AbstractModel
             $this->address = $account->info[0]->destinations[0]->address;
         }
         $this->policy = $account->info[0]->{'processing-fee-policy'};
+        $this->changed = false;
 
         return $this;
     }
 
     /**
-     * Save currency settings to account
+     * Save currency to account
      *
      * @param mixed $account
      * @param mixed $transferKey
      * @return $this
      */
-    public function saveSettings($account, $transferKey)
+    public function save($account, $transferKey)
     {
-        $options = [];
+        if($this->changed) {
+            $options = [];
 
-        $options['destinations'] = ($this->address !== null) ? [['address' => $this->address]] : null;
-        $options['processing-fee-policy'] = $this->policy;
+            $options['destinations'] = ($this->address !== null) ? [['address' => $this->address]] : null;
+            $options['processing-fee-policy'] = $this->policy;
 
-        $this->error = null;
-
-        Account::init($account, $transferKey)->settings($this->network, $options);
+            $this->error = null;
+            try {
+                Account::init($account, $transferKey)->settings($this->network, $options);
+                $this->changed = false;
+            }
+            catch(Exception $e) {
+                $this->error = $e->getMessage();
+            }
+        }
 
         return $this;
     }
@@ -135,7 +146,12 @@ class Currency extends AbstractModel
      */
     public function address(?string $address = null)
     {
-        $this->address = empty($address) ? null : trim($address);
+        $address = empty($address) ? null : trim($address);
+
+        if ($address !== $this->address) {
+            $this->address = $address;
+            $this->changed = true;
+        }
 
         return $this;
     }
@@ -148,7 +164,12 @@ class Currency extends AbstractModel
      */
     public function policy(string $policy)
     {
-        $this->policy = $policy;
+        $policy = strtolower(trim($policy));
+
+        if (in_array($policy, ['fixed', 'percentage']) && $policy !== $this->policy ) {
+            $this->policy = $policy;
+            $this->changed = true;
+        }
 
         return $this;
     }

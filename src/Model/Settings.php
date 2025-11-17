@@ -269,6 +269,7 @@ class Settings extends AbstractModel
                 $address = ($accountItem->destinations !== null) ? $accountItem->destinations[0]->address : null;
                 $currency->address($address);
                 $currency->policy($accountItem->{'processing-fee-policy'});
+                $currency->changed(false);
             }
             $this->currencies[$serviceItem->abbr] = $currency;
         }
@@ -284,7 +285,7 @@ class Settings extends AbstractModel
     public function saveCurrencies()
     {
         foreach ($this->currencies as $currency) {
-            $currency->saveSettings($this->account, $this->transferKey);
+            $currency->save($this->account, $this->transferKey);
         }
 
         return $this;

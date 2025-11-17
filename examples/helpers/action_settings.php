@@ -3,6 +3,7 @@
 require_once('common.php');
 
 use Apirone\SDK\Service\Utils;
+use Apirone\SDK\Model\Settings;
 
 $path = '/var/www/storage/settings.json';
 $action = $_GET['action'] ?? false;

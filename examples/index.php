@@ -117,17 +117,17 @@ require_once('helpers/common.php');
                             <div class="grid md:grid-cols-2 gap-6 grid-cols-1">
                                 <label class="block">
                                     <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
-                                    <select x-model="data.currency" class="block w-full mt-1">
+                                    <select x-model="data.currency" class="block w-full mt-1" x-init="currencies()">
                                         <option value="" class="text-gray-400">Select currency</option>
                                         <template x-if="$store.settings">
-                                            <template x-for="currency in $store.settings.currencies">
+                                            <template x-for="currency in $store.currencies">
                                                 <template x-if="currency.address">
                                                     <option x-text="currency.alias" x-bind:value="currency.abbr"></option>
                                                 </template>
                                             </template>
                                         </template>
                                         <template x-if="$store.settings">
-                                            <template x-for="currency in $store.settings.currencies">
+                                            <template x-for="currency in $store.currencies">
                                                 <template x-if="!currency.address">
                                                     <option x-text="currency.alias" x-bind:value="currency.abbr" disabled></option>
                                                 </template>

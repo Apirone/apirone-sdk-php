@@ -62,6 +62,10 @@ function playground() {
       if(result) { this.invoice = result; this.content = JSON.stringify(result, null, 2); }
       this.label = 'Create';
     },
+    async currencies() {
+      result = await ajax('/helpers/action_currencies.php');
+      if(result) this.$store.currencies = JSON.parse(result);
+    },
     front() {
       if (this.invoice == null) {return;}
       qr = this.qrOnly ? '&qr-only=1' : '';
