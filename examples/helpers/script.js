@@ -36,7 +36,7 @@ function settings() {
       this.$store.settings = JSON.parse(data);
     },
     doAction() { this.action = this.file ? 'delete' : 'create'; this.load(); },
-    toggle() {this.expand = !this.expand;}
+    toggle() {this.expand = !this.expand;},
   }
 }
 

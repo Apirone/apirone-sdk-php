@@ -108,7 +108,7 @@ require_once('helpers/common.php');
             </div>
             <div id="step_5">
                 <h2>Playground</h2>
-                <div x-show="!$store.table || !$store.settings">
+                <div x-show="!$store.table || !$store.settings" class="pb-10">
                     Before creating an invoice you need create data table and settings!
                 </div>
                 <div x-show="$store.table && $store.settings" class="pb-10">
@@ -117,7 +117,7 @@ require_once('helpers/common.php');
                             <div class="grid md:grid-cols-2 gap-6 grid-cols-1">
                                 <label class="block">
                                     <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
-                                    <select x-model="data.currency" class="block w-full mt-1" x-init="currencies()">
+                                    <select x-model="data.currency" class="block w-full mt-1" x-init="$watch('$store.settings', value => currencies())">
                                         <option value="" class="text-gray-400">Select currency</option>
                                         <template x-if="$store.settings">
                                             <template x-for="currency in $store.currencies">
