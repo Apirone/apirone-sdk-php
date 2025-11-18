@@ -75,7 +75,9 @@ abstract class AbstractModel
 
         if (\property_exists($this, 'meta')) {
             if (empty($value) || $value[0] == false) {
-                unset($this->meta->{$name});
+                if ($this->meta !== null && property_exists($this->meta, $name)) {
+                    unset($this->meta->{$name});
+                }
 
                 if (empty((array) $this->meta)) {
                     $setProperty('meta', null);

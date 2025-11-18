@@ -72,6 +72,12 @@ class Settings extends AbstractModel
 
         // Currencies lazy loading
         if ($name == 'currencies') {
+            foreach (debug_backtrace(2) as $item) {
+                $callstack[] = $item['function'];
+            }
+            if (in_array('toArray', $callstack)) {
+                return $this->currencies;
+            }
             if (empty($this->currencies) || get_class($this->currencies[array_key_first($this->currencies)]) == 'stdClass') {
                 $this->loadCurrencies();
             }
