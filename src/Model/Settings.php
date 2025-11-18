@@ -55,8 +55,6 @@ class Settings extends AbstractModel
      */
     private array $currencies = [];
 
-    private array $coins = [];
-
     /**
      * Metadata
      *
@@ -128,7 +126,7 @@ class Settings extends AbstractModel
     /**
      * Restore settings from file
      *
-     * @param mixed $abspath
+     * @param mixed $absFilePath
      * @return self|null
      * @throws ReflectionException
      * @throws RuntimeException
@@ -138,9 +136,9 @@ class Settings extends AbstractModel
      * @throws NotFoundException
      * @throws MethodNotAllowedException
      */
-    public static function fromFile($abspath)
+    public static function fromFile($absFilePath)
     {
-        $json = @file_get_contents($abspath);
+        $json = @file_get_contents($absFilePath);
 
         if ($json) {
             return static::fromJson($json);
@@ -176,9 +174,9 @@ class Settings extends AbstractModel
     /**
      * Save settings to file
      *
-     * @param string $abspath
-     * @param string $filename
-     * @return bool
+     * @param mixed $absFilePath
+     * @param 128 $flag
+     * @return true|false
      */
     public function toFile($absFilePath, $flag = JSON_PRETTY_PRINT)
     {
@@ -199,7 +197,7 @@ class Settings extends AbstractModel
         $settings = parent::toArray();
 
         foreach ($settings as $key => $val) {
-            if (!in_array($key, ['account', 'transfer-key', 'coins', 'meta'])) {
+            if (!in_array($key, ['account', 'transfer-key', 'meta'])) {
                 unset($settings[$key]);
             }
         }
