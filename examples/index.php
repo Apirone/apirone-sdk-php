@@ -14,7 +14,10 @@ require_once('helpers/common.php');
         <script>hljs.highlightAll();</script>
         <link rel="icon" href="/helpers/favicon.ico?v=0.0.1">
         <script src="/helpers/script.js"></script>
-        <style>pre strong.filename {display: block; background-color: #5d8ab9; margin: -12px -15px; padding: 8px 25px;}</style>
+        <style>
+            pre strong.filename {display: block; background-color: #5d8ab9; margin: -12px -15px; padding: 8px 25px;}
+            p i {font-family: monospace; font-style: normal; font-weight: bold;}
+        </style>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body class="flex px-4" x-data>
@@ -59,7 +62,6 @@ require_once('helpers/common.php');
                         <strong x-show="file" class="absolute top-[12px] right-10 !text-white cursor-pointer font-mono text-sm" @click="toggle" x-text="expand ? 'Collapse' : 'Expand'"></strong>
                         <pre><strong class="!text-white filename">settings.json</strong><code class="language-json mt-5" :class="{'' : expand, 'max-h-96' : !expand}" x-ref="settingsJson" x-text="content"></code></pre>
                     </div>
-                    <!-- <button class="text-white rounded-md w-48 bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-2" @click="hljs.highlightElement($refs.settings); console.log($refs.settings);" x-text='hljs'></button> -->
                     <button class="text-white rounded-md w-48 bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-2" @click="doAction" x-text="label" :disabled="file"></button>
                 </div>
 
@@ -84,26 +86,29 @@ require_once('helpers/common.php');
             </div>
             <div>
                 <h2>Show invoice</h2>
-                <p>
-                    Starting with SDK 2.0, server-side rendering is no longer used. Instead, we now use
+
+                <div class="border border-gray-200 bg-gray-200 rounded-md px-8 py-5">
+                    <h3 class="!mt-2">Important!</h3>
+                    <p>
+                    Starting with <strong>SDK 2.0</strong>, server-side rendering is no longer supported. Instead, we now use
                     <a href="https://github.com/Apirone/invoice-app" target="_blank">Apirone Invoice App</a>.
                     This app, written in Vue, combines the ease of integration with the usability of modern front-end apps.
-                </p>
+                    </p>
+                </div>
                 <h3>Invoice APP</h3>
                 <p>
-                    To display an invoice, use <code>Invoice::renderLoader()</code>.<br />
-                    You can pass an optional <code>$invoice_id</code> parameter to display an invoice by its ID.
-                    If the parameter is not set, the function will try to get it from the GET request parameter "invoice".
+                    To display the invoice, you need to add two files: <code>script.min.js</code> and <code>style.min.css</code> from the <code>src/assets</code> directory.
+                    All available config options see on <a href="https://github.com/Apirone/invoice-app" target="_blank">github</a>.
                 </p>
                 <?php echo load_file_content('./invoice.php'); ?>
 
                 <h3>Local API for Invoice App</h3>
                 <p>
                     By default, Invoice-App uses the <a href="https://apirone.com/docs" target="_blank">Apirone API</a> to retrieve data.
-                    To fully implement White Label on your server, you need to implement your own API with two endpoints: invoices and wallets.
-                    You can see an example implementation in the <i>invoice-app-api.php</i> and <i>.htaccess</i> files.
+                    To fully implement <a href="https://ru.wikipedia.org/wiki/White_Label" target="_blank">White Label</a> on your server, you need to implement your own API with two endpoints: <code>invoices</code> and <code>wallets</code>.
+                    You can see an example implementation in the <code>api.php</code> and <code>.htaccess</code> files.
                 </p>
-                <?php echo load_file_content('./invoice-app-api.php'); ?>
+                <?php echo load_file_content('./api.php'); ?>
                 <?php echo load_file_content('.htaccess'); ?>
             </div>
             <div id="step_5">

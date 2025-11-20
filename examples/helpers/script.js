@@ -68,7 +68,7 @@ function playground() {
     },
     front() {
       if (this.invoice == null) {return;}
-      qr = this.qrOnly ? '&qr-only=1' : '';
+      qr = this.qrOnly ? '&qr-only=true' : '';
       window.open('/invoice.php?id=' + this.invoice.invoice + qr, '_blank').focus();
     },
     toggle() {
