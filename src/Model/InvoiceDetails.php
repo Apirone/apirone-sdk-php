@@ -14,19 +14,9 @@ declare(strict_types=1);
 namespace Apirone\SDK\Model;
 
 use Apirone\API\Endpoints\Account;
-use Apirone\API\Endpoints\Service;
-use Apirone\API\Exceptions\RuntimeException;
-use Apirone\API\Exceptions\ValidationFailedException;
-use Apirone\API\Exceptions\UnauthorizedException;
-use Apirone\API\Exceptions\ForbiddenException;
-use Apirone\API\Exceptions\NotFoundException;
-use Apirone\API\Exceptions\MethodNotAllowedException;
-use Apirone\SDK\Invoice;
 use Apirone\SDK\Model\AbstractModel;
 use Apirone\SDK\Model\UserData;
 use Apirone\SDK\Model\HistoryItem;
-use Apirone\SDK\Tools\Utils;
-use ReflectionException;
 
 /**
  * Apirone invoice wrapper class
@@ -135,7 +125,6 @@ class InvoiceDetails extends AbstractModel
      *
      * @param mixed $json
      * @return $this
-     * @throws ReflectionException
      */
     public static function fromJson($json)
     {
@@ -148,13 +137,6 @@ class InvoiceDetails extends AbstractModel
      * Gets invoice info from apirone and create instance from it
      *
      * @return $this
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     * @throws ReflectionException
      */
     public function update()
     {
@@ -174,7 +156,6 @@ class InvoiceDetails extends AbstractModel
      *
      * @param mixed $data
      * @return UserData
-     * @throws ReflectionException
      */
     protected function parseUserData($data)
     {
@@ -188,7 +169,6 @@ class InvoiceDetails extends AbstractModel
      *
      * @param mixed $data
      * @return array
-     * @throws ReflectionException
      */
     protected function parseHistory($data)
     {

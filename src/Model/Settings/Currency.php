@@ -14,15 +14,8 @@ declare(strict_types=1);
 namespace Apirone\SDK\Model\Settings;
 
 use Apirone\API\Endpoints\Account;
-use Apirone\API\Exceptions\RuntimeException;
-use Apirone\API\Exceptions\ValidationFailedException;
-use Apirone\API\Exceptions\UnauthorizedException;
-use Apirone\API\Exceptions\ForbiddenException;
-use Apirone\API\Exceptions\NotFoundException;
-use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\SDK\Model\AbstractModel;
 use Apirone\SDK\Service\Utils;
-use ReflectionException;
 use Exception;
 
 /**
@@ -90,12 +83,6 @@ class Currency extends AbstractModel
      *
      * @param mixed $account
      * @return $this
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
      */
     public function load($account)
     {
@@ -254,7 +241,6 @@ class Currency extends AbstractModel
      *
      * @param mixed $json
      * @return $this
-     * @throws ReflectionException
      */
     public static function fromJson($json)
     {

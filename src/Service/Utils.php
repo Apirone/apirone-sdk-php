@@ -14,15 +14,7 @@ declare(strict_types=1);
 namespace Apirone\SDK\Service;
 
 use Apirone\API\Endpoints\Service;
-use Apirone\API\Exceptions\RuntimeException;
-use Apirone\API\Exceptions\ValidationFailedException;
-use Apirone\API\Exceptions\UnauthorizedException;
-use Apirone\API\Exceptions\ForbiddenException;
-use Apirone\API\Exceptions\NotFoundException;
-use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\API\Http\Request;
-use Apirone\Lib\PhpQRCode\QRCode;
-use Apirone\SDK\Model\Settings\Currency;
 use stdClass;
 
 class Utils
@@ -61,12 +53,6 @@ class Utils
      *
      * @param string $abbr
      * @return mixed
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
      */
     public static function getCoin(string $abbr)
     {
@@ -110,7 +96,7 @@ class Utils
     public static function getExplorerHref($abbr, $type, $hash = '')
     {
         $coin = static::getCoin($abbr);
-        // Explorer switch
+
         switch ($coin->abbr) {
             case (substr_count($coin->abbr, 'trx') > 0 ):
                 $explorer = $coin->testnet ? 'shasta.tronscan.org' : 'tronscan.org';
@@ -230,9 +216,9 @@ class Utils
     /**
      * Convert to decimal and trim trailing zeros if $zeroTrim set true
      *
-     * @param int $amount
-     * @param string $abbr
-     * @param bool $zeroTrim (optional)
+     * @param mixed $amount
+     * @param mixed $abbr
+     * @param bool $zeroTrim
      * @return string
      */
     public static function humanizeAmount($amount, $abbr, $zeroTrim = true)
@@ -336,7 +322,6 @@ class Utils
      */
     public static function sanitize($string = '')
     {
-
         if (empty($string) || is_object($string) || is_array($string)) {
             return '';
         }
@@ -389,7 +374,7 @@ class Utils
     }
 
     /**
-     * Send exception method & code as JSON
+     * Send exception message & code as JSON
      *
      * @param mixed $e
      * @return never

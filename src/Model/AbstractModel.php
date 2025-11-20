@@ -110,7 +110,6 @@ abstract class AbstractModel
      *
      * @param json|stdClass
      * @return $this
-     * @throws ReflectionException
      */
     protected function classLoader($json)
     {

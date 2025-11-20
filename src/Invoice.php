@@ -14,26 +14,15 @@ declare(strict_types=1);
 namespace Apirone\SDK;
 
 use Apirone\SDK\Service\Db;
-use Apirone\SDK\Service\InvoiceQuery;
 use Apirone\SDK\Model\AbstractModel;
 use Apirone\SDK\Model\InvoiceDetails;
-use Apirone\API\Endpoints\Service;
 use Apirone\API\Endpoints\Account;
-use Apirone\API\Exceptions\RuntimeException;
-use Apirone\API\Exceptions\ValidationFailedException;
-use Apirone\API\Exceptions\UnauthorizedException;
-use Apirone\API\Exceptions\ForbiddenException;
-use Apirone\API\Exceptions\InternalServerErrorException;
-use Apirone\API\Exceptions\NotFoundException;
-use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\SDK\Service\Logger;
 use Apirone\SDK\Model\UserData;
 use Apirone\SDK\Model\Settings;
-use Apirone\SDK\Service\Render;
 use Apirone\SDK\Service\Utils;
-use DivisionByZeroError;
-use ReflectionException;
 
+/** @package Apirone\SDK */
 class Invoice extends AbstractModel
 {
     /**
@@ -149,7 +138,6 @@ class Invoice extends AbstractModel
      *
      * @param mixed $json
      * @return static
-     * @throws ReflectionException
      */
     public static function fromJson($json)
     {
@@ -165,7 +153,6 @@ class Invoice extends AbstractModel
      *
      * @param mixed $invoice
      * @return null|Invoice
-     * @throws ReflectionException
      */
     public static function get(?string $invoice)
     {
@@ -225,14 +212,9 @@ class Invoice extends AbstractModel
     /**
      * Invoice callback handler
      *
+     * @param null|callable $paymentProcessing
+     * @param null|callable $callbackChecker
      * @return void
-     * @throws ReflectionException
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
      */
     public static function callbackHandler(?callable $paymentProcessing = null, ?callable $callbackChecker = null)
     {
@@ -293,13 +275,7 @@ class Invoice extends AbstractModel
      * Set currency for new invoice
      *
      * @param string $currency
-     * @return static
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
+     * @return $this
      */
     public function currency(string $currency)
     {
@@ -406,16 +382,8 @@ class Invoice extends AbstractModel
     /**
      * Create invoice from creation params
      *
-     * @param string $account
+     * @param null|string $account
      * @return $this
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     * @throws InternalServerErrorException
-     * @throws ReflectionException
      */
     public function create(?string $account = null)
     {
@@ -433,7 +401,6 @@ class Invoice extends AbstractModel
         $account = Account::init($account_id);
         $created = false;
         $options = $this->createParams;
-        // $options['currency'] = $this->createParams['currency'];
 
         $created = $account->invoiceCreate(json_encode($options));
         $this->details = InvoiceDetails::fromJson($created);
@@ -470,13 +437,6 @@ class Invoice extends AbstractModel
      * Update invoice data from apirone & save if status changed
      *
      * @return bool
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     * @throws ReflectionException
      */
     public function update()
     {
@@ -538,7 +498,6 @@ class Invoice extends AbstractModel
      *
      * @param mixed $json
      * @return InvoiceDetails
-     * @throws ReflectionException
      */
     protected function parseDetails($json)
     {

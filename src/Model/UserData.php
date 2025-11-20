@@ -16,7 +16,6 @@ namespace Apirone\SDK\Model;
 use Apirone\SDK\Model\AbstractModel;
 use Apirone\SDK\Model\UserData\ExtraItem;
 use Apirone\SDK\Model\UserData\OrderItem;
-use ReflectionException;
 use stdClass;
 
 /**
@@ -93,7 +92,6 @@ class UserData extends AbstractModel
      *
      * @param mixed $json
      * @return $this
-     * @throws ReflectionException
      */
     public static function fromJson($json)
     {
@@ -138,7 +136,6 @@ class UserData extends AbstractModel
      *
      * @param mixed $data
      * @return array
-     * @throws ReflectionException
      */
     public function parseExtras($data)
     {
@@ -155,7 +152,6 @@ class UserData extends AbstractModel
      *
      * @param mixed $data
      * @return array
-     * @throws ReflectionException
      */
     public function parseItems($data)
     {

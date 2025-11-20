@@ -136,7 +136,6 @@ class Db
      * Throws an exception if the handler is not set.
      *
      * @return void
-     * @throws \Apirone\SDK\Service\Db\HandlerNotSetException
      */
     public static function checkHandler()
     {
@@ -186,9 +185,9 @@ class Db
 
     /**
      * Save created
-     * @param \Apirone\SDK\Invoice $invoice
+     *
+     * @param Invoice $invoice
      * @return mixed
-     * @throws \Apirone\SDK\Service\Db\HandlerNotSetException
      */
     public static function saveInvoice(Invoice $invoice)
     {

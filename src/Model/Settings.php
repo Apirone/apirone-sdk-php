@@ -92,13 +92,6 @@ class Settings extends AbstractModel
      * Create instance
      *
      * @return self
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     * @throws ReflectionException
      */
     public static function init()
     {
@@ -111,15 +104,7 @@ class Settings extends AbstractModel
      * Restore settings from JSON
      *
      * @param mixed $json
-     * Get the value of transferKey
-     * @return self
-     * @throws ReflectionException
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
+     * @return static
      */
     public static function fromJson($json)
     {
@@ -134,13 +119,6 @@ class Settings extends AbstractModel
      *
      * @param mixed $absFilePath
      * @return self|null
-     * @throws ReflectionException
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
      */
     public static function fromFile($absFilePath)
     {
@@ -159,13 +137,6 @@ class Settings extends AbstractModel
      * @param mixed $account
      * @param mixed $transferKey
      * @return self
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     * @throws ReflectionException
      */
     public static function fromExistingAccount($account, $transferKey)
     {
@@ -221,12 +192,6 @@ class Settings extends AbstractModel
      *
      * @param bool $renew
      * @return self
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
      */
     public function createAccount($renew = false)
     {
@@ -250,13 +215,6 @@ class Settings extends AbstractModel
      * Load currencies from an apirone service
      *
      * @return self
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     * @throws ReflectionException
      */
     public function loadCurrencies()
     {

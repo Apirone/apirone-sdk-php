@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Apirone\SDK\Model\UserData;
 
 use Apirone\SDK\Model\AbstractModel;
-use ReflectionException;
 
 /**
  * @property-read string $name
@@ -103,7 +102,6 @@ class OrderItem extends AbstractModel
      *
      * @param mixed $json
      * @return $this
-     * @throws ReflectionException
      */
     public static function fromJson($json)
     {

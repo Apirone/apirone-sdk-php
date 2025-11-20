@@ -39,7 +39,6 @@ class HistoryItem extends AbstractModel
      *
      * @param mixed $json
      * @return $this
-     * @throws ReflectionException
      */
     public static function fromJson($json)
     {
