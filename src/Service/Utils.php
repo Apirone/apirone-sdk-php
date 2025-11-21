@@ -25,13 +25,18 @@ class Utils
 
     public static array $coins = [];
 
+    /**
+     * Loads currencies from the API and returns them as an array of coins.
+     *
+     * @return array
+     */
     public static function loadCoins()
     {
         $info = Service::account();
         $coins = [];
 
         foreach ($info->currencies as $item) {
-            $coin = new \stdClass;
+            $coin = new stdClass;
 
             $coin->abbr = $item->abbr;
             $coin->name = $item->name;
@@ -49,7 +54,7 @@ class Utils
     }
 
     /**
-     * Get cryptocurrency parameters by abbreviation
+     * Get currency parameters by abbreviation
      *
      * @param string $abbr
      * @return mixed
@@ -93,6 +98,13 @@ class Utils
         return static::$coins[$abbr] = $coin;
     }
 
+    /**
+     * Returns the explorer href based on the currency abbr and hash type
+     * @param mixed $abbr
+     * @param mixed $type
+     * @param string $hash
+     * @return string
+     */
     public static function getExplorerHref($abbr, $type, $hash = '')
     {
         $coin = static::getCoin($abbr);
@@ -135,7 +147,7 @@ class Utils
     }
 
     /**
-     * Return transaction link to blockchair.com
+     * Return transaction link to explorer
      *
      * @param string $abbr
      * @return string
@@ -146,7 +158,7 @@ class Utils
     }
 
     /**
-     * Return transaction link to blockchair.com
+     * Return transaction link to explorer
      *
      * @param string $abbr
      * @return string
@@ -195,7 +207,17 @@ class Utils
         return $class;
     }
 
-
+    /**
+     * Calculates estimation
+     *
+     * @param mixed $account
+     * @param mixed $amount
+     * @param mixed $fiat
+     * @param mixed $currencies
+     * @param bool $fee
+     * @param int $factor
+     * @return json
+     */
     public static function estimate($account, $amount, $fiat, $currencies, $fee = false, $factor = 1)
     {
         $path = sprintf('v2/accounts/%s/tocrypto', $account);
@@ -303,6 +325,7 @@ class Utils
 
     /**
      * Checks if a cryptocurrency is a testnet
+     *
      * @param string $abbr
      * @return bool
      */

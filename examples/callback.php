@@ -6,18 +6,22 @@ require_once('log.php');
 
 use Apirone\SDK\Invoice;
 use Apirone\SDK\Model\Settings;
-use Apirone\SDK\Service\Db;
 
 /**
- * Your system Order status handler
+ * callbackChecker
  */
-$order_handler = static function ($invoice) {
-    $order_id = $invoice->order;
-
-    // Process order by order_id
+$callbackChecker = static function (Invoice $invoice) {
+    // your input validation/processing logic
 };
 
-// Setup DB and Settings into invoice object
+/**
+ * paymentProcessing
+ */
+$paymentProcessing = static function (Invoice $invoice) {
+    // Your payment processing logic
+};
+
+// Setup settings to invoice class
 Invoice::settings(Settings::fromFile('/var/www/storage/settings.json'));
 
-Invoice::callbackHandler($order_handler);
+Invoice::callbackHandler($paymentProcessing, $callbackChecker);

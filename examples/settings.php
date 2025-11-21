@@ -20,12 +20,19 @@ else {
     $settings = Settings::fromFile($path);
 }
 
-// Set destination & fee policy for tbtc currency (for example)
-$destination = '2N186GvYp1gctUXMT4RXzAv3N5MB7wLncq7';
-$fee = 'percentage';
+// You can save any property value, which will be stored
+// in a special metaproperty and retrieved by its name.
+// For example, save the processing-fee-plan in a settings object.
+// To remove a parameter, simply set its value to empty via $settings->fee()
+$settings->fee('percentage');
 
-$settings->currency('btc')->address();
-$settings->currency('tbtc')->address($destination)->policy($fee);
+// Your transfer address for tbtc
+$transfer_address = '2N186GvYp1gctUXMT4RXzAv3N5MB7wLncq7';
+
+// Configure tbtc currency
+$settings->currency('tbtc')
+    ->address($transfer_address)
+    ->policy($settings->fee);
 
 // Save currencies settings into account
 $settings->saveCurrencies();

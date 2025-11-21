@@ -19,6 +19,13 @@ use Apirone\SDK\Service\Utils;
 
 class Api
 {
+    /**
+     * Local API invoices entry point handler
+     *
+     * @param string $invoice
+     * @param null|callable $paymentProcessing callback function
+     * @return never
+     */
     public static function invoices(string $invoice, ?callable $paymentProcessing = null)
     {
         $invoice = Invoice::get($invoice);
@@ -41,6 +48,11 @@ class Api
         exit;
     }
 
+    /**
+     * Local API wallets entry point handler
+     *
+     * @return never
+     */
     public static function wallets()
     {
         try {

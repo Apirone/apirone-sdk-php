@@ -32,23 +32,36 @@ require_once('helpers/common.php');
                 <pre><code class="language-bash">composer require apirone-sdk-php</code></pre>
             </div>
             <div>
-                <h2>Create database and logging callback functions</h2>
+                <h2>Database and Logging</h2>
+                <p>
+                    To interact with the database and logs, the library uses callback functions
+                    that wrap calls to your methods for working with the database and logs.
+                    For more information, see the documentation.
+                </p>
+                <h3>Database</h3>
                 <p>Simple example with <i>SQLite</i> usage.</p>
                 <?php echo load_file_content('db_sqlite.php'); ?>
-                <p>Simple <i>write log to file</i> example</p>
+                <h3>Logging</h3>
+                <p>
+                    Simple write log to file example, used as callback function.
+                    Also you can use <code>PSR/LOG</code> or own implementation of <code>Psr\Log\LoggerInterface</code>.</p>
                 <?php echo load_file_content('log.php'); ?>
             </div>
             <div x-data="table" x-init="load" id="step_2">
                 <h2>Invoice data table</h2>
+                <p>
+                    To store invoice information, you need to create a table in your database.
+                    The Db class contains special methods for this purpose.
+                </p>
                 <?php echo load_file_content('table.php'); ?>
                 <button class="text-white rounded-md w-48 bg-[#5d8ab9] hover:opacity-80 disabled:opacity-80 p-2" @click="doAction" x-text="label" :disabled="table"></button>
             </div>
             <div id="step_3">
                 <h2>Settings</h2>
                 <p>
-                    When creating a settings object, you need to create an account, or you can use an existing one.
-                    Also, all accessible cryptos of the service are automatically added to the settings object.
-                    For invoice you can set only one destination address for each currency. You can set the destination address for each currency right away or do it later.
+                    This is a special class that allows you to create a new account or use an existing one,
+                    configure transfer addresses, or set up a pricing plan.
+                    The class also allows you to store all the settings you need in one place.
                 </p>
                 <p>
                     You can store the settings in a file or get them as a JSON-object and save them in any way you like.
@@ -69,13 +82,15 @@ require_once('helpers/common.php');
             <div>
                 <h2>Apirone API callbacks handler</h2>
                 <p>
-                    Response processing is important for correct operation of the library.
+                    Receiving API callbacks is important for the correct processing of invoices.
                     To do this, you need to create a URL that will respond to requests from the apirone service.
                     There is a special static method for this. You only need to register its call.
                 </p>
                 <p>
-                    If you want to process invoice statuses for your system,
-                    you need to create a callback function that will handle the changed invoice status.
+                    The method supports two parameters for additional data processing in your system.
+                    Both parameters must be callback functions. The first parameter, <code>$paymentProcessing</code>,
+                    is used to process the payment in your system. The second parameter, <code>$callbackChecker</code>,
+                    is used for preliminary validation/processing of input data.
                 </p>
                 <?php echo load_file_content('./callback.php'); ?>
 
@@ -114,7 +129,12 @@ require_once('helpers/common.php');
             <div id="step_5">
                 <h2>Playground</h2>
                 <div x-show="!$store.table || !$store.settings" class="pb-10">
-                    Before creating an invoice you need create data table and settings!
+                    <div class="border border-gray-200 bg-gray-200 rounded-md px-8 py-5">
+                        <h3 class="!mt-2">Important!</h3>
+                        <p>
+                            Before creating an invoice you need create <a href="#step_2">data table</a> and <a href="#step_3">settings</a>!
+                        </p>
+                    </div>
                 </div>
                 <div x-show="$store.table && $store.settings" class="pb-10">
                     <div class="my-8">

@@ -7,8 +7,7 @@ require_once('log.php');
 use Apirone\SDK\Invoice;
 use Apirone\SDK\Model\Settings;
 
-// Setup DB and Settings
-Db::handler($db_handler)->prefix($table_prefix);
+// Set settings to invoice class
 Invoice::settings(Settings::fromFile('/var/www/storage/settings.json'));
 
 // For example you need to pay in btc 25000 satoshi
