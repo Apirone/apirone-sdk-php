@@ -7,13 +7,13 @@ require_once('log.php');
 use Apirone\SDK\Invoice;
 use Apirone\SDK\Model\Settings;
 
-// Set settings to invoice class
-Invoice::settings(Settings::fromFile('/var/www/storage/settings.json'));
+// Get settings
+$settings = Settings::fromFile('/var/www/storage/settings.json');
 
-// For example you need to pay in btc 25000 satoshi
-$invoice = Invoice::init('btc', 25000);
+// For example you need to pay in btc 2500 satoshi
+$invoice = Invoice::init($settings->account, 'btc')->amount(2500);
 
-// Set invoice lifetime 300s
+// Set invoice lifetime 300s (5 min)
 $invoice->lifetime(300);
 
 // Set callback URL

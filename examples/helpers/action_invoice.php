@@ -11,7 +11,7 @@ use Apirone\SDK\Model\Settings;
 use Apirone\SDK\Model\UserData;
 
 // Config
-Invoice::settings(Settings::fromFile('/var/www/storage/settings.json'));
+$settings = Settings::fromFile('/var/www/storage/settings.json');
 
 $invoiceJson = json_decode(Utils::sanitize($_POST['data']));
 $userDataJson = null;
@@ -19,7 +19,11 @@ $userDataJson = null;
 if(isset($_POST['userData'])) {
     $userDataJson = json_decode(Utils::sanitize($_POST['userData']));
 }
-$invoice = Invoice::init($invoiceJson->currency, $invoiceJson->amount);
+$invoice = Invoice::init($settings->account, $invoiceJson->currency);
+
+if ($invoiceJson->amount) {
+    $invoice->amount($invoiceJson->amount);
+}
 
 if ($invoiceJson->lifetime) {
     $invoice->lifetime($invoiceJson->lifetime);
