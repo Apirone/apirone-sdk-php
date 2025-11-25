@@ -20,6 +20,13 @@ use Apirone\SDK\Service\Utils;
 class Api
 {
     /**
+     * Minimum interval for checking invoice status
+     *
+     * @var int
+     */
+    public static int $checkInterval = 0;
+
+    /**
      * Local API invoices entry point handler
      *
      * @param string $invoice
@@ -31,7 +38,7 @@ class Api
         $invoice = Invoice::get($invoice);
         if ($invoice->id !== null) {
             try {
-                $updated = $invoice->update();
+                $updated = $invoice->update(static::$checkInterval);
                 if ($updated && is_callable($paymentProcessing)) {
                     call_user_func($paymentProcessing, $invoice);
                 }

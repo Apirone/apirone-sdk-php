@@ -26,20 +26,6 @@ use Apirone\SDK\Service\Utils;
 class Invoice extends AbstractModel
 {
     /**
-     * Invoice settings object
-     *
-     * @var Settings
-     */
-    public static Settings $settings;
-
-    /**
-     * Minimum interval for checking invoice status
-     *
-     * @var int
-     */
-    public static int $checkInterval = 0;
-
-    /**
      * Invoice record Id - auto increment
      * @var null|int
      */
@@ -92,43 +78,18 @@ class Invoice extends AbstractModel
     private function __construct() {}
 
     /**
-     * Set settings to Invoice object
-     *
-     * @param Settings $settings
-     * @return void
-     */
-    public static function settings(\Apirone\SDK\Model\Settings $settings)
-    {
-        static::$settings = $settings;
-    }
-
-    /**
-     * Set invoice update timer
-     *
-     * @param int $interval
-     * @return void
-     */
-    public static function checkInterval(int $interval = 0)
-    {
-        static::$checkInterval = $interval;
-    }
-
-    /**
      * Init new Invoice class
      *
+     * @param string $account
      * @param string $currency
-     * @param null|int $amount
      * @return static
      */
-    public static function init(string $currency, $amount = null)
+    public static function init(string $account, string $currency)
     {
         $class = new static();
 
-        $class->currency($currency);
-
-        if ($amount !== null) {
-            $class->amount($amount);
-        }
+        $class->createParams['account'] = $account;
+        $class->createParams['currency'] = $currency;
 
         return $class;
     }
@@ -272,19 +233,6 @@ class Invoice extends AbstractModel
     }
 
     /**
-     * Set currency for new invoice
-     *
-     * @param string $currency
-     * @return $this
-     */
-    public function currency(string $currency)
-    {
-        $this->createParams['currency'] = $currency;
-
-        return $this;
-    }
-
-    /**
      * Set invoice amount
      *
      * @param $amount
@@ -385,7 +333,7 @@ class Invoice extends AbstractModel
      * @param null|string $account
      * @return $this
      */
-    public function create(?string $account = null)
+    public function create()
     {
         Db::checkHandler();
 
@@ -393,19 +341,17 @@ class Invoice extends AbstractModel
             return $this;
         }
 
-        $this->order = array_key_exists('order', $this->createParams) ? $this->createParams['order'] : 0;
+        $account = $this->createParams['account'];
+        $this->order = $this->createParams['order'] ?? 0;
 
-        unset($this->createParams['order']);
-        $account_id = ($account === null) ? Invoice::$settings->account : $account;
+        unset($this->createParams['order'], $this->createParams['account']);
 
-        $account = Account::init($account_id);
-        $created = false;
-        $options = $this->createParams;
+        $invoice = Account::init($account)->invoiceCreate(json_encode($this->createParams));
 
-        $created = $account->invoiceCreate(json_encode($options));
-        $this->details = InvoiceDetails::fromJson($created);
+        $this->details = InvoiceDetails::fromJson($invoice);
         $this->invoice = $this->details->invoice;
         $this->status = $this->details->status;
+
         unset($this->createParams);
 
         $this->save();
@@ -436,16 +382,17 @@ class Invoice extends AbstractModel
     /**
      * Update invoice data from apirone & save if status changed
      *
-     * @return bool
+     * @param int $checkInterval default 0
+     * @return false|bool
      */
-    public function update()
+    public function update($checkInterval = 0)
     {
         if(!isset($this->details)) {
             return false;
         }
 
-        if (Invoice::$checkInterval > 0) {
-            $interval = Invoice::$checkInterval <= 5 ? 5 : Invoice::$checkInterval;
+        if ($checkInterval > 0) {
+            $interval = $checkInterval <= 5 ? 5 : $checkInterval;
 
             if (time() - $this->time < $interval) {
                 return false;
