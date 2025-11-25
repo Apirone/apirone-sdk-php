@@ -39,29 +39,30 @@ src/
 │  └─ ...
 ├─ Model/
 │  ├─ Settings/
-│  |  └─ Currency.php
+│  |  ├─ Currency.php
+│  |  └─ Network.php
 │  ├─ Settings.php
 │  ├─ UserData.php
 │  └─ ...
 ├─ Service/
-|  ├─ Db/
-|  |  └─ ...
+|  ├─ Api.php
 |  ├─ Db.php
-|  ├─ Render.php
-|  ├─ Utils.php
-|  └─ ...
+|  ├─ Logger.php
+│  ├─ Utils.php
+│  └─ ...
 └─ Invoice.php
 ```
 
 - __assets__ - Contains JS, CSS and image files for displaying the Invoice.
 - __Model__ - Contains classes for working with various data.
   - __Settings/Currency.php__ - Contains all currency properties and methods.
+  - __Settings/Network.php__ - Contains additional methods when currency is network not a token.
   - __Settings.php__ - Used to handle accounts, currencies, destinations, tariffs, synchronization and storage of settings.
-  - __UserData.php__ - Used to configure some additional information about the Invoice (includes following fields: title, merchant, URL, price, sub-price, items, extras, etc.)
-- __Service__ - Contains service classes and invoice templates.
-  - __tpl__ - Templates & locales.
-  - __InvoiceDb.php__ - Work with your Database.
-  - __Render.php__ - Display the Invoice.
+  - __UserData.php__ - Used to configure some additional information about the Invoice (includes following fields: `title`, `merchant`, `URL`, `price`, `sub-price`, `items`, `extras`, etc.)
+- __Service__ - Contains service classes.
+  - __Api.php__ - Local white label API implementation.
+  - __Db.php__ - Database wrapper class.
+  - __Logger.php__ - Logger wrapper class.
   - __Utils.php__ - Contain some useful methods.
 - __Invoice.php__ - The main entry point to the library.
 

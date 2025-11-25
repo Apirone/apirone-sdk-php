@@ -22,8 +22,8 @@ A static property `$settings` is also available, which can contain an instance o
 You need to have an Apirone account to create an invoice. Use the Settings class to create and configure an account.
 
 `Invoice::init()` returns a new invoice instance for further configuration and creation.
-
-`Invoice::fromFiatAmount()` returns a new invoice instance with an already calculated amount from fiat currency to the specified cryptocurrency
+The currency abbreviation is a required parameter, and the amount is optional.
+However, you can change the currency value before calling the `create()` method.
 
 ### Creation parameters
 
@@ -54,7 +54,7 @@ Usage example:
 $invoice->init('btc');
 // ...
 $invoiceUserData = UserData::init()
-    ->itle('My invoice Title')
+    ->title('My invoice Title')
     ->merchant('Merchant name');
     ->price('$ 100');
 
@@ -86,3 +86,24 @@ Use the `setMeta($key, $value )` method to set and the `getMeta($key)` method to
 If you set the `order` property when creating an invoice, you can retrieve all invoices associated with that payment.
 
 Use `Invoice::getByOrder($order)` method for this and get an array with invoices or an empty array if no invoices are found.
+
+### Meta property
+
+The `meta` property is used to store additional parameters and can be modified after the invoice is created. It is a `stdClass` class with key-value parameters.
+
+To get/set values, use the `meta` property or the `meta()` method with an `stdClass` as parameter.
+
+To set and get individual parameter, also use the `property/method`, where name is the name of the desired parameter. To delete a parameter, call the method with the parameter name and an empty value.
+
+For example:
+
+```php
+// store value into meta
+$invoice->myParameter('My parameter value');
+
+// get value from meta
+$param = $invoice->myParameter;
+
+// remove value from meta
+$invoice->myParameter();
+```

@@ -27,11 +27,6 @@ All properties also available via `getPropertyName()` functions. Deprecated, use
 
 |Method|Description|
 |---|---|
-|`update()`|Returns updated invoice data from the API|
 |`info()`|Returns public or private invoice info|
+|`update()`|Returns updated invoice data from the API|
 |`isExpired()`|Checks if the invoice has not expired|
-|`timeToExpire()`|Returns the number of seconds until an invoice expires. If the invoice has status `paid`, `overpaid`, `completed` or `expired` returns `-1`|
-|`showLinkback()`*|Shows linkback if set and invoice status is paid or overpaid|
-|`statusNum()`*|Returns count of history items. In case when the invoice completed or expired return zero value|
-
-`*` - Used to render the invoice data.

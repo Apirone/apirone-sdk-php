@@ -15,3 +15,5 @@ docs/.vitepress/cache
 docs/.vitepress/dist
 examples/*
 invoice
+package-lock.json
+yarn.lock

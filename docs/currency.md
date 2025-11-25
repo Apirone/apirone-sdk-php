@@ -18,23 +18,28 @@ received from the API [account info](https://apirone.com/docs/account/#account-i
 |---|---|
 |`name`|The full name of the cryptocurrency|
 |`abbr`|Cryptocurrency abbreviation|
+|`alias`|Cryptocurrency alias|
 |`units`|The minimal unit used for cryptocurrency|
 |`unitsFactor`|Factor for minimal unit|
 |`dustRate`|Fee free threshold. We don't charge the service fee for payments under this amount|
 |`address`|Forwarding destination address|
 |`policy`|Processing fee policies|
+|`network`|Processing fee policies|
+|`token`|Processing fee policies|
 |`error`|Returns error property if set|
 
 Almost all properties are read-only. Two properties `address` and `policy` are available for modification.
 To do this, use `$class->address()` and `$class->policy()` methods.
 
-## Sinchronize with account
+## Create instance and synchronize with account
 
 |Method|Description|
 |---|---|
-|`loadSettings()`|Load currency settings from account|
-|`saveSettings()`|Save currency settings to account|
+|`init($json)`|Init currency object from API currency response|
+|`load()`|Load currency settings from account|
+|`save()`|Save currency settings to account|
 |`hasError()`|Checks is the currency has an error|
+|`fromJson($json)`|Alias to init()|
 
 ## Additional methods
 
@@ -42,6 +47,5 @@ To do this, use `$class->address()` and `$class->policy()` methods.
 |---|---|
 |`isTestnet()`|Checks whether the currency is a testnet. For example tbtc.|
 |`isNetwork()`|Is the token over network (blockchain)|
-|`isToken()`|Is a network-based token.|
-|`isStablecoin()`|Returns whether the currency is a stablecoin|
-|`getTokens()`|Returns an array with network tokens. An array of all currencies is used as a parameter.|
+|`isToken()`|Is a network-based token|
+|`tokens()`|Returns an array with network tokens. An array of all currencies is used as a parameter.|

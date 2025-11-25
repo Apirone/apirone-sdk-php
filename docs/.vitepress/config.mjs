@@ -72,11 +72,12 @@ function sidebar() {
         items: [
           {text: 'Invoice', link: '/invoice'},
           {text: 'InvoiceDetails', link: '/invoice-details'},
+          {text: 'UserData', link: '/user-data'},
           {text: 'Settings', link: '/settings'},
           {text: 'Currency', link: '/currency'},
-          {text: 'UserData', link: '/user-data'},
-          {text: 'Render', link: '/render'},
+          {text: 'Network', link: '/network'},
           {text: 'Utils', link: '/utils'},
+          {text: 'Db', link: '/db'},
         ]
       },
       {
