@@ -19,8 +19,7 @@
         <link rel="stylesheet" crossorigin href="/assets/style.min.css">
     </head>
     <body>
-        <!-- Add Invoce App container -->
+        <!-- Add Invoice App container -->
         <div id="app"></div>
-        <div class="my_mount_point"></div>
     </body>
 </html>

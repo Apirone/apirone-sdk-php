@@ -27,29 +27,33 @@ use Apirone\SDK\Service\Logger;
  */
 class Db
 {
+    /**
+     * Callback handler for database execution
+     *
+     * @var callable
+     */
+    public static $handler = null;
 
     /**
-     * Database table prefix
+     * Database adepter
      *
-     * @var bool
+     * @var string
+     */
+    private static $adapter = 'mysql';
+
+    /**
+     * Database table name
+     *
+     * @var string
      */
     public static $table = 'apirone_invoice';
 
     /**
      * Database table prefix
      *
-     * @var bool
+     * @var string
      */
     public static $prefix = '';
-
-    private static $adapter = 'mysql';
-
-    /**
-     * Callback handler for database execution
-     *
-     * @var bool
-     */
-    public static $handler = false;
 
     private function __construct() {}
 
@@ -184,7 +188,7 @@ class Db
     }
 
     /**
-     * Save created
+     * Save created or update existed
      *
      * @param Invoice $invoice
      * @return mixed
