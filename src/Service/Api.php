@@ -27,6 +27,17 @@ class Api
     public static int $checkInterval = 0;
 
     /**
+     * Set $checkInterval via method
+     *
+     * @param int $interval
+     * @return void
+     */
+    public static function checkInterval($interval = 0)
+    {
+        static::$checkInterval = $interval;
+    }
+
+    /**
      * Local API invoices entry point handler
      *
      * @param string $invoice
