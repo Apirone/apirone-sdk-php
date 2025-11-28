@@ -63,21 +63,23 @@ function sidebar() {
         items: [
           { text: 'Getting started', link: '/getting-started' },
           { text: 'Five-steps guide', link: '/five-steps-guide' },
+          { text: 'Invoice App', link: '/invoice-app' },
         ]
       },
       {
-        // text: 'Digging Deeper',
         text: 'Dive deeper',
         collapsed: false,
         items: [
-          {text: 'Invoice', link: '/invoice'},
-          {text: 'InvoiceDetails', link: '/invoice-details'},
-          {text: 'UserData', link: '/user-data'},
-          {text: 'Settings', link: '/settings'},
-          {text: 'Currency', link: '/currency'},
-          {text: 'Network', link: '/network'},
-          {text: 'Utils', link: '/utils'},
-          {text: 'Db', link: '/db'},
+          { text: 'Invoice class', link: '/invoice' },
+          { text: 'InvoiceDetails class', link: '/invoice-details' },
+          { text: 'UserData class', link: '/user-data' },
+          { text: 'Settings class', link: '/settings' },
+          { text: 'Currency class', link: '/currency' },
+          { text: 'Network class', link: '/network' },
+          { text: 'Utils class', link: '/utils' },
+          { text: 'Database class', link: '/database' },
+          { text: 'Logger class', link: '/logger' },
+          { text: 'Local API class', link: '/api' },
         ]
       },
       {

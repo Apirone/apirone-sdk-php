@@ -17,16 +17,16 @@ Simple "log to file" implementation:
 
 ```php
 <?php
-use Apirone\SDK\Invoice;
+use Apirone\SDK\Service\Logger;
 
-$logger_handler = static function ($level, $message, $context) {
+$log_handler = static function ($level, $message, $context) {
     $log_file = '/path/to/log_file.txt';
     $data = [$level, $message, $context];
     file_put_contents($log_file, print_r($data, true) . "\r\n", FILE_APPEND);
 };
 
-// Set logger handler via Invoice class
-Invoice::logger($logger_handler);
+// Set logger handler
+Logger::set($log_handler);
 
 ```
 
@@ -38,18 +38,23 @@ into a callback function that is passed an SQL query as a parameter.
 Once you have created your database callback function, simply set it as a DB handler.
 
 ```php
+use Apirone\SDK\Service\Db;
+
 $db_handler = static function ($query) {
     // Your implementation here;
     // Just run a sql query and return the result
 }
 
-Invoice::db($db_handler);
+Db::handler($db_handler);
 ```
+
+> [!WARNING]
+> If you do not install the handler, an exception will be thrown when accessing the data store.
 
 ### Invoice table
 
 After installing the DB-handler, create an invoice table in the database.
-To do this, just execute the `InvoiceDB::install()` method once.
+To do this, just execute the `DB::install()` method once.
 
 ```php
 <?php
@@ -58,33 +63,25 @@ use Apirone\SDK\Service\Db;
 // Create an invoice table
 Db::install();
 ```
+To get more details see [Db class](database);
 
-## Step 2. Working with Apirone callbacks
+## Step 2. Working with API callbacks
 
-### Create callbacks handler
+
+### Adding callbacks handler
 
 The Apirone service informs you of invoice events with callbacks.
-Create a page that supports the POST method and add `Invoice::callbackHandler()` call to it.
-You will use the URL of this page when creating the Invoice as a callback address.
+Create a page that supports the POST request method and add a call to the `Invoice::callbackHandler();` method on the page.
 
-### Process callback data
+You will use the URL of this page when creating the Invoice as a `callback_url` parameter.
 
-When the callback is received you can process its data in your app.
-Create a handler and simply add it as a parameter to the `Invoice::callbackHandler()` function.
-To authenticate the order in your app, set its ID to the `Invoice::$order` property
-at the creation stage and get it from the invoice data at the callback processing stage.
+### Handling callback data
 
-```php
-$my_apirone_callback_handler = static function ($invoice) {
-    $my_app_order_id = $invoice->order;
+When the callback is received you [can process](invoice#callback-handler) its data in your app.
+To do this, you can create a `$callbackChecker` and a `$paymentProcessing` callback functions
+and pass them as parameters into `Invoice::callbackHandler();`
 
-    // Process your business logic with $my_app_order_id here
-};
-
-Invoice::callbackHandler($my_apirone_callback_handler);
-```
-
-## Step 3. Apirone account
+## Step 3. Creating and managing an account
 
 A special [Settings](/settings) class that allows you to work with accounts, currencies, invoice parameters, fees, etc.
 
@@ -113,16 +110,16 @@ $settings = Settings::fromExistingAccount('account-id', 'transfer-key');
 Destination addresses must be set before the invoice can be created.
 The destination is set separately, one for each currency.
 
-> [!WARNING]
-> If you do not specify a destination, no automatic forwarding will take place and funds will accumulate in the account.
-
 ```php
 // Set the BTC currency and the transfer address for forwarding
-$settings->getCurrency('btc')->setAddress('3JH4GWtXNz7us8qw1zAtRr4zuq2nDFXTgu');
+$settings->currency('btc')->setAddress('3JH4GWtXNz7us8qw1zAtRr4zuq2nDFXTgu');
 
 // Save currency settings into account
 $settings->saveCurrencies();
 ```
+
+> [!WARNING]
+> If you do not specify a destination, no automatic forwarding will take place and funds will accumulate in the account.
 
 ### Save and restore Settings object
 
@@ -140,123 +137,81 @@ $settings = Settings::fromFile('/absolute/path/to/settings.json');
 
 ## Step 4. Invoice creating
 
-A mandatory condition for creating an invoice is the presence of a database handler and a configured Settings object.
-To add the above, use the static methods of the Invoice class before creating an invoice instance.
+The mandatory parameter for creating an invoice is the account id and currency. All other [parameters](invoice#setting-up-invoice-parameter-methods) are optional.
+The account ID can be obtained from the `Settings` object from the previous step.
 
 ```php
-// Setup DB and Settings into Invoice class
-Invoice::db($db_handler, $table_prefix);
-Invoice::settings(Settings::fromFile('/absolute/path/to/settings.json'));
+$settings = Settings::fromFile('/absolute/path/to/settings.json');
+
+$simplest_invoice = Invoice::init($settings->account, 'btc')->create();
 ```
 
----
+The result of the execution will be a created invoice and a record will be added to the invoice table.
+In this example, the created invoice will wait for any amount to be paid, after which its [status](https://apirone.com/docs/invoices/#invoice-status) will change to `completed`.
 
-Unlike APIs, the library has two ways to create an invoice -
-set the amount in cryptocurrency or create from fiat currency.
-Let's look at both methods in more detail.
-
-### Via crypto amount
-
-The mandatory parameter for creating an invoice is the currency. All other parameters are optional.
-Initialize the invoice with the desired currency and call the `Invoice::create()` method.
-You can also set other parameters before you call the `Invoice::create()` method.
-
-```php
-$simplest_invoice = Invoice::init('btc')->create();
-```
-
-If you have created the database function and the Settings object correctly, the result of the execution
-will be a created invoice and a record will be added to the invoice table.
-The created invoice will wait for any amount to be paid, after which its [status](https://apirone.com/docs/invoices/#invoice-status) will change to `completed`.
-
-To create a fixed amount invoice, you can set it up by calling the `Invoice::init()` method or using the `Invoice::amount()` method.
+To create a fixed amount invoice, you can set it up using the `amount()` method.
 The amount is indicated in minor units (e.g. 0.005 BTC shall be specified as 500000, e.g. for usdt@trx: 50 usd shall be specified as 50000000).
 
 ```php
 // 0.005 btc
-$invoice_btc = Invoice::init('btc', 500000)->create();
+$invoice_btc = Invoice::init($settings->account, 'btc')
+  ->amount(500000)
+  ->create();
 
 // 50 usd via usdt@trx
-$invoice_usdt = Invoice::init('usdt@trx')
+$invoice_usdt = Invoice::init($settings->account, 'usdt@trx')
     ->amount(50000000)
     ->create();
 ```
 
-### Via fiat amount
-
-If you have an amount in fiat currency, the first thing you need to do is convert it to cryptocurrency,
-as the API only supports creating an account in cryptocurrency.
-
-But the library has a special method `Invoice::fromFiatAmount()` that will do it for you.
-The amount specified in fiat will be converted to cryptocurrency automatically.
-
-```php
-// Create an invoice for 99.50 USD via BTC
-$invoice_from_fiat = Invoice::fromFiatAmount(99.50, 'usd', 'btc');
-
-// Instead of this comment, you can set other invoice parameters.
-
-// Finally call create() method
-$invoice_from_fiat->create();
-```
-
-See the list of [supported fiat currencies](https://apirone.com/docs/supported-currencies-and-networks/).
-
 ## Step 5. Displaying an Invoice
 
-The library provides methods that will allow you to add an invoice to your HTML.
-A special [Render](/render) class that will allow you to do this.
+Starting with SDK 2.0, server-side rendering is no longer supported.
+Instead, we now use [Apirone Invoice App](https://github.com/Apirone/invoice-app).
+This app, written in Vue, combines the ease of integration with the usability of modern front-end apps.
 
-### Dynamic data update
+### Local API
 
-Create a page that supports the POST method, set its address using the `Invoice::dataUrl()` method,
-and then add a call to the `Invoice::renderAjax()` method.
+By default, Invoice-App uses the Apirone API to retrieve data.
 
-```php
-// Set invoice dataUrl via Invoice class
-Invoice::dataUrl('https://my-domain.com/render-invoice-data.php');
+If you want to display invoices created only in your app, you'll need to configure your own API endpoints.
+You need to set up two endpoints: `wallets` and `invoices` -  `wallets` to receive the list of currencies
+and `invoices` to receive the invoice data. The `Api class` is provided for this purpose.
+For example, let's say your API is accessible at `https://my_domain.net/api` and we use this URL
+as `service_url` parameter to configure our Invoice application in the next step.
 
-// Return invoice data
-Invoice::renderAjax();
-```
+### Invoice App
+We now use the official app, which will look the same whether it's hosted on the Apirone service or on your website.
 
-### Displaying an invoice
+![Invoice](/user-data-invoice-example.png)
 
-Add `src/assets/css/styles.css` and `src/assets/js/script.js` to the page where you want to display the invoice.
+Just add `src/assets/styles.css` and `src/assets/script.js` to the page where you want to display the invoice.
+In the attributes of the container where the invoice should be displayed, add `id="app"`
 
-In the right place in the HTML markup, add a call to the `Invoice::renderLoader()` method.
-On this page, you should have the DB handler added and the Settings object loaded just like in [Step 4](#step-4-invoice-creating).
-See the code below for an example.
-
-```php
-use Apirone\SDK\Invoice;
-use Apirone\SDK\Model\Settings;
-
-// Setup DB and Settings
-Invoice::db($db_handler, $table_prefix);
-Invoice::settings(Settings::fromFile('/absolute/path/to/settings.json'));
-
-// Setup Invoice Data Url
-Invoice::dataUrl('https://my-domain.com/render-invoice-data.php');
-
-?>
-<html>
+```html
+<!doctype html>
+<html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="/assets/js/script.min.js" type="text/javascript"></script>
-        <link href="/assets/css/styles.min.css" rel="stylesheet">
+        <script>
+            window.invoice_app_config = {
+                service_url: 'https://my_domain.net/api',
+            };
+        <!-- Add Invoice App script & styles -->
+        <script type="module" crossorigin src="/assets/script.min.js"></script>
+        <link rel="stylesheet" crossorigin href="/assets/style.min.css">
     </head>
-    <body style="margin: 0;">
-        <?php echo Invoice::renderLoader(); ?>
+    <body>
+        <!-- Add Invoice App container -->
+        <div id="app"></div>
     </body>
 </html>
 
 ```
 
-For more invoice display and configuration settings, explore the [Render](/render) class.
-
 ## What's Next?
+
+[Invoice App](/invoice-app) App - Learn more about setting up the Invoice app
+or [explore](https://github.com/Apirone/invoice-app) the app on GitHub.
 
 [Dive deeper](/invoice) - by learning the classes of the library,
 you will be able to control all available parameters more flexibly
