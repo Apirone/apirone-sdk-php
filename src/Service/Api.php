@@ -36,7 +36,7 @@ class Api
     public static function invoices(string $invoice, ?callable $paymentProcessing = null)
     {
         $invoice = Invoice::get($invoice);
-        if ($invoice->id !== null) {
+        if ($invoice !== null) {
             try {
                 $updated = $invoice->update(static::$checkInterval);
                 if ($updated && is_callable($paymentProcessing)) {

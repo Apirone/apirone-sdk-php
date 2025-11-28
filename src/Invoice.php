@@ -112,14 +112,14 @@ class Invoice extends AbstractModel
     /**
      * Get Invoice from database table
      *
-     * @param mixed $invoice
+     * @param string $invoice
      * @return null|Invoice
      */
-    public static function get(?string $invoice)
+    public static function get(string $invoice)
     {
         $result = Db::getInvoice($invoice);
         if (empty($result)) {
-            return new static();
+            return null;
         }
         $row = $result[0];
         $json = new \stdClass();
@@ -201,7 +201,7 @@ class Invoice extends AbstractModel
 
         $invoice = Invoice::get($params->invoice);
 
-        if (!$invoice->invoice) {
+        if ($invoice == null) {
             $message = "Invoice not found: " . $params->invoice;
             Logger::debug($message);
             Utils::sendJson($message, 404);
