@@ -43,14 +43,6 @@ abstract class AbstractModel
             return $this->meta->{$name};
         }
 
-        $trace = \debug_backtrace();
-        \trigger_error(
-            'Undefined property ' . $name .
-            ' in ' . $trace[0]['file'] .
-            ' on line ' . $trace[0]['line'],
-            \E_USER_NOTICE
-        );
-
         return null;
     }
 
@@ -93,14 +85,6 @@ abstract class AbstractModel
 
             return $this;
         }
-
-        $trace = \debug_backtrace();
-        \trigger_error(
-            'Undefined method ' . $name .
-            ' in ' . $trace[0]['file'] .
-            ' on line ' . $trace[0]['line'],
-            \E_USER_NOTICE
-        );
 
         return $this;
     }
