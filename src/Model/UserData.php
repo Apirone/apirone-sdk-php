@@ -60,8 +60,9 @@ class UserData extends AbstractModel
             $class = new \ReflectionClass(static::class);
 
             $property = $class->getProperty($name);
-            $property->setAccessible(true);
-
+            if (version_compare(phpversion(), '8.1.0', '<')) {
+                $property->setAccessible(true);
+            }
             $property->setValue($this, $value[0]);
 
             return $this;

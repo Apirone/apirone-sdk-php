@@ -114,6 +114,7 @@ class Db
 
         return new static();
     }
+
     /**
      * Returns adapter class namespace
      *

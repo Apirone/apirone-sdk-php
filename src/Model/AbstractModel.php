@@ -30,8 +30,9 @@ abstract class AbstractModel
             $class = new \ReflectionClass(static::class);
 
             $property = $class->getProperty($name);
-            $property->setAccessible(true);
-
+            if (version_compare(phpversion(), '8.1.0', '<')) {
+                $property->setAccessible(true);
+            }
             if(!$property->isInitialized($this)) {
                 return null;
             }
@@ -55,7 +56,9 @@ abstract class AbstractModel
             $value = is_array($value) ? $value[0] : $value;
 
             $property = $class->getProperty($name);
-            $property->setAccessible(true);
+            if (version_compare(phpversion(), '8.1.0', '<')) {
+                $property->setAccessible(true);
+            }
             $property->setValue($this, $value);
         };
 
@@ -105,7 +108,9 @@ abstract class AbstractModel
 
             if (\property_exists($this, $name)) {
                 $property = $class->getProperty($name);
-                $property->setAccessible(true);
+                if (version_compare(phpversion(), '8.1.0', '<')) {
+                    $property->setAccessible(true);
+                }
                 if (gettype($value) == 'object' || gettype($value) == 'array') {
                     $parser = 'parse' . ucfirst($name);
                     if ($class->hasMethod($parser)) {
