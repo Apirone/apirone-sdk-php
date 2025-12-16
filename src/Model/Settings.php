@@ -190,12 +190,11 @@ class Settings extends AbstractModel
     /**
      * Create a new apirone account
      *
-     * @param bool $renew
      * @return self
      */
-    public function createAccount($renew = false)
+    public function createAccount()
     {
-        if ($renew == false && isset($this->account)) {
+        if (isset($this->account)) {
             return $this;
         }
         $account = Account::create();
@@ -203,9 +202,6 @@ class Settings extends AbstractModel
         if ($account) {
             $this->account = $account->account;
             $this->transferKey = $account->{'transfer-key'};
-            if ($renew) {
-                $this->saveCurrencies();
-            }
         }
 
         return $this;
