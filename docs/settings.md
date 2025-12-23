@@ -82,11 +82,15 @@ The `Settings::networks` property returns an associative array of available netw
 > If the currency `abbr` property contains `@`, this is an indication that the currency is a token.
 > For example, `trx` is a network, `usdt@trx` is a Tron-based token.
 
-Also you can retrieve any available currency by its abbreviation using the `currency('abbr')` method.
+Also you can retrieve any available currency by its abbreviation using the `Settings::currency('abbr')` method.
 
-The `loadCurrencies()` method retrieves currency settings from the account and sets them in the currency property.
+The `loadCurrencies()` method retrieves currencies settings from the account and sets them in the `Settings::currencies` property.
 
-To save currency changes to the account, use the `saveCurrencies()` method.
+To save currency changes to the account, use the `Currency::save()` method for each currency.
+For networks with tokens, the last saved address will be relevant.
+
+Also you can cave all networks addresses into account in one action `Settings::saveNetworks()`.
+The network address will have priority. Addresses set in tokens will be ignored.
 
 ## Additional Parameters storage
 

@@ -236,17 +236,22 @@ class Settings extends AbstractModel
     }
 
     /**
-     * Save currencies into apirone account
+     * Save networks currencies into apirone account
      *
-     * @return self
+     * @return array $errors Returns an array with errors, if this happens otherwise an empty array
      */
-    public function saveCurrencies()
+    public function saveNetworks()
     {
-        foreach ($this->currencies as $currency) {
-            $currency->save($this->account, $this->transferKey);
+        $errors = [];
+
+        foreach ($this->networks as $network) {
+            $network->save($this->account, $this->transferKey);
+            if ($network->error) {
+                $errors[$network->abbr] = $network->error;
+            }
         }
 
-        return $this;
+        return $errors;
     }
 
     /**

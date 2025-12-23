@@ -108,15 +108,21 @@ $settings = Settings::fromExistingAccount('account-id', 'transfer-key');
 ### Setting up a forwarding
 
 Destination addresses must be set before the invoice can be created.
-The destination is set separately, one for each currency.
+The destination is set separately, one for each currency/network.
 
 ```php
 // Set the BTC currency and the transfer address for forwarding
-$settings->currency('btc')->setAddress('3JH4GWtXNz7us8qw1zAtRr4zuq2nDFXTgu');
+$settings->currency('btc')
+  ->setAddress('3JH4GWtXNz7us8qw1zAtRr4zuq2nDFXTgu')
+  ->save();
 
-// Save currency settings into account
-$settings->saveCurrencies();
+// Save all networks addresses into account in one action.
+// The network address will have priority. Addresses set for tokens will be ignored.
+$settings->saveNetworks();
 ```
+
+> [!INFO]
+> For networks with tokens, the last saved address will be relevant.
 
 > [!WARNING]
 > If you do not specify a destination, no automatic forwarding will take place and funds will accumulate in the account.
