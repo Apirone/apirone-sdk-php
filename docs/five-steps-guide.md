@@ -111,13 +111,15 @@ Destination addresses must be set before the invoice can be created.
 The destination is set separately, one for each currency/network.
 
 ```php
-// Set the BTC currency and the transfer address for forwarding
+// Set the BTC currency and the transfer address for forwarding.
+// To save the currency settings you need to use the account and transfer-key values.
 $settings->currency('btc')
   ->setAddress('3JH4GWtXNz7us8qw1zAtRr4zuq2nDFXTgu')
-  ->save();
+  ->save($settings->account, $settings->transferKey);
 
 // Save all networks addresses into account in one action.
 // The network address will have priority. Addresses set for tokens will be ignored.
+// The account and transfer-key values will be automatically taken from the settings.
 $settings->saveNetworks();
 ```
 
