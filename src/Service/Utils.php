@@ -14,62 +14,113 @@ declare(strict_types=1);
 namespace Apirone\SDK\Service;
 
 use Apirone\API\Endpoints\Service;
-use Apirone\API\Exceptions\RuntimeException;
-use Apirone\API\Exceptions\ValidationFailedException;
-use Apirone\API\Exceptions\UnauthorizedException;
-use Apirone\API\Exceptions\ForbiddenException;
-use Apirone\API\Exceptions\NotFoundException;
-use Apirone\API\Exceptions\MethodNotAllowedException;
-use Apirone\Lib\PhpQRCode\QRCode;
-use Apirone\SDK\Model\Settings\Currency;
+use Apirone\API\Http\Request;
+use stdClass;
 
 class Utils
 {
-    public const FROM = '?from=apirone';
-
     public const THRESHOLD = 1.0E-8;
 
     public const SUFFIX = '0000000000';
 
+    public static array $coins = [];
+
     /**
-     * Get apirone currency by abbreviation
+     * Loads currencies from the API and returns them as an array of coins.
      *
-     * @param string $currency
-     * @return mixed
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
+     * @return array
      */
-    public static function currency(string $currency)
+    public static function loadCoins()
     {
         $info = Service::account();
-        foreach($info->currencies as $item) {
-            if ($item->abbr == $currency) {
-                return $item;
-            }
+        $coins = [];
+
+        foreach ($info->currencies as $item) {
+            $coin = new stdClass;
+
+            $coin->abbr = $item->abbr;
+            $coin->name = $item->name;
+            $coin->alias = Utils::getAlias($item->abbr,$item->name);
+            $coin->unitsFactor = $item->{'units-factor'};
+            $parts = Utils::getNetworkAndToken($item->abbr);
+            $coin->network = $parts->network;
+            $coin->token = $parts->token;
+            $coin->testnet = Utils::isTestnet($item->abbr);
+
+            static::$coins[$item->abbr] = $coin;
         }
 
-        return null;
+        return static::$coins;
     }
 
-    public static function getExplorerHref(Currency $currency, $type, $hash = '')
+    /**
+     * Get currency parameters by abbreviation
+     *
+     * @param string $abbr
+     * @return mixed
+     */
+    public static function getCoin(string $abbr)
     {
-        // Explorer switch
-        switch ($currency->abbr) {
-            case (substr_count($currency->abbr, 'trx') > 0 ):
-                $explorer = $currency->isTestnet() ? 'shasta.tronscan.org' : 'tronscan.org';
+        // Loading coins mapping prod api on first launch
+        if (static::$coins == null) {
+            require_once(__DIR__ . '/coins.php');
+            static::$coins = (array) json_decode($coins);
+        }
+
+        if (!array_key_exists($abbr, static::$coins)) {
+            Utils::loadCoins();
+        }
+        if (array_key_exists($abbr, static::$coins)) {
+            if (!property_exists(static::$coins[$abbr], 'alias')) {
+                $parts = Utils::getNetworkAndToken($abbr);
+
+                static::$coins[$abbr]->abbr = $abbr;
+                static::$coins[$abbr]->alias = Utils::getAlias($abbr, static::$coins[$abbr]->name);
+                static::$coins[$abbr]->network = $parts->network;
+                static::$coins[$abbr]->token = $parts->token;
+                static::$coins[$abbr]->testnet = Utils::isTestnet($abbr);
+            }
+
+            return static::$coins[$abbr];
+        }
+
+        $parts = Utils::getNetworkAndToken($abbr);
+
+        $coin = new stdClass;
+        $coin->name =  ucfirst($abbr) . ' Unknown (Testnet)';
+        $coin->unitsFactor = static::THRESHOLD;
+        $coin->abbr = $abbr;
+        $coin->alias = $coin->name;
+        $coin->network = $parts->network;
+        $coin->token = $parts->token;
+        $coin->testnet = true;
+
+        return static::$coins[$abbr] = $coin;
+    }
+
+    /**
+     * Returns the explorer href based on the currency abbr and hash type
+     * @param mixed $abbr
+     * @param mixed $type
+     * @param string $hash
+     * @return string
+     */
+    public static function getExplorerHref($abbr, $type, $hash = '')
+    {
+        $coin = static::getCoin($abbr);
+
+        switch ($coin->abbr) {
+            case (substr_count($coin->abbr, 'trx') > 0 ):
+                $explorer = $coin->testnet ? 'shasta.tronscan.org' : 'tronscan.org';
                 $path = implode('/', ['#', $type, $hash]);
                 break;
-            case (substr_count($currency->abbr, 'eth') > 0 ):
-                $explorer = $currency->isTestnet() ? 'sepolia.etherscan.io' : 'etherscan.io';
+            case (substr_count($coin->abbr, 'eth') > 0 ):
+                $explorer = $coin->testnet ? 'sepolia.etherscan.io' : 'etherscan.io';
                 $type = ($type == 'transaction') ? 'tx' : $type;
                 $path = implode('/', [$type, $hash]);
                 break;
-            case (substr_count($currency->abbr, 'bnb') > 0 ):
-                $explorer = $currency->isTestnet() ? 'testnet.bscscan.com' : 'bscscan.com';
+            case (substr_count($coin->abbr, 'bnb') > 0 ):
+                $explorer = $coin->testnet ? 'testnet.bscscan.com' : 'bscscan.com';
                 $type = ($type == 'transaction') ? 'tx' : $type;
                 $path = implode('/', [$type, $hash]);
                 break;
@@ -80,9 +131,9 @@ class Utils
                 break;
             default:
                 $explorer = 'blockchair.com';
-                $currencyName = strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $currency->name));
+                $currencyName = strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $coin->name));
                 $from = '?from=apirone';
-                if ($currency->abbr == 'tbtc') {
+                if ($coin->abbr == 'tbtc') {
                     $currencyName = 'bitcoin/testnet';
                     $from = '';
                 }
@@ -96,106 +147,113 @@ class Utils
     }
 
     /**
-     * Return transaction link to blockchair.com
+     * Return transaction link to explorer
      *
-     * @param mixed $currency
+     * @param string $abbr
      * @return string
      */
-    public static function getTransactionLink($currency, $hash = '')
+    public static function getTransactionLink($abbr, $hash = '')
     {
-        return self::getExplorerHref($currency, 'transaction', $hash);
+        return self::getExplorerHref($abbr, 'transaction', $hash);
     }
 
     /**
-     * Return transaction link to blockchair.com
+     * Return transaction link to explorer
      *
-     * @param mixed $currency
+     * @param string $abbr
      * @return string
      */
-    public static function getAddressLink($currency, $hash = '')
+    public static function getAddressLink($abbr, $hash = '')
     {
-        return self::getExplorerHref($currency, 'address', $hash);
+        return self::getExplorerHref($abbr, 'address', $hash);
     }
 
     /**
-     * Return chart.googleapis.com QR-code link
+     * Make currency alias by abbr & name
      *
-     * @param mixed $currency
-     * @param mixed $input_address
-     * @param mixed $amount
-     * @deprecated Use renderQr() to get base64 encoded PNG
-     * @return string
+     * @param string $abbr
+     * @param mixed $name
+     * @return mixed
      */
-    public static function getQrLink($currency, $input_address, $amount = null)
+    public static function getAlias(string $abbr, $name)
     {
-        $prefix = (substr_count($input_address, ':') > 0) ? '' : strtolower(str_replace([' ', '(', ')'], ['-', '', ''], $currency->name)) . ':';
-        $amount = ($amount !== null && $amount > 0) ? '?amount=' . $amount : '';
+        $parts = Utils::getNetworkAndToken($abbr);
 
-        return 'https://chart.googleapis.com/chart?chs=256x256&cht=qr&chld=H|0&chl=' . urlencode($prefix . $input_address . $amount);
-    }
+        if ($parts->token) {
+            preg_match('#\((.*?)\)#', $name, $match);
+            $suffix = count($match) > 0 ? $match[1] : '';
 
-    /**
-     * Return base64 encoded QR png
-     *
-     * @param mixed $currency
-     * @param mixed $input_address
-     * @param mixed $amount
-     * @return string
-     */
-    public static function renderQr($currency, $input_address, $amount = null)
-    {
-        $prefix = (substr_count($input_address, ':') > 0) ? '' : strtolower(str_replace([' ', '(', ')'], ['-', '', ''], $currency->name)) . ':';
-        $amount = ($amount !== null && $amount > 0) ? '?amount=' . $amount : '';
+            $format = Utils::isTestnet($abbr) ? '%s (%s - testnet)' : '%s (%s)';
 
-        return QRCode::init()->data($prefix . $input_address . $amount)->levelHigh()->quietZone(0)->base64();
-    }
-
-    /**
-     * Return masked transaction hash
-     *
-     * @param mixed $hash
-     * @return string
-     */
-    public static function maskTransactionHash($hash, $size = 8)
-    {
-        return substr($hash, 0, $size) . '......' . substr($hash, -$size);
-    }
-
-    /**
-     * Convert to decimal and trim trailing zeros if $zeroTrim set true
-     *
-     * @param mixed $value
-     * @param bool $zeroTrim (optional)
-     * @return string
-     * @deprecated Use humanizeAmount()
-     */
-    public static function exp2dec($value, $zeroTrim = false)
-    {
-        if ($zeroTrim) {
-            return rtrim(rtrim(sprintf('%.8f', floatval($value)), 0), '.');
+            return strtoupper(sprintf($format, $parts->token, $suffix));
         }
 
-        return sprintf('%.8f', floatval($value));
+        return $name;
     }
 
+    /**
+     * Determine currency network & token by abbr
+     *
+     * @param string $abbr
+     * @return stdClass
+     */
+    public static function getNetworkAndToken(string $abbr)
+    {
+        $parts = explode('@', $abbr, 2);
+        $class = new stdClass;
+        $class->network = count($parts) == 1 ? $parts[0] : $parts[1];
+        $class->token = count($parts) == 2 ? $parts[0] : null;
+
+        return $class;
+    }
+
+    /**
+     * Calculates estimation
+     *
+     * @param mixed $account
+     * @param mixed $amount
+     * @param mixed $fiat
+     * @param mixed $currencies
+     * @param bool $fee
+     * @param int $factor
+     * @return json
+     */
+    public static function estimate($account, $amount, $fiat, $currencies, $fee = false, $factor = 1)
+    {
+        $path = sprintf('v2/accounts/%s/tocrypto', $account);
+        $options['amount'] = $amount;
+        $options['fiat'] = $fiat;
+        $options['currencies'] = (is_array($currencies) ? implode(',', $currencies) : $currencies);
+
+        if ($fee !== false) {
+            $options['fee'] = (bool) $fee;
+        }
+        if ($factor !== 1) {
+            $options['factor'] = $factor;
+        }
+
+        return Request::get($path, $options);
+    }
 
     /**
      * Convert to decimal and trim trailing zeros if $zeroTrim set true
      *
-     * @param int $amount
-     * @param Currency $currency
-     * @param bool $zeroTrim (optional)
+     * @param mixed $amount
+     * @param mixed $abbr
+     * @param bool $zeroTrim
      * @return string
      */
-    public static function humanizeAmount($amount, $currency, $zeroTrim = true)
+    public static function humanizeAmount($amount, $abbr, $zeroTrim = true)
     {
-        $amount = Utils::min2cur($amount, $currency->unitsFactor);
-        $suffix = ($currency->unitsFactor < static::THRESHOLD) ? static::SUFFIX : '';
-        if($currency->isStablecoin()) {
+        $coin = Utils::getCoin($abbr);
+
+        $amount = Utils::min2cur($amount, $coin->unitsFactor);
+        $suffix = ($coin->unitsFactor < static::THRESHOLD) ? static::SUFFIX : '';
+        if(Utils::isStablecoin($abbr)) {
             $decimals = 2;
         }
         else {
-            $unitsFactor = ($currency->unitsFactor < static::THRESHOLD) ? static::THRESHOLD : $currency->unitsFactor;
+            $unitsFactor = ($coin->unitsFactor < static::THRESHOLD) ? static::THRESHOLD : $coin->unitsFactor;
             $decimals = substr((string) $unitsFactor, strpos((string) $unitsFactor, "-") + 1);
         }
 
@@ -237,87 +295,12 @@ class Utils
     }
 
     /**
-     * Convert fiat amount to crypto
-     *
-     * @param mixed $fiatAmount
-     * @param mixed $fiatCode
-     * @param mixed $crypto
-     * @return float
-     * @throws \Apirone\API\Exceptions\RuntimeException
-     * @throws \Apirone\API\Exceptions\ValidationFailedException
-     * @throws \Apirone\API\Exceptions\UnauthorizedException
-     * @throws \Apirone\API\Exceptions\ForbiddenException
-     * @throws \Apirone\API\Exceptions\NotFoundException
-     * @throws \Apirone\API\Exceptions\MethodNotAllowedException
-     */
-    public static function fiat2crypto(float $fiatAmount, string $fiatCode, $currency): float
-    {
-        // Fallback for support currency abbr
-        if (gettype($currency) == 'string') {
-            $json = Utils::currency(strtolower($currency));
-            $currency = Currency::init($json);
-        }
-        $fiatCode = strtolower($fiatCode);
-
-        $result = static::fiat2cryptos($fiatAmount, $fiatCode, [$currency]);
-
-        if ($result) {
-            return (float)$result[$currency->abbr];
-        }
-
-        return $result;
-    }
-
-    /**
-     * Converts fiat amount to crypto for array of cryptos
-     *
-     * @param float $fiatAmount
-     * @param string $fiatCode
-     * @param Currency[] $currencies
-     * @return array<mixed, int|float>
-     * @throws \Apirone\API\Exceptions\RuntimeException
-     * @throws \Apirone\API\Exceptions\ValidationFailedException
-     * @throws \Apirone\API\Exceptions\UnauthorizedException
-     * @throws \Apirone\API\Exceptions\ForbiddenException
-     * @throws \Apirone\API\Exceptions\NotFoundException
-     * @throws \Apirone\API\Exceptions\MethodNotAllowedException
-     */
-    public static function fiat2cryptos(float $fiatAmount, string $fiatCode, array $currencies)
-    {
-        $fiatCode = strtolower($fiatCode);
-        $to = [];
-        $currencies = array_values($currencies);
-        foreach ($currencies as $currency) {
-            $to[] = $currency->abbr;
-        }
-        $rates = Service::ticker(implode(',', $to), $fiatCode);
-        $amounts = [];
-
-        if (property_exists($rates, $fiatCode)) {
-            $amount =  floatval($fiatAmount / (float) $rates->$fiatCode);
-            $decimals = substr((string)$currencies[0]->unitsFactor, strpos((string)$currencies[0]->unitsFactor, "-") + 1);
-            $amounts[$currencies[0]->abbr] = floatval(sprintf('%.' . $decimals . 'f', $amount));
-        }
-        else {
-            foreach ($currencies as $currency) {
-                if (property_exists($rates, $currency->abbr)) {
-                    $amount =  floatval($fiatAmount / (float) $rates->{$currency->abbr}->$fiatCode);
-                    $decimals = substr((string)$currency->unitsFactor, strpos((string)$currency->unitsFactor, "-") + 1);
-                    $amounts[$currency->abbr] = floatval(sprintf('%.' . $decimals . 'f', $amount));
-                }
-            }
-        }
-
-        return $amounts;
-    }
-
-    /**
      * Check is fiat supported by apirone
      *
-     * @param mixed $fiat string
+     * @param string $fiat
      * @return bool
      */
-    public static function isFiatSupported($fiat)
+    public static function isFiatSupported(string $fiat)
     {
         $supported_currencies = Service::ticker();
         if (!$supported_currencies) {
@@ -331,14 +314,38 @@ class Utils
     }
 
     /**
+     * Returns whether the currency is a stablecoin
+     *
+     * @return bool
+     */
+    public static function isStablecoin(string $abbr)
+    {
+        return substr_count(strtolower($abbr), 'usd') > 0 ? true : false;
+    }
+
+    /**
+     * Checks if a cryptocurrency is a testnet
+     *
+     * @param string $abbr
+     * @return bool
+     */
+    public static function isTestnet(string $abbr)
+    {
+        $parts = explode('@', $abbr, 2);
+        $network = count($parts) == 1 ? $parts[0] : $parts[1];
+
+        return (substr($network, 0, 1) == 't' && strlen($network) > 3) ? true : false;
+    }
+
+    /**
      * Sanitize text input to prevent XSS & SQL injection
      *
      * @param mixed $string
      * @return mixed
      */
-    public static function sanitize($string)
+    public static function sanitize($string = '')
     {
-        if (is_object($string) || is_array($string)) {
+        if (empty($string) || is_object($string) || is_array($string)) {
             return '';
         }
 
@@ -390,15 +397,17 @@ class Utils
     }
 
     /**
-     * Send JSON response
+     * Send exception message & code as JSON
      *
-     * @param mixed $data
-     * @param int $code
-     * @return false|void
-     * @deprecated Use sendJson()
+     * @param mixed $e
+     * @return never
      */
-    public function send_json($data, $code = 200)
+    public static function sendException($e)
     {
-        return self::sendJson($data, $code = 200);
+        $json = json_decode(sprintf('{"message": "%s"}', $e->getMessage()));
+        $code = $e->getCode();
+
+        Utils::sendJson($json, $code ? $code : 503);
+        exit;
     }
 }

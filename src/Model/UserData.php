@@ -16,7 +16,6 @@ namespace Apirone\SDK\Model;
 use Apirone\SDK\Model\AbstractModel;
 use Apirone\SDK\Model\UserData\ExtraItem;
 use Apirone\SDK\Model\UserData\OrderItem;
-use ReflectionException;
 use stdClass;
 
 /**
@@ -59,10 +58,11 @@ class UserData extends AbstractModel
         if (\property_exists($this, $name)) {
 
             $class = new \ReflectionClass(static::class);
-            
-            $property = $class->getProperty($name);
-            $property->setAccessible(true);
 
+            $property = $class->getProperty($name);
+            if (version_compare(phpversion(), '8.1.0', '<')) {
+                $property->setAccessible(true);
+            }
             $property->setValue($this, $value[0]);
 
             return $this;
@@ -93,7 +93,6 @@ class UserData extends AbstractModel
      *
      * @param mixed $json
      * @return $this
-     * @throws ReflectionException
      */
     public static function fromJson($json)
     {
@@ -138,7 +137,6 @@ class UserData extends AbstractModel
      *
      * @param mixed $data
      * @return array
-     * @throws ReflectionException
      */
     public function parseExtras($data)
     {
@@ -155,7 +153,6 @@ class UserData extends AbstractModel
      *
      * @param mixed $data
      * @return array
-     * @throws ReflectionException
      */
     public function parseItems($data)
     {
@@ -165,189 +162,5 @@ class UserData extends AbstractModel
         }
 
         return $items;
-    }
-
-    /**
-     * Convert instance to JSON
-     *
-     * @return stdClass
-     */
-    public function toJson(): stdClass
-    {
-        $json = parent::toJson();
-
-        foreach ($json as $key => $value) {
-            if ($value === null) {
-                unset($json->$key);
-            }
-        }
-
-        return $json;
-    }
-
-    /**
-     * Get the value of title
-     *
-     * @deprecated Use $class->title
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * Set the title value
-     *
-     * @param null|string $title
-     * @return $this
-     * @deprecated Use $class->title()
-     */
-    public function setTitle(?string $title = null)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of merchant
-     *
-     * @deprecated Use $class->merchant
-     */
-    public function getMerchant()
-    {
-        return $this->merchant;
-    }
-
-    /**
-     * Set the merchant value
-     *
-     * @param null|string $merchant
-     * @return $this
-     * @deprecated Use $class->merchant()
-     */
-    public function setMerchant(?string $merchant = null)
-    {
-        $this->merchant = $merchant;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of url
-     *
-     * @deprecated Use $class->url
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * Set the url value
-     *
-     * @param null|string $url
-     * @return $this
-     * @deprecated Use $class->url()
-     */
-    public function setUrl(?string $url = null)
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of price
-     *
-     * @deprecated Use $class->price
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
-     * Set the price value
-     *
-     * @param null|string $value
-     * @return $this
-     * @deprecated Use $class->price()
-     */
-    public function setPrice(?string $value = null)
-    {
-        $this->price = $value;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of subPrice
-     *
-     * @deprecated Use $class->subPrice
-     */
-    public function getSubPrice()
-    {
-        return $this->subPrice;
-    }
-
-    /**
-     * Set the subPrice value
-     *
-     * @param null|string $value
-     * @return $this
-     * @deprecated Use $class->subPrice()
-     */
-    public function setSubPrice(?string $value = null)
-    {
-        $this->subPrice = $value;
-
-        return $this;
-    }
-    /**
-     * Get the value of items
-     *
-     * @return null|array
-     * @deprecated Use $class->items
-     */
-    public function getItems()
-    {
-        return $this->items;
-    }
-
-    /**
-     * Set the value of items
-     *
-     * @return $this
-     * @deprecated Use $class->items()
-     */
-    public function setItems(array $items = [])
-    {
-        $this->items = $this->parseItems($items);
-
-        return $this;
-    }
-
-    /**
-     * Get the value of extras
-     *
-     * @return null|array
-     * @deprecated Use $class->extras
-     */
-    public function getExtras()
-    {
-        return $this->extras;
-    }
-    /**
-     * Set the value of extras
-     *
-     * @return null|array
-     * @deprecated Use $class->extras()
-     */
-    public function setExtras(array $extras = [])
-    {
-        $this->extras = $this->parseExtras($extras);
-
-        return $this;
     }
 }

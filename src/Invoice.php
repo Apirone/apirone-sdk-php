@@ -13,144 +13,83 @@ declare(strict_types=1);
 
 namespace Apirone\SDK;
 
-use Apirone\SDK\Service\InvoiceDb;
-use Apirone\SDK\Service\InvoiceQuery;
+use Apirone\SDK\Service\Db;
 use Apirone\SDK\Model\AbstractModel;
 use Apirone\SDK\Model\InvoiceDetails;
-use Apirone\API\Endpoints\Service;
 use Apirone\API\Endpoints\Account;
-use Apirone\API\Exceptions\RuntimeException;
-use Apirone\API\Exceptions\ValidationFailedException;
-use Apirone\API\Exceptions\UnauthorizedException;
-use Apirone\API\Exceptions\ForbiddenException;
-use Apirone\API\Exceptions\InternalServerErrorException;
-use Apirone\API\Exceptions\NotFoundException;
-use Apirone\API\Exceptions\MethodNotAllowedException;
-use Apirone\API\Log\LoggerWrapper;
+use Apirone\SDK\Service\Logger;
 use Apirone\SDK\Model\UserData;
 use Apirone\SDK\Model\Settings;
-use Apirone\SDK\Service\Render;
 use Apirone\SDK\Service\Utils;
-use DivisionByZeroError;
-use ArithmeticError;
-use ReflectionException;
 
+/** @package Apirone\SDK */
 class Invoice extends AbstractModel
 {
     /**
-     * Invoice settings object
-     *
-     * @var Settings
+     * Invoice record Id - auto increment
+     * @var null|int
      */
-    public static Settings $settings;
-
     private ?int $id = null;
 
+    /**
+     * Last updated time
+     * @var mixed
+     */
+    private $time;
+
+    /**
+     * Order ID in the external system
+     * @var null|int
+     */
     private ?int $order = null;
 
+    /**
+     * Invoice ID
+     * @var null|string
+     */
     private ?string $invoice = null;
 
+    /**
+     * Invoice status
+     * @var null|string
+     */
     private ?string $status = null;
 
-    private ?InvoiceDetails $details;
+    /**
+     * Apirone invoice data object
+     *
+     * @var null|\Apirone\SDK\Model\InvoiceDetails
+     */
+    private ?InvoiceDetails $details = null;
 
-    private ?array $meta = null;
+    /**
+     * Additional invoice properties 'key->value'storage
+     *
+     * @var null|\stdClass
+     */
+    private ?\stdClass $meta = null;
 
-    private ?array $createParams;
+    /**
+     * Parameter storage for invoice creation
+     * @var null|array
+     */
+    private ?array $createParams = null;
 
     private function __construct() {}
 
     /**
-     * Set settings to Invoice object
-     *
-     * @param Settings $settings
-     * @return void
-     */
-    public static function settings(\Apirone\SDK\Model\Settings $settings): void
-    {
-        static::$settings = $settings;
-    }
-
-    /**
-     * Set DB handler & table prefix for InvoiceDb class
-     *
-     * @param Closure $handler
-     * @param string $prefix
-     * @return void
-     */
-    public static function db(\Closure $handler, string $prefix = ''): void
-    {
-        InvoiceDb::setCallback($handler);
-        InvoiceDb::setPrefix($prefix);
-    }
-
-    /**
-     * Set Render invoice dataUrl
-     *
-     * @param string $dataUrl
-     * @return void
-     */
-    public static function dataUrl(string $dataUrl)
-    {
-        Render::$dataUrl = $dataUrl;
-    }
-
-    /**
-     * Set log handler
-     * Alias to setLogger()
-     *
-     * @param mixed $logger
-     * @return void
-     */
-    public static function logger($logger): void
-    {
-        LoggerWrapper::setLogger($logger);
-    }
-
-    /**
      * Init new Invoice class
      *
+     * @param string $account
      * @param string $currency
-     * @param null|int $amount
      * @return static
      */
-    public static function init(string $currency, $amount = null): Invoice
+    public static function init(string $account, string $currency)
     {
         $class = new static();
 
-        $class->currency($currency);
-
-        if ($amount !== null) {
-            $class->amount($amount);
-        }
-
-        return $class;
-    }
-
-    /**
-     * Create new invoice class from fiat amount
-     *
-     * @param float $value
-     * @param string $from
-     * @param string $to
-     * @param float|int $factor
-     * @return static
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     * @throws InternalServerErrorException
-     */
-    public static function fromFiatAmount(float $value, string $from, string $to, float $factor = 1): Invoice
-    {
-        $class = new static();
-        $class->currency($to);
-        $cryptoAmount = Utils::fiat2crypto($value * $factor, $from, $to);
-        $unitFactor = $class->createParams['currency']->{'units-factor'};
-
-        $class->createParams['amount'] = Utils::cur2min($cryptoAmount, $unitFactor);
+        $class->createParams['account'] = $account;
+        $class->createParams['currency'] = $currency;
 
         return $class;
     }
@@ -160,9 +99,8 @@ class Invoice extends AbstractModel
      *
      * @param mixed $json
      * @return static
-     * @throws ReflectionException
      */
-    public static function fromJson($json): Invoice
+    public static function fromJson($json)
     {
         $class = new static();
 
@@ -174,28 +112,24 @@ class Invoice extends AbstractModel
     /**
      * Get Invoice from database table
      *
-     * @param mixed $invoice
+     * @param string $invoice
      * @return null|Invoice
-     * @throws ReflectionException
      */
-    public static function get(?string $invoice): ?Invoice
+    public static function get(string $invoice)
     {
-        $prefix = InvoiceDb::$prefix;
-        $query = InvoiceQuery::selectInvoice((string)$invoice, $prefix);
-
-        $result = InvoiceDb::execute($query);
-
+        $result = Db::getInvoice($invoice);
         if (empty($result)) {
-            return new static();
+            return null;
         }
         $row = $result[0];
         $json = new \stdClass();
         $json->id = $row['id'];
+        $json->time = strtotime($row['time']);
         $json->order = $row['order'];
         $json->invoice = $row['invoice'];
         $json->status = $row['status'];
         $json->details = json_decode($row['details']);
-        $json->meta = json_decode($row['meta']);
+        $json->meta = $row['meta'] !== null ? json_decode($row['meta']) : null;
 
         return Invoice::fromJson($json);
     }
@@ -206,29 +140,32 @@ class Invoice extends AbstractModel
      * @param int $order - Order ID in your system
      * @return array
      */
-    public static function getByOrder(int $order): array
+    public static function getByOrder(int $order)
     {
-        $prefix = InvoiceDb::$prefix;
-        $query = InvoiceQuery::selectOrder($order, $prefix);
-
-        $result = InvoiceDb::execute($query);
+        $result = Db::getOrderInvoices($order);
 
         $invoices = [];
 
         if ($result === null) {
             return $invoices;
         }
-        foreach($result as $data) {
+        foreach($result as $row) {
             $json = new \stdClass();
-            $json->id = $data['id'];
-            $json->order = $data['order'];
-            $json->invoice = $data['invoice'];
-            $json->status = $data['status'];
-            $json->details = json_decode($data['details']);
-            $json->meta = json_decode($data['meta']);
+            $json->id = $row['id'];
+            $json->order = $row['order'];
+            $json->invoice = $row['invoice'];
+            $json->status = $row['status'];
+            $json->details = json_decode($row['details']);
+            $json->meta = $row['meta'] !== null ? json_decode($row['meta']) : null;
 
-            $invoices[] = Invoice::fromJson($json);
+            $invoice = Invoice::fromJson($json);
+            if ($invoice->details->isExpired() == true && $invoice->status !="expired") {
+                $invoice->update();
+            }
+
+            $invoices[] = $invoice;
         }
+
 
         return $invoices;
     }
@@ -236,26 +173,19 @@ class Invoice extends AbstractModel
     /**
      * Invoice callback handler
      *
-     * @param mixed $order_handler - Callback func to process your order process logic (change status, etc)
+     * @param null|callable $paymentProcessing
+     * @param null|callable $callbackChecker
      * @return void
-     * @throws ReflectionException
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
      */
-    public static function callbackHandler($order_handler = null): void
+    public static function callbackHandler(?callable $paymentProcessing = null, ?callable $callbackChecker = null)
     {
 
         $data = file_get_contents('php://input');
-
         $params = ($data) ? json_decode(Utils::sanitize($data)) : null;
 
         if (!$params) {
             $message = 'Data not received';
-            LoggerWrapper::debug($message);
+            Logger::debug($message);
             Utils::sendJson('Data not received', 400);
 
             return;
@@ -263,27 +193,28 @@ class Invoice extends AbstractModel
 
         if (!property_exists($params, 'invoice') || !property_exists($params, 'status')) {
             $message = 'Wrong params received: ' . json_encode($params);
-            LoggerWrapper::debug($message);
+            Logger::debug($message);
             Utils::sendJson('Wrong params received: ' . json_encode($params), 400);
 
             return;
         }
 
-        // $invoice = Invoice::getInvoice($params->invoice);
         $invoice = Invoice::get($params->invoice);
 
-        if (!$invoice->invoice) {
+        if ($invoice == null) {
             $message = "Invoice not found: " . $params->invoice;
-            LoggerWrapper::debug($message);
+            Logger::debug($message);
             Utils::sendJson($message, 404);
 
             return;
         }
 
-        if ($invoice->update()) {
-            if ($order_handler !== null) {
-                $order_handler($invoice);
-            }
+        if (is_callable($callbackChecker)) {
+            call_user_func($callbackChecker, $invoice);
+        }
+
+        if ($invoice->update() && is_callable($paymentProcessing)) {
+            call_user_func($paymentProcessing, $invoice);
         }
         exit;
     }
@@ -297,26 +228,6 @@ class Invoice extends AbstractModel
     public function order(?int $order = null)
     {
         $this->createParams['order'] = $order;
-
-        return $this;
-    }
-
-    /**
-     * Set currency for new invoice
-     *
-     * @param string $currency
-     * @return static
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     */
-    public function currency(string $currency): self
-    {
-        $currency = Utils::currency($currency);
-        $this->createParams['currency'] = $currency;
 
         return $this;
     }
@@ -419,43 +330,30 @@ class Invoice extends AbstractModel
     /**
      * Create invoice from creation params
      *
-     * @param string $account
+     * @param null|string $account
      * @return $this
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     * @throws InternalServerErrorException
-     * @throws ReflectionException
      */
-    public function create(?string $account = null)
+    public function create()
     {
+        Db::checkHandler();
+
         if ($this->invoice !== null || !isset($this->createParams)) {
             return $this;
         }
 
-        $this->order = array_key_exists('order', $this->createParams) ? $this->createParams['order'] : 0;
+        $account = $this->createParams['account'];
+        $this->order = $this->createParams['order'] ?? 0;
 
-        unset($this->createParams['order']);
-        $account_id = ($account === null) ? Invoice::$settings->account : $account;
+        unset($this->createParams['order'], $this->createParams['account']);
 
-        $account = Account::init($account_id);
-        $created = false;
-        $options = $this->createParams;
-        $options['currency'] = $this->createParams['currency']->abbr;
+        $invoice = Account::init($account)->invoiceCreate(json_encode($this->createParams));
 
-        try {
-            $created = $account->invoiceCreate(json_encode($options));
-            $this->details = InvoiceDetails::fromJson($created);
-            $this->invoice = $this->details->invoice;
-            $this->status = $this->details->status;
-            unset($this->createParams);
-        }
-        catch(Exception $e) {
-            throw $e;
-        }
+        $this->details = InvoiceDetails::fromJson($invoice);
+        $this->invoice = $this->details->invoice;
+        $this->status = $this->details->status;
+
+        unset($this->createParams);
+
         $this->save();
 
         return $this;
@@ -466,15 +364,13 @@ class Invoice extends AbstractModel
      *
      * @return bool
      */
-    public function save(): bool
+    public function save()
     {
         if(!isset($this->details)) {
             return false;
         }
 
-        $prefix = InvoiceDb::$prefix;
-        $query = ($this->id === null) ? InvoiceQuery::createInvoice($this, $prefix) : InvoiceQuery::updateInvoice($this, $prefix);
-        $result = InvoiceDb::execute($query);
+        $result = Db::saveInvoice($this);
 
         if ($result == true) {
             $this->id = ($this->id === null) ? 0 : $this->id;
@@ -486,153 +382,40 @@ class Invoice extends AbstractModel
     /**
      * Update invoice data from apirone & save if status changed
      *
-     * @return bool
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     * @throws ReflectionException
+     * @param int $checkInterval default 0
+     * @return false|bool
      */
-    public function update(): bool
+    public function update($checkInterval = 0)
     {
-        if(isset($this->details)) {
-            $this->details->update();
+        if(!isset($this->details)) {
+            return false;
+        }
 
-            if ($this->status !== $this->details->status) {
-                $this->status = $this->details->status;
+        if ($checkInterval > 0) {
+            $interval = $checkInterval <= 5 ? 5 : $checkInterval;
 
-                return $this->save();
+            if (time() - $this->time < $interval) {
+                return false;
             }
         }
 
-        return false;
-    }
+        $historyCount = count($this->details->history);
+        $this->details->update();
 
-    /**
-     * Render html invoice loader
-     *
-     * @param null|string $invoice_id
-     * @return string
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     */
-    public static function renderLoader(?Invoice $invoice = null)
-    {
-        if(Render::isAjaxRequest()) {
-            return Invoice::renderAjax();
+        if ($historyCount == count($this->details->history)) {
+            return false;
         }
 
-        return Render::show($invoice);
-    }
+        $this->status = $this->details->status;
 
-    /**
-     * Echo invoice data or status ajax response
-     *
-     * @return never
-     * @throws DivisionByZeroError
-     * @throws ArithmeticError
-     */
-    public static function renderAjax()
-    {
-        if (Render::isAjaxRequest()) {
-            $data = file_get_contents('php://input');
-            $params = ($data) ? json_decode(Utils::sanitize($data)) : null;
-
-            if ($params) {
-                $id = property_exists($params, 'invoice') ? (string) $params->invoice : '';
-                $offset = property_exists($params, 'offset') ? (int) $params->offset : null;
-                header("Content-Type: text/plain");
-                $invoice = Invoice::get($id);
-                if ($offset === null) {
-                    echo $invoice->id ? $invoice->details->statusNum() : 0;
-                    exit;
-                }
-                Render::timeZoneByOffset($offset);
-                echo $invoice->render();
-            }
-            exit;
-        }
-        echo 0;
-        exit;
-    }
-
-    /**
-     * Render Invoice object html
-     *
-     * @return string
-     */
-    public function render()
-    {
-        return Render::show($this);
-    }
-
-    /**
-     * Set invoice meta value
-     *
-     * @param mixed $key
-     * @param mixed $value
-     * @return $this
-     */
-    public function setMeta($key, $value)
-    {
-        if ($this->meta === null) {
-            $this->meta = [];
-        }
-
-        $this->meta[$key] = $value;
-
-        $this->save();
-
-        return $this;
-    }
-
-    /**
-     * Get invoice meta value by key
-     *
-     * @param mixed $key
-     * @return mixed
-     */
-    public function getMeta($key)
-    {
-        if ($this->meta == null) {
-            return null;
-        }
-
-        return array_key_exists($key, $this->meta) ? $this->meta[$key] : null;
-    }
-
-    /**
-     * Delete meta value from invoice
-     *
-     * @param mixed $key
-     * @return $this
-     */
-    public function deleteMeta($key)
-    {
-        if($this->meta === null) {
-            return $this;
-        }
-        unset($this->meta[$key]);
-        if (count($this->meta) == 0) {
-            $this->meta = null;
-        }
-
-        $this->save();
-
-        return $this;
+        return $this->save();
     }
 
     /**
      * Return public or private invoice info
      *
      * @param bool $private
-     * @return Apirone\SDK\Model\stdClass
+     * @return stdClass
      */
     public function info($private = false)
     {
@@ -642,13 +425,17 @@ class Invoice extends AbstractModel
     /**
      * Convert invoice object to JSON
      *
-     * @return Apirone\SDK\Model\stdClass
+     * @return stdClass
      */
-    public function toJson(): \stdClass
+    public function toJson()
     {
         $json = parent::toJson();
-        unset($json->{'create-params'});
-        unset($json->{'template'});
+
+        foreach ($json as $key => $val) {
+            if (!in_array($key, ['id', 'order', 'invoice', 'details', 'status', 'meta'])) {
+                unset($json->{$key});
+            }
+        }
 
         return $json;
     }
@@ -658,59 +445,11 @@ class Invoice extends AbstractModel
      *
      * @param mixed $json
      * @return InvoiceDetails
-     * @throws ReflectionException
      */
     protected function parseDetails($json)
     {
         $details = InvoiceDetails::fromJson($json);
 
         return $details;
-    }
-
-    /**
-     * Invoice meta parser
-     *
-     * @param mixed $value
-     * @return array
-     */
-    protected function parseMeta($value)
-    {
-        return (array) $value;
-    }
-
-    /**
-     * Set log handler
-     *
-     * @param mixed $logger
-     * @return void
-     * @deprecated Use Invoice::logger()
-     */
-    public static function setLogger($logger): void
-    {
-        LoggerWrapper::setLogger($logger);
-    }
-
-    /**
-     * @param null|string $invoice
-     * @return null|\Apirone\SDK\Invoice
-     * @throws \ReflectionException
-     * @deprecated Use Invoice::get()
-     */
-    public static function getInvoice(?string $invoice): ?Invoice
-    {
-        return static::get($invoice);
-    }
-
-    /**
-     * Get invoices objects array for order with orderID
-     *
-     * @param int $order - Order ID in your system
-     * @return array
-     * @deprecated Use Invoice::getByOrder
-     */
-
-    public static function getOrderInvoices(int $order): array
-    {
-        return static::getByOrder($order);
     }
 }

@@ -2,8 +2,8 @@ name: 'Draft release'
 
 on:
   push:
-    tags:
-      - '1.*'
+    tags-ignore:
+      - '*rc*'
   workflow_dispatch:
 
 jobs:

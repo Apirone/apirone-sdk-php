@@ -1,14 +1,5 @@
 <?php
 
-/**
- * This file is part of the Apirone SDK.
- *
- * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 require_once('/var/www/vendor/autoload.php');
 
 /**
@@ -46,8 +37,7 @@ if(!function_exists('load_file_content')) {
         if (!$wrap) {
             return $content;
         }
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
 
-        return sprintf('<pre>%s<code class="language-%s">%s</code></pre>', $filename, $ext, $content);
+        return sprintf('<pre><strong class="!text-white filename">%s</strong><code>%s</code></pre>', $filename, "\n" . $content);
     }
 }

@@ -1,17 +1,9 @@
 <?php
 
-/**
- * This file is part of the Apirone SDK.
- *
- * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 require_once('common.php');
 
 use Apirone\SDK\Service\Utils;
+use Apirone\SDK\Model\Settings;
 
 $path = '/var/www/storage/settings.json';
 $action = $_GET['action'] ?? false;

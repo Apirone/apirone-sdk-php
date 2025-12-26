@@ -22,8 +22,8 @@ use Apirone\API\Exceptions\ForbiddenException;
 use Apirone\API\Exceptions\NotFoundException;
 use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\SDK\Model\Settings\Currency;
+use Apirone\SDK\Model\Settings\Network;
 use ReflectionException;
-use stdClass;
 
 /**
  * @property-read string $account
@@ -53,189 +53,63 @@ class Settings extends AbstractModel
      *
      * @var array
      */
-    private array   $currencies = [];
+    private array $currencies = [];
 
     /**
      * Metadata
      *
      * @var stdClass
      */
-    private stdClass   $meta;
+    private ?\stdClass $meta = null;
 
-    /**
-     * Invoice title
-     *
-     * @var string
-     * @deprecated Use meta object. The property will be removed in future versions.
-     */
-    private string  $title = '';
-
-    /**
-     * Merchant name
-     *
-     * @var string
-     * @deprecated Use meta object. The property will be removed in future versions.
-     */
-    private string  $merchant = '';
-
-    /**
-     * Merchant Url
-     *
-     * @var string
-     * @deprecated Use meta object. The property will be removed in future versions.
-     */
-    private string  $merchantUrl = '';
-
-    /**
-     * Invoice timeout
-     *
-     * @var int
-     * @deprecated Use meta object. The property will be removed in future versions.
-     */
-    private int     $timeout = 1800;
-
-    /**
-     * Price adjustment factor
-     *
-     * @var float
-     * @deprecated Use meta object. The property will be removed in future versions.
-     */
-    private float   $factor = 1;
-
-    /**
-     * Backlink
-     *
-     * @var string
-     * @deprecated Use meta object. The property will be removed in future versions.
-     */
-    private string  $backlink = '';
-
-    /**
-     * QR Template
-     *
-     * @var bool
-     * @deprecated Use meta object. The property will be removed in future versions.
-     */
-    private bool    $qrOnly = false;
-
-    /**
-     * Logo
-     *
-     * @var bool
-     * @deprecated Use meta object. The property will be removed in future versions.
-     */
-    private bool    $logo = true;
-
-    /**
-     * Debug
-     *
-     * @var bool
-     * @deprecated Use meta object. The property will be removed in future versions.
-     */
-    private bool    $debug = false;
-
-    /**
-     * Extra settings values object
-     *
-     * @var stdClass
-     * @deprecated Use meta object. The property will be removed in future versions.
-     */
-    private \stdClass $extra;
-
-    /**
-     * Class constructor
-     *
-     * @return void
-     */
-    private function __construct()
-    {
-        $this->extra = new \stdClass();
-        $this->meta = new \stdClass();
-    }
+    private function __construct() {}
 
     public function __get($name) {
+
         if ($name == 'networks') {
             return $this->networks();
         }
 
-        return parent::__get($name);
-    }
-
-    public function __call($name, $value)
-    {
-        if ($name = 'meta') {
-            switch (count($value)) {
-                case 0:
-                    return $this->metaGet();
-                case 1:
-                    return $this->metaGet($value[0]);
-                case 2:
-                    return $this->metaSet($value[0], $value[1]);
+        // Currencies lazy loading
+        if ($name == 'currencies') {
+            foreach (debug_backtrace(2) as $item) {
+                $callstack[] = $item['function'];
             }
+            if (in_array('toArray', $callstack)) {
+                return $this->currencies;
+            }
+            if (empty($this->currencies) || get_class($this->currencies[array_key_first($this->currencies)]) == 'stdClass') {
+                $this->loadCurrencies();
+            }
+
+            return $this->currencies;
         }
-        $name = static::convertToCamelCase($name);
 
-        if (\property_exists($this, $name)) {
-
-            $class = new \ReflectionClass(static::class);
-
-            $property = $class->getProperty($name);
-            $property->setAccessible(true);
-
-            $property->setValue($this, $value[0]);
-
-            return $this;
-        }
-        $trace = \debug_backtrace();
-        \trigger_error(
-            'Call to undefined method ' . $name .
-            ' in ' . $trace[0]['file'] .
-            ' on line ' . $trace[0]['line'],
-            \E_USER_ERROR
-        );
+        return parent::__get($name);
     }
 
     /**
      * Create instance
      *
      * @return self
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     * @throws ReflectionException
      */
     public static function init()
     {
         $class = new static();
 
-        return $class->loadCurrencies();
+        return $class;
     }
 
     /**
      * Restore settings from JSON
      *
      * @param mixed $json
-     * Get the value of transferKey
-     * @return self
-     * @throws ReflectionException
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
+     * @return static
      */
     public static function fromJson($json)
     {
         $class = new static();
         $class->classLoader($json);
-
-        if (empty($class->currencies)) {
-            $class->loadCurrencies();
-        }
 
         return $class;
     }
@@ -243,19 +117,12 @@ class Settings extends AbstractModel
     /**
      * Restore settings from file
      *
-     * @param mixed $abspath
+     * @param mixed $absFilePath
      * @return self|null
-     * @throws ReflectionException
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
      */
-    public static function fromFile($abspath)
+    public static function fromFile($absFilePath)
     {
-        $json = @file_get_contents($abspath);
+        $json = @file_get_contents($absFilePath);
 
         if ($json) {
             return static::fromJson($json);
@@ -270,13 +137,6 @@ class Settings extends AbstractModel
      * @param mixed $account
      * @param mixed $transferKey
      * @return self
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     * @throws ReflectionException
      */
     public static function fromExistingAccount($account, $transferKey)
     {
@@ -284,7 +144,6 @@ class Settings extends AbstractModel
 
         $class->account = $account;
         $class->transferKey = $transferKey;
-        $class->loadCurrencies();
 
         return $class;
     }
@@ -292,13 +151,13 @@ class Settings extends AbstractModel
     /**
      * Save settings to file
      *
-     * @param string $abspath
-     * @param string $filename
-     * @return bool
+     * @param mixed $absFilePath
+     * @param 128 $flag
+     * @return true|false
      */
-    public function toFile($abspath)
+    public function toFile($absFilePath, $flag = JSON_PRETTY_PRINT)
     {
-        if (file_put_contents($abspath, json_encode($this->toJson(), JSON_PRETTY_PRINT))) {
+        if (file_put_contents($absFilePath, json_encode($this->toJson(), $flag))) {
             return true;
         }
 
@@ -306,42 +165,36 @@ class Settings extends AbstractModel
     }
 
     /**
-     * Convert instance to array
+     * Convert instance to array and skip currency property
      *
      * @return array
      */
-    public function toArray(): array
+    public function toArray()
     {
-        $data = parent::toArray();
+        $settings = parent::toArray();
 
-        if(empty($data['extra']))
-        {
-            unset($data['extra']);
+        foreach ($settings as $key => $val) {
+            if (!in_array($key, ['account', 'transfer-key', 'meta'])) {
+                unset($settings[$key]);
+            }
         }
 
-        if(empty($data['meta']))
-        {
-            unset($data['meta']);
-        }
+        return $settings;
+    }
 
-        return $data;
+    protected function classLoader($json)
+    {
+        return parent::classLoader($json);
     }
 
     /**
      * Create a new apirone account
      *
-     * @param bool $renew
      * @return self
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
      */
-    public function createAccount($renew = false)
+    public function createAccount()
     {
-        if ($renew == false && isset($this->account)) {
+        if (isset($this->account)) {
             return $this;
         }
         $account = Account::create();
@@ -349,9 +202,6 @@ class Settings extends AbstractModel
         if ($account) {
             $this->account = $account->account;
             $this->transferKey = $account->{'transfer-key'};
-            if ($renew) {
-                $this->saveCurrencies();
-            }
         }
 
         return $this;
@@ -361,13 +211,6 @@ class Settings extends AbstractModel
      * Load currencies from an apirone service
      *
      * @return self
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     * @throws ReflectionException
      */
     public function loadCurrencies()
     {
@@ -384,25 +227,31 @@ class Settings extends AbstractModel
                 $address = ($accountItem->destinations !== null) ? $accountItem->destinations[0]->address : null;
                 $currency->address($address);
                 $currency->policy($accountItem->{'processing-fee-policy'});
+                $currency->changed(false);
             }
-            $this->currencies[] = $currency;
+            $this->currencies[$serviceItem->abbr] = $currency;
         }
 
         return $this;
     }
 
     /**
-     * Save currencies into apirone account
+     * Save networks currencies into apirone account
      *
-     * @return self
+     * @return array $errors Returns an array with errors, if this happens otherwise an empty array
      */
-    public function saveCurrencies()
+    public function saveNetworks()
     {
-        foreach ($this->currencies as $currency) {
-            $currency->saveSettings($this->account, $this->transferKey);
+        $errors = [];
+
+        foreach ($this->networks as $network) {
+            $network->save($this->account, $this->transferKey);
+            if ($network->error) {
+                $errors[$network->abbr] = $network->error;
+            }
         }
 
-        return $this;
+        return $errors;
     }
 
     /**
@@ -413,470 +262,37 @@ class Settings extends AbstractModel
      */
     public function currency($abbr)
     {
-        foreach($this->currencies as $currency) {
-            if ($currency->abbr == $abbr) {
-                return $currency;
-            }
+        if (empty($this->currencies)) {
+            $this->loadCurrencies();
         }
 
-        return false;
+        return array_key_exists($abbr, $this->currencies) ? $this->currencies[$abbr] : false;
     }
 
+
     /**
-     * Get the networks only
+     * Get the networks with tokens
      *
      * @return array
-     * @deprecated Use as property $class->network
      */
-    public function networks()
+    private function networks()
     {
+        if (empty($this->currencies) || get_class($this->currencies[array_key_first($this->currencies)]) == 'stdClass') {
+            $this->loadCurrencies();
+        }
+
         $networks = [];
         foreach ($this->currencies as $currency) {
             if (!$currency->isToken()) {
-                $networks[] = $currency;
+                $networks[$currency->abbr] = Network::init($currency);
             }
         }
+        foreach ($this->currencies as $currency) {
+            if ($currency->isToken()) {
+                $networks[$currency->network]->token($currency);
+            }
+        }
+
         return $networks;
-    }
-
-    /**
-     * Currencies list parser
-     *
-     * @param mixed $array Array of json currency objects
-     * @return array
-     * @throws ReflectionException
-     */
-    public function parseCurrencies($array)
-    {
-        $items = [];
-        foreach ($array as $item) {
-            $items[] = Currency::init($item);
-        }
-
-        return $items;
-    }
-
-    /**
-     * Get the value of meta
-     *
-     * @param string|null $key
-     * @return mixed
-     * @deprecated Use $class->meta for the entire meta object, or $class->meta('meta-key') for a single key value.
-     */
-    public function getMeta(string $key = null)
-    {
-        if ($key == null) {
-            return $this->meta;
-        }
-        if (property_exists($this->meta, $key)) {
-            return $this->meta->{$key};
-        }
-
-        return null;
-    }
-
-    /**
-     * Get meta value via $class->meta('key')
-     * Use $class->meta() to clear all meta
-     *
-     * @param string $key
-     * @return mixed
-     */
-    protected function metaGet($key = '{}') {
-        $json = gettype($key) == 'string' ? json_decode($key) : $key;
-        if (json_last_error() == JSON_ERROR_NONE) {
-            $this->meta = $json;
-            return $this;
-        }
-
-        return (property_exists($this->meta, $key)) ? $this->meta->{$key} : null;
-    }
-
-    /**
-     * Set or unset meta via meta('key', 'value')
-     * Unset meta key in case when value is empty (false, 0, null, empty string, etc)
-     *
-     * @param mixed $key
-     * @param mixed $value
-     * @return $this
-     */
-    protected function metaSet($key, $value) {
-        if (empty($value)) {
-            unset($this->meta->{$key});
-            return $this;
-        }
-        $this->meta->{$key} = $value;
-        return $this;
-
-    }
-
-
-    /**
-     * Add/edit meta item
-     *
-     * @return self
-     * @deprecated Use $class->meta('meta-key', 'meta-value')
-     */
-    public function addMeta($key, $value)
-    {
-        $this->meta->{$key} = $value;
-
-        return $this;
-    }
-
-    /**
-     * Delete meta item
-     *
-     * @return self
-     * @deprecated Use $class->meta('meta-key', null)
-     */
-    public function deleteMeta($key)
-    {
-        unset($this->meta->{$key});
-
-        return $this;
-    }
-
-    /**
-     * Reset settings to default values
-     *
-     * @return self
-     * @deprecated The method will be removed in future versions.
-     */
-    public function restoreDefaults()
-    {
-        $this->merchantUrl = '';
-        $this->merchant = '';
-        $this->timeout = 1800;
-        $this->factor = 1;
-        $this->backlink = '';
-        $this->logo = true;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of account
-     *
-     * @return null|string
-     * @deprecated Use $class->account
-     */
-    public function getAccount()
-    {
-        return $this->account;
-    }
-
-    /**
-     * Get the value of transferKey
-     *
-     * @return null|string
-     * @deprecated Use $class->transferKey
-     */
-    public function getTransferKey()
-    {
-        return $this->transferKey;
-    }
-
-    /**
-     * Alias to currency()
-     *
-     * @param mixed $abbr
-     * @return Currency | false
-     * @deprecated Use $class->currency() method
-     */
-    public function getCurrency($abbr)
-    {
-        return $this->currency($abbr);
-    }
-
-    /**
-     * Get the value of currencies
-     *
-     * @return array
-     * @deprecated Use $class->currencies
-     */
-    public function getCurrencies()
-    {
-        return $this->currencies;
-    }
-
-    /**
-     * Alias to networks()
-     *
-     * @return array
-     * @deprecated Use $class->networks
-     */
-    public function getNetworks()
-    {
-        return $this->networks();
-    }
-
-    /**
-     * Get invoice title
-     *
-     * @return string
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * Set invoice title
-     *
-     * @param  string  $title  Invoice title
-     *
-     * @return self
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
-     */
-    public function setTitle(string $title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of merchant
-     *
-     * @return string
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
-     */
-    public function getMerchant()
-    {
-        return $this->merchant;
-    }
-
-    /**
-     * Set the value of merchant
-     *
-     * @return self
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
-     */
-    public function setMerchant($merchant)
-    {
-        $this->merchant = $merchant;
-
-        return $this;
-    }
-
-    /**
-     * Get merchant Url
-     *
-     * @return string
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
-     */
-    public function getMerchantUrl()
-    {
-        return $this->merchantUrl;
-    }
-
-    /**
-     * Set merchant Url
-     *
-     * @param  string  $merchantUrl  Merchant Url
-     * @return self
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
-     */
-    public function setMerchantUrl(string $merchantUrl)
-    {
-        $this->merchantUrl = $merchantUrl;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of timeout
-     *
-     * @return int
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
-     */
-    public function getTimeout()
-    {
-        return $this->timeout;
-    }
-
-    /**
-     * Set the value of timeout
-     *
-     * @return self
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
-     */
-    public function setTimeout($timeout)
-    {
-        $this->timeout = $timeout;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of factor
-     *
-     * @return float
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
-     */
-    public function getFactor()
-    {
-        return $this->factor;
-    }
-
-    /**
-     * Set the value of factor
-
-     * If you want to add/subtract percent to/from the payment amount, use the following  price adjustment factor
-     * multiplied by the amount.
-     * For example:
-     * 100% * 0.99 = 99%
-     * 100% * 1.01 = 101%
-     * @return self
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
-     */
-    public function setFactor($factor)
-    {
-        $this->factor = $factor;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of backlink
-     *
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
-     */
-    public function getBacklink()
-    {
-        return $this->backlink;
-    }
-
-    /**
-     * Set the value of backlink
-     *
-     * @return self
-     * @deprecated The method will be removed in future versions.
-     */
-    public function setBacklink($backlink)
-    {
-        $this->backlink = $backlink;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of logo
-     *
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
-     */
-    public function getLogo(): bool
-    {
-        return $this->logo;
-    }
-
-    /**
-     * Set the value of logo
-     *
-     * @return self
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
-     */
-    public function setLogo(bool $logo)
-    {
-        $this->logo = $logo;
-
-        return $this;
-    }
-
-    /**
-     * Get qR Template
-     *
-     * @return bool
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
-     */
-    public function getQrOnly()
-    {
-        return $this->qrOnly;
-    }
-
-    /**
-     * Set qR Template
-     *
-     * @param  bool  $qrOnly  QR Template
-     * @return self
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
-     */
-    public function setQrOnly(bool $qrOnly)
-    {
-        $this->qrOnly = $qrOnly;
-
-        return $this;
-    }
-
-    /**
-     * Get debug
-     *
-     * @return bool
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
-     */
-    public function getDebug()
-    {
-        return $this->debug;
-    }
-
-    /**
-     * Set debug
-     *
-     * @param  bool  $debug Debug
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
-     * @return self
-     */
-    public function setDebug(bool $debug)
-    {
-        $this->debug = $debug;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of extra
-     *
-     * @param string|null $key
-     * @return mixed
-     * @deprecated Use $class->getMeta() method. The method will be removed in future versions.
-     */
-    public function getExtra(string $key = null)
-    {
-        if ($key == null) {
-            return $this->extra;
-        }
-        if (property_exists($this->extra, $key)) {
-            return $this->extra->{$key};
-        }
-
-        return null;
-    }
-
-    /**
-     * Set the value of extra
-     *
-     * @return self
-     * @deprecated Use $class->addMeta() method. The method will be removed in future versions.
-     */
-    public function setExtra(string $key, string $value)
-    {
-        $this->extra->{$key} = $value;
-
-        return $this;
-    }
-
-    /**
-     * Set the value of extra
-     *
-     * @return self
-     * @deprecated Use $class->meta() method. The method will be removed in future versions.
-     */
-    public function setExtraObj(\stdClass $obj)
-    {
-        $this->extra = $obj;
-
-        return $this;
     }
 }

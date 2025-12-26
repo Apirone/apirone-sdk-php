@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Apirone\SDK\Model\UserData;
 
 use Apirone\SDK\Model\AbstractModel;
-use ReflectionException;
 
 /**
  * @property-read string $name
@@ -65,10 +64,11 @@ class OrderItem extends AbstractModel
         if (\property_exists($this, $name)) {
 
             $class = new \ReflectionClass(static::class);
-            
-            $property = $class->getProperty($name);
-            $property->setAccessible(true);
 
+            $property = $class->getProperty($name);
+            if (version_compare(phpversion(), '8.1.0', '<')) {
+                $property->setAccessible(true);
+            }
             $property->setValue($this, $value[0]);
 
             return $this;
@@ -103,7 +103,6 @@ class OrderItem extends AbstractModel
      *
      * @param mixed $json
      * @return $this
-     * @throws ReflectionException
      */
     public static function fromJson($json)
     {
@@ -120,99 +119,5 @@ class OrderItem extends AbstractModel
     public function toString()
     {
         return $this->amount . $this->currency;
-    }
-
-    /**
-     * Get the value of name
-     *
-     * @deprecated Use $class->name
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set the value of name
-     *
-     * @return self
-     * @deprecated Use $class->name()
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of cost
-     *
-     * @deprecated Use $class->cost
-     */
-    public function getCost()
-    {
-        return $this->cost;
-    }
-
-    /**
-     * Set the value of cost
-     *
-     * @return self
-     * @deprecated Use $class->cost()
-     */
-    public function setCost($cost)
-    {
-        $this->cost = $cost;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of qty
-     *
-     * @return null|int
-     * @deprecated Use $class->qty
-     */
-    public function getQty()
-    {
-        return $this->qty;
-    }
-
-    /**
-     * Set the value of qty
-     *
-     * @return  self
-     * @deprecated Use $class->qty()
-     */
-    public function setQty($qty)
-    {
-        $this->qty = $qty;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of total
-     *
-     * @return null|string
-     * @deprecated Use $class->total
-     */
-    public function getTotal()
-    {
-        return $this->total;
-    }
-
-    /**
-     * Set the value of total
-     *
-     * @return self
-     * @deprecated Use $class->total()
-     */
-    public function setTotal($total)
-    {
-        $this->total = $total;
-
-        return $this;
     }
 }

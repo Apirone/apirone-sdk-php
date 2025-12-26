@@ -30,8 +30,9 @@ abstract class AbstractModel
             $class = new \ReflectionClass(static::class);
 
             $property = $class->getProperty($name);
-            $property->setAccessible(true);
-
+            if (version_compare(phpversion(), '8.1.0', '<')) {
+                $property->setAccessible(true);
+            }
             if(!$property->isInitialized($this)) {
                 return null;
             }
@@ -39,15 +40,56 @@ abstract class AbstractModel
             return $property->getValue($this);
         }
 
-        $trace = \debug_backtrace();
-        \trigger_error(
-            'Undefined property ' . $name .
-            ' in ' . $trace[0]['file'] .
-            ' on line ' . $trace[0]['line'],
-            \E_USER_NOTICE
-        );
+        if (property_exists($this, 'meta') && $this->meta !== null && property_exists($this->meta, $name)) {
+            return $this->meta->{$name};
+        }
 
         return null;
+    }
+
+    public function __call($name, $value) {
+
+        $name = static::convertToCamelCase($name);
+
+        $setProperty = function ($name, $value) {
+            $class = new \ReflectionClass(static::class);
+            $value = is_array($value) ? $value[0] : $value;
+
+            $property = $class->getProperty($name);
+            if (version_compare(phpversion(), '8.1.0', '<')) {
+                $property->setAccessible(true);
+            }
+            $property->setValue($this, $value);
+        };
+
+        if (\property_exists($this, $name)) {
+            $setProperty($name, $value);
+
+            return $this;
+        }
+
+        if (\property_exists($this, 'meta')) {
+            if (empty($value) || $value[0] == false) {
+                if ($this->meta !== null && property_exists($this->meta, $name)) {
+                    unset($this->meta->{$name});
+                }
+
+                if (empty((array) $this->meta)) {
+                    $setProperty('meta', null);
+                }
+
+                return $this;
+            }
+
+            if ($this->meta == null) {
+                $setProperty('meta', new \stdClass());
+            }
+            $this->meta->{$name} = $value[0];
+
+            return $this;
+        }
+
+        return $this;
     }
 
     /**
@@ -55,19 +97,20 @@ abstract class AbstractModel
      *
      * @param json|stdClass
      * @return $this
-     * @throws ReflectionException
      */
     protected function classLoader($json)
     {
         $json = gettype($json) == 'string' ? json_decode($json) : $json;
 
         $class = new \ReflectionClass(static::class);
-
         foreach ($json as $key => $value) {
             $name = static::convertToCamelCase($key);
+
             if (\property_exists($this, $name)) {
                 $property = $class->getProperty($name);
-                $property->setAccessible(true);
+                if (version_compare(phpversion(), '8.1.0', '<')) {
+                    $property->setAccessible(true);
+                }
                 if (gettype($value) == 'object' || gettype($value) == 'array') {
                     $parser = 'parse' . ucfirst($name);
                     if ($class->hasMethod($parser)) {
@@ -91,39 +134,44 @@ abstract class AbstractModel
      *
      * @return array
      */
-    public function toArray(): array
+    public function toArray()
     {
-        $settings = [];
+        $result = [];
         $class = new \ReflectionClass(static::class);
 
         foreach ($class->getProperties() as $property) {
             $prop = $property->getName();
+
+            if ($this->{$prop} == null || $this->{$prop} == false) {
+                continue;
+            }
+
             $type = gettype($this->{$prop});
 
             if ($type !== 'object' || $type !== 'array') {
-                $settings[self::convertToSnakeCase($prop)] = $this->{$prop};
+                $result[self::convertToSnakeCase($prop)] = $this->{$prop};
             }
 
             if ($type == 'object') {
-                $settings[self::convertToSnakeCase($prop)] = (get_class($this->{$prop}) !== 'stdClass') ? $this->{$prop}->toArray() : json_decode(json_encode($this->{$prop}), true);
-
+                $result[self::convertToSnakeCase($prop)] = (get_class($this->{$prop}) !== 'stdClass') ? $this->{$prop}->toArray() : json_decode(json_encode($this->{$prop}));
                 continue;
             }
+
             if ($type == 'array') {
                 $items = [];
                 foreach($this->{$prop} as $key => $item) {
                     if(gettype($item) == 'object') {
-                        $items[] = (get_class($item) !== 'stdClass') ? $item->toArray() : json_decode(json_encode($item), true);
+                        $items[] = (get_class($item) !== 'stdClass') ? $item->toArray() : json_decode(json_encode($item));
                     }
                     else {
                         $items[$key] = $item;
                     }
                 }
-                $settings[self::convertToSnakeCase($prop)] = $items;
+                $result[self::convertToSnakeCase($prop)] = $items;
             }
         }
 
-        return $settings;
+        return $result;
     }
 
     /**
@@ -131,9 +179,8 @@ abstract class AbstractModel
      *
      * @return stdClass
      */
-    public function toJson(): \stdClass
+    public function toJson()
     {
-
         return json_decode(json_encode($this->toArray()));
     }
 
@@ -143,9 +190,9 @@ abstract class AbstractModel
      * @param int $flag - second param for json_encode. For example - JSON_PRETTY_PRINT or 128
      * @return string
      */
-    public function toJsonString($flag = 0): string
+    public function toJsonString($flag = 0)
     {
-        return json_encode($this->toArray(), $flag);
+        return json_encode($this->toJson(), $flag);
     }
 
     /**
@@ -154,9 +201,9 @@ abstract class AbstractModel
      * @param string $str
      * @return string
      */
-    protected static function convertToCamelCase(string $str): string
+    protected static function convertToCamelCase(string $str)
     {
-        $callback = function ($match): string {
+        $callback = function ($match) {
             return strtoupper($match[2]);
         };
 
@@ -175,7 +222,7 @@ abstract class AbstractModel
      * @param string $str
      * @return string
      */
-    protected static function convertToSnakeCase(string $str): string
+    protected static function convertToSnakeCase(string $str)
     {
         $replaced = preg_split('/(?=[A-Z])/', $str);
 

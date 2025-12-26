@@ -14,25 +14,15 @@ declare(strict_types=1);
 namespace Apirone\SDK\Model;
 
 use Apirone\API\Endpoints\Account;
-use Apirone\API\Endpoints\Service;
-use Apirone\API\Exceptions\RuntimeException;
-use Apirone\API\Exceptions\ValidationFailedException;
-use Apirone\API\Exceptions\UnauthorizedException;
-use Apirone\API\Exceptions\ForbiddenException;
-use Apirone\API\Exceptions\NotFoundException;
-use Apirone\API\Exceptions\MethodNotAllowedException;
-use Apirone\SDK\Invoice;
 use Apirone\SDK\Model\AbstractModel;
 use Apirone\SDK\Model\UserData;
 use Apirone\SDK\Model\HistoryItem;
-use Apirone\SDK\Tools\Utils;
-use ReflectionException;
 
 /**
  * Apirone invoice wrapper class
  *
  * @package Apirone\SDK\Model
- * 
+ *
  * @property-read string $account
  * @property-read string $invoice
  * @property-read string $created
@@ -64,27 +54,27 @@ class InvoiceDetails extends AbstractModel
      *
      * @var null|string Invoice creation date. Contains the full date in ISO-8601 format, for example, 2022-02-22T09:00:30
      */
-    private ?string $created;
+    private ?string $created = null;
 
     /**
      * @var null|string Currency type
      */
-    private ?string $currency;
+    private ?string $currency = null;
 
     /**
      * @var null|string The generated cryptocurrency address to receive a payment from a customer
      */
-    private ?string $address;
+    private ?string $address = null;
 
     /**
      * @var null|string Invoice expiration time in ISO-8601 format, for example, 2022-02-22T09:00:30
      */
-    private ?string $expire;
+    private ?string $expire = null;
 
     /**
      * @var null|string Amount in the selected currency
      */
-    private ?string $amount;
+    private ?string $amount = null;
 
     /**
      * @var null|UserData Some additional information about the invoice
@@ -94,7 +84,7 @@ class InvoiceDetails extends AbstractModel
     /**
      * @var null|string Invoice status
      */
-    private ?string $status;
+    private ?string $status = null;
 
     /**
      * @var null|array Invoice status change history
@@ -119,7 +109,7 @@ class InvoiceDetails extends AbstractModel
     private function __construct() {}
 
     /**
-     * Create a new instance
+     * Creates a new instance
      *
      * @return static
      */
@@ -131,11 +121,10 @@ class InvoiceDetails extends AbstractModel
     }
 
     /**
-     * Restore instance from JSON
+     * Restores instance from JSON
      *
      * @param mixed $json
      * @return $this
-     * @throws ReflectionException
      */
     public static function fromJson($json)
     {
@@ -145,16 +134,9 @@ class InvoiceDetails extends AbstractModel
     }
 
     /**
-     * Get invoice info from apirone and create instance from it
+     * Gets invoice info from apirone and create instance from it
      *
      * @return $this
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
-     * @throws ReflectionException
      */
     public function update()
     {
@@ -174,7 +156,6 @@ class InvoiceDetails extends AbstractModel
      *
      * @param mixed $data
      * @return UserData
-     * @throws ReflectionException
      */
     protected function parseUserData($data)
     {
@@ -188,7 +169,6 @@ class InvoiceDetails extends AbstractModel
      *
      * @param mixed $data
      * @return array
-     * @throws ReflectionException
      */
     protected function parseHistory($data)
     {
@@ -201,118 +181,22 @@ class InvoiceDetails extends AbstractModel
     }
 
     /**
-     * Return invoice public or private invoice info
+     * Returns invoice public or private invoice info JSON
      *
      * @param bool $private
-     * @return Apirone\SDK\Model\stdClass
+     * @return stdClass
      */
     public function info($private = false)
     {
+
         $info = $this->toJson();
+        unset($info->{'create-params'});
+
         if (!$private) {
             unset($info->{'callback-url'}, $info->account);
         }
-        unset($info->{'create-params'});
-
-        if ($info->{'user-data'} !== null) {
-            foreach ($info->{'user-data'} as $key => $value) {
-                if ($value === null) {
-                    unset($info->{'user-data'}->{$key});
-                }
-            }
-        }
 
         return $info;
-    }
-
-    /**
-     * Get the value of currency
-     * @deprecated Use $class->currency
-     */
-    public function getCurrency()
-    {
-        return $this->currency;
-    }
-
-    /**
-     * Get the value of address
-     * @deprecated Use $class->address
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
-
-    /**
-     * Get the value of expire
-     * @deprecated Use $class->expire
-     */
-    public function getExpire()
-    {
-        return $this->expire;
-    }
-
-    /**
-     * Get the value of amount
-     * @deprecated Use $class->amount
-     */
-    public function getAmount()
-    {
-        return $this->amount;
-    }
-
-    /**
-     * Get the value of userData
-     * @deprecated Use $class->userData
-     */
-    public function getUserData()
-    {
-        return $this->userData;
-    }
-
-    /**
-     * Get the value of status
-     * @deprecated Use $class->status
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * Get the value of history
-     * @deprecated Use $class->history
-     */
-    public function getHistory()
-    {
-        return $this->history;
-    }
-
-    /**
-     * Get the value of linkback
-     * @deprecated Use $class->linkback
-     */
-    public function getLinkback()
-    {
-        return $this->linkback;
-    }
-
-    /**
-     * Get the value of callbackUrl
-     * @deprecated Use $class->callbackUrl
-     */
-    public function getCallbackUrl()
-    {
-        return $this->callbackUrl;
-    }
-
-    /**
-     * Get the value of invoiceUrl
-     * @deprecated Use $class->invoiceUrl
-     */
-    public function getInvoiceUrl()
-    {
-        return $this->invoiceUrl;
     }
 
     /**
@@ -320,12 +204,12 @@ class InvoiceDetails extends AbstractModel
      *
      * @return bool
      */
-    public function isExpired(): bool
+    public function isExpired()
     {
         if ($this->status == 'expired') {
             return true;
         }
-        
+
         if (in_array($this->status, ['paid', 'overpaid', 'completed'])) {
             return false;
         }
@@ -335,54 +219,5 @@ class InvoiceDetails extends AbstractModel
         }
 
         return true;
-    }
-
-    /**
-     * Returns the number of seconds until an invoice expires
-     * If the invoice has status paid, overpaid,completed or expired - returns -1
-     *
-     * @return int
-     */
-    public function timeToExpire()
-    {
-        if ($this->expire == null || !in_array($this->status, ['created', 'partpaid'])) {
-            return -1;
-        }
-
-        $expire = strtotime($this->expire . ' UTC');
-        $now = time();
-
-        return ($expire > $now) ? $expire - $now : -1;
-    }
-
-    /**
-     * Show linkback if set and invoice status is paid or overpaid
-     *
-     * @return bool
-     */
-    public function showLinkback()
-    {
-        if ($this->linkback && in_array($this->status, ['paid', 'overpaid'])) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Return count of history items.
-     * In case when invoice completed or expired return zero value
-     *
-     * @return int|int<0, max>
-     */
-    public function statusNum()
-    {
-        switch ($this->status) {
-            case 'completed':
-            case 'expired':
-                return 0;
-            default:
-                return count($this->history);
-        }
     }
 }

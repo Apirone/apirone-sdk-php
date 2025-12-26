@@ -39,7 +39,6 @@ class HistoryItem extends AbstractModel
      *
      * @param mixed $json
      * @return $this
-     * @throws ReflectionException
      */
     public static function fromJson($json)
     {
@@ -48,60 +47,4 @@ class HistoryItem extends AbstractModel
         return $class->classLoader($json);
     }
 
-    /**
-     * Convert object to array
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        $item = parent::toArray();
-
-        if ($item['status'] == 'created' || $item['status'] == 'expired') {
-            unset($item['txid'], $item['amount']);
-        }
-
-        return $item;
-    }
-
-
-    /**
-     * Get the value of date
-     *
-     * @deprecated Use $class->date
-     */
-    public function getDate()
-    {
-        return $this->date;
-    }
-
-    /**
-     * Get the value of status
-     *
-     * @deprecated Use $class->status
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * Get the value of txid
-     *
-     * @deprecated Use $class->txid
-     */
-    public function getTxid()
-    {
-        return $this->txid;
-    }
-
-    /**
-     * Get the value of amount
-     *
-     * @deprecated Use $class->amount
-     */
-    public function getAmount()
-    {
-        return $this->amount;
-    }
 }

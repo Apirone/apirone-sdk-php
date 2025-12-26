@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Apirone\SDK\Model\UserData;
 
 use Apirone\SDK\Model\AbstractModel;
-use ReflectionException;
 
 /**
  * @property-read string $name
@@ -48,10 +47,12 @@ class ExtraItem extends AbstractModel
         if (\property_exists($this, $name)) {
 
             $class = new \ReflectionClass(static::class);
-            
-            $property = $class->getProperty($name);
-            $property->setAccessible(true);
 
+            $property = $class->getProperty($name);
+
+            if (version_compare(phpversion(), '8.1.0', '<')) {
+                $property->setAccessible(true);
+            }
             $property->setValue($this, $value[0]);
 
             return $this;
@@ -84,7 +85,6 @@ class ExtraItem extends AbstractModel
      *
      * @param mixed $json
      * @return $this
-     * @throws ReflectionException
      */
     public static function fromJson($json)
     {
@@ -101,53 +101,5 @@ class ExtraItem extends AbstractModel
     public function toString()
     {
         return $this->name . $this->price;
-    }
-
-
-    /**
-     * Get the value of name
-     *
-     * @deprecated Use $class->name
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set the value of name
-     *
-     * @return self
-     * @deprecated Use $class->name()
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of price
-     *
-     * @return null|string
-     * @deprecated Use $class->price
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
-     * Set the value of price
-     *
-     * @return self
-     * @deprecated Use $class->price()
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-
-        return $this;
     }
 }

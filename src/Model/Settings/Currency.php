@@ -14,15 +14,9 @@ declare(strict_types=1);
 namespace Apirone\SDK\Model\Settings;
 
 use Apirone\API\Endpoints\Account;
-use Apirone\API\Exceptions\RuntimeException;
-use Apirone\API\Exceptions\ValidationFailedException;
-use Apirone\API\Exceptions\UnauthorizedException;
-use Apirone\API\Exceptions\ForbiddenException;
-use Apirone\API\Exceptions\NotFoundException;
-use Apirone\API\Exceptions\MethodNotAllowedException;
 use Apirone\SDK\Model\AbstractModel;
+use Apirone\SDK\Service\Utils;
 use Exception;
-use ReflectionException;
 
 /**
  * Apirone crypto currency
@@ -66,6 +60,8 @@ class Currency extends AbstractModel
 
     private ?string $error = null;
 
+    private bool $changed = false;
+
     private function __construct() {}
 
     /**
@@ -83,18 +79,12 @@ class Currency extends AbstractModel
     }
 
     /**
-     * Load currency settings from account
+     * Load currency from account
      *
      * @param mixed $account
      * @return $this
-     * @throws RuntimeException
-     * @throws ValidationFailedException
-     * @throws UnauthorizedException
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws MethodNotAllowedException
      */
-    public function loadSettings($account)
+    public function load($account)
     {
         $account = Account::init($account)->info($this->abbr);
 
@@ -102,30 +92,34 @@ class Currency extends AbstractModel
             $this->address = $account->info[0]->destinations[0]->address;
         }
         $this->policy = $account->info[0]->{'processing-fee-policy'};
+        $this->changed = false;
 
         return $this;
     }
 
     /**
-     * Save currency settings to account
+     * Save currency to account
      *
      * @param mixed $account
      * @param mixed $transferKey
      * @return $this
      */
-    public function saveSettings($account, $transferKey)
+    public function save($account, $transferKey)
     {
-        $options = [];
+        if($this->changed) {
+            $options = [];
 
-        $options['destinations'] = ($this->address !== null) ? [['address' => $this->address]] : null;
-        $options['processing-fee-policy'] = $this->policy;
+            $options['destinations'] = ($this->address !== null) ? [['address' => $this->address]] : null;
+            $options['processing-fee-policy'] = $this->policy;
 
-        $this->error = null;
-        try {
-            Account::init($account, $transferKey)->settings($this->network, $options);
-        }
-        catch(Exception $e) {
-            $this->error = $e->getMessage();
+            $this->error = null;
+            try {
+                Account::init($account, $transferKey)->settings($this->network, $options);
+                $this->changed = false;
+            }
+            catch(Exception $e) {
+                $this->error = $e->getMessage();
+            }
         }
 
         return $this;
@@ -139,7 +133,12 @@ class Currency extends AbstractModel
      */
     public function address(?string $address = null)
     {
-        $this->address = empty($address) ? null : trim($address);
+        $address = empty($address) ? null : trim($address);
+
+        if ($address !== $this->address) {
+            $this->address = $address;
+            $this->changed = true;
+        }
 
         return $this;
     }
@@ -152,7 +151,12 @@ class Currency extends AbstractModel
      */
     public function policy(string $policy)
     {
-        $this->policy = $policy;
+        $policy = strtolower(trim($policy));
+
+        if (in_array($policy, ['fixed', 'percentage']) && $policy !== $this->policy ) {
+            $this->policy = $policy;
+            $this->changed = true;
+        }
 
         return $this;
     }
@@ -163,17 +167,8 @@ class Currency extends AbstractModel
      */
     private function alias()
     {
-        if ($this->token == null) {
-            $this->alias = $this->name;
-            return $this;
-        }
 
-        preg_match('#\((.*?)\)#', $this->name, $match);
-        $suffix = count($match) > 0 ? $match[1] : '';
-
-        $format = ($this->isTestnet()) ? '%s (%s - testnet)' : '%s (%s)';
-
-        $this->alias = strtoupper(sprintf($format, $this->token, $suffix));
+        $this->alias = Utils::getAlias($this->abbr, $this->name);
 
         return $this;
     }
@@ -184,7 +179,7 @@ class Currency extends AbstractModel
      *
      * @return bool
      */
-    public function hasError(): bool
+    public function hasError()
     {
         return $this->error ? true : false;
     }
@@ -196,11 +191,7 @@ class Currency extends AbstractModel
      */
     public function isTestnet()
     {
-        if ($this->isToken()) {
-            return (substr($this->network, 0, 1) == 't' && strlen($this->network) > 3) ? true : false;
-        }
-
-        return (substr_count(strtolower($this->name), 'testnet') > 0) ? true : false;
+        return Utils::isTestnet($this->abbr);
     }
 
     /**
@@ -221,16 +212,6 @@ class Currency extends AbstractModel
     public function isToken()
     {
         return ($this->token !== null ) ? $this->network : null;
-    }
-
-    /**
-     * Returns whether the currency is a stablecoin
-     *
-     * @return bool
-     */
-    public function isStablecoin()
-    {
-        return (substr_count(strtolower($this->name), 'usd') > 0) ? true : false;
     }
 
     /**
@@ -256,164 +237,13 @@ class Currency extends AbstractModel
     }
 
     /**
-     * Alias to tokens();
+     * Create currency instance from JSON. Alias to init()
      *
-     * @param array $currencies
-     * @return \Apirone\SDK\Model\Settings\Currency[]
-     * @deprecated Use $class->tokens() function
-     */
-    public function getTokens(array $currencies)
-    {
-        return $this->tokens($currencies);
-    }
-
-    /**
-     * Create currency instance from JSON
-     *
-     * @deprecated use Currency::init($json)
      * @param mixed $json
      * @return $this
-     * @throws ReflectionException
      */
     public static function fromJson($json)
     {
-        $class = new static();
-
-        return $class->classLoader($json);
-    }
-
-    /**
-     * Get the value of name
-     *
-     * @return null|string
-     * @deprecated Use $class->name
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Get the value of abbr
-     *
-     * @return null|string
-     * @deprecated Use $class->abbr
-     */
-    public function getAbbr()
-    {
-        return $this->abbr;
-    }
-
-    /**
-     * Get the value of units
-     *
-     * @return null|string
-     * @deprecated Use $class->units
-     */
-    public function getUnits()
-    {
-        return $this->units;
-    }
-
-    /**
-     * Get the value of unitsFactor
-     *
-     * @return null|float
-     * @deprecated Use $class->unitsFactor
-     */
-    public function getUnitsFactor()
-    {
-        return $this->unitsFactor;
-    }
-
-    /**
-     * Get the value of dustRate
-     *
-     * @return null|int
-     * @deprecated Use $class->dustRate
-     */
-    public function getDustRate()
-    {
-        return $this->dustRate;
-    }
-
-    /**
-     * Get the currency destination address
-     *
-     * @return null|string
-     * @deprecated Use $class->address
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
-
-    /**
-     * Set currency destination address
-     *
-     * @param null|string $address
-     * @return $this
-     * @deprecated Use $class->address()
-     */
-    public function setAddress(?string $address = null)
-    {
-        return $this->address($address);
-    }
-
-    /**
-     * Get the value of policy
-     *
-     * @return string
-     * @deprecated Use $class->policy
-     */
-    public function getPolicy()
-    {
-        return $this->policy;
-    }
-
-    /**
-     * Set the value of policy
-     *
-     * @param string $policy `fixed` or `percentage`
-     * @return $this
-     * @deprecated Use $class->policy()
-     */
-    public function setPolicy(string $policy)
-    {
-        return $this->policy($policy);
-    }
-
-    /**
-     * Get the value of error
-     *
-     * @return null|string
-     * @deprecated Use $class->error
-     */
-    public function getError()
-    {
-        return $this->error;
-    }
-
-    /**
-     * Parses currency abbr to set network & token
-     *
-     * @deprecated Since the API now supports network and token properties
-     * @return self
-     */
-    public function parseAbbr()
-    {
-        $parts = explode('@', $this->abbr);
-        switch (count($parts)) {
-            case 1:
-                $this->network = $parts[0];
-                $this->token = null;
-                break;
-            case 2:
-                $this->network = $parts[1];
-                $this->token = $parts[0];
-                break;
-        }
-
-        return $this;
+        return self::init($json);
     }
 }

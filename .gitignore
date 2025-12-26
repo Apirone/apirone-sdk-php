@@ -3,7 +3,7 @@ vendor
 docker/data
 docker/storage
 composer.lock
-docker-compose.yml
+docker-compose*.yml
 src/*.php
 src/*.json
 !src/Invoice.php
@@ -14,3 +14,6 @@ node_modules
 docs/.vitepress/cache
 docs/.vitepress/dist
 examples/*
+invoice
+package-lock.json
+yarn.lock

@@ -1,36 +1,25 @@
-<?php
-
-/**
- * This file is part of the Apirone SDK.
- *
- * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-require_once('../vendor/autoload.php');
-require_once('db.php');
-require_once('log.php');
-
-use Apirone\SDK\Invoice;
-use Apirone\SDK\Model\Settings;
-
-// Setup DB and Settings into invoice object
-Invoice::db($db_handler, $table_prefix);
-Invoice::settings(Settings::fromFile('/var/www/storage/settings.json'));
-
-// For example you need to pay in btc 25000 satoshi
-$invoice = Invoice::init('btc', 25000);
-
-// Set invoice lifetime 300s
-$invoice->lifetime(300);
-
-// Set callback URL
-$invoice->callbackUrl('https://yourhost.com/invoice_callback.php');
-
-// Create invoice
-$invoice->create();
-
-// Print invoice info
-print_r($invoice->details->toJson());
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Invoice</title>
+        <link rel="icon" href="/assets/favicon.ico">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <!-- Customize Invoice App to use the local API -->
+        <script>
+            window.invoice_app_config = {
+                service_url: 'http://localhost/api/',
+                images_relative_path: '/assets/img',
+                invoice_id_key: 'id',
+            };
+        </script>
+        <!-- Add Invoice App script & styles -->
+        <script type="module" crossorigin src="/assets/script.min.js"></script>
+        <link rel="stylesheet" crossorigin href="/assets/style.min.css">
+    </head>
+    <body>
+        <!-- Add Invoice App container -->
+        <div id="app"></div>
+    </body>
+</html>

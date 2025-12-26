@@ -1,17 +1,8 @@
 <?php
 
-/**
- * This file is part of the Apirone SDK.
- *
- * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 require_once('helpers/common.php');
 
-use Apirone\SDK\Invoice;
+use Apirone\SDK\Service\Logger;
 
 $loggerCallback = static function ($level, $message, $context) {
     // No debug level logs
@@ -25,4 +16,4 @@ $loggerCallback = static function ($level, $message, $context) {
     file_put_contents($log_file, $logdata. "\r\n", FILE_APPEND);
 };
 
-Invoice::logger($loggerCallback);
+Logger::set($loggerCallback);

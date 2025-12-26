@@ -1,6 +1,7 @@
 # Settings class
 
-The second most important class is the `Apirone\SDK\Model\Settings` class, which is used to handle the account, retrieve network and currency lists, set forwarding addresses and policy fees, and store common invoice and SDK parameters such as `lifetime`, `title`, `debug`, etc.
+The second most important class is the `Apirone\SDK\Model\Settings` class, which is used to handle the account, retrieve network and currency lists, set forwarding addresses and policy fees.
+You can also use the class as a single place to store the parameters you need.
 
 ## Creating and saving
 
@@ -33,7 +34,7 @@ $settings = Settings::fromExistingAccount($account, $transferKey);
 
 ### Account credentials
 
-Use the `getAccount()` and `getTransferKey()` methods to get the values of `account` and `transfer-key`.
+Use the `account` and `transferKey` as properties to get the values.
 
 ### Save and restore
 
@@ -43,7 +44,7 @@ Three methods of saving an object are available to you:
 // Save to file
 $settings->toFile('/absolute/path/to/file.json');
 
-// Get as JSON object
+// Get as stdClass object
 $json_settings = $settings->toJson();
 
 // Get as string. Use JSON_PRETTY_PRINT or 128 as parameter to get pretty print.
@@ -70,63 +71,46 @@ $json_settings = Settings::fromJson($settings);
 
 ## Currencies and networks
 
-Currencies are all the cryptocurrencies that Apirone supports. The list of supported currencies
-can be obtained via [API](https://apirone.com/docs/service/#service-info) or by using
-the `Settings::currencies()` method.
+The `Settings::currencies` property returns an associative array available currencies, with currency abbreviations as keys. This property is lazy and loads the list the first time it is accessed. The property is also loaded when the network property is accessed, if it hasn't been loaded previously.
 
-A network refers to a blockchain, for example, Bitcoin is both a currency and a network.
-Similarly, Tron is both a currency and a network. At the same time, USDT or USDC using
-the Tron network as a carrier is both currency and token.
-If you need a list of networks use the `Settings::networks()` method.
+The `Settings::networks` property returns an associative array of available networks and their tokens, if any, with currency abbreviations as keys.
 
 > [!INFO]
+> Differences between currency types: a network refers to a blockchain; for example, Bitcoin is both a currency and a network. Similarly, Tron is both a currency and a network. Meanwhile, USDT or USDC, which use the Tron network as their medium of exchange, are both a currency and a token.
+
+> [!TIP]
 > If the currency `abbr` property contains `@`, this is an indication that the currency is a token.
 > For example, `trx` is a network, `usdt@trx` is a Tron-based token.
 
-As mentioned above, use the `currencies()` or `networks()` methods to get a list of currencies and return an array of [Currency](/currency) classes. You can also get any currency by its abbreviation using the `currency(‘abbr’)` method.
+Also you can retrieve any available currency by its abbreviation using the `Settings::currency('abbr')` method.
 
-The `loadCurrencies()` method gets the currency settings from the account and updates the local values for each of them. You must then save the Settings object locally.
+The `loadCurrencies()` method retrieves currencies settings from the account and sets them in the `Settings::currencies` property.
 
-To save the local currency changes to the account, use the `saveCurrencies()` method;
+To save currency changes to the account, use the `Currency::save()` method for each currency.
+For networks with tokens, the last saved address will be relevant.
+
+Also you can cave all networks addresses into account in one action `Settings::saveNetworks()`.
+The network address will have priority. Addresses set in tokens will be ignored.
 
 ## Additional Parameters storage
 
 ### Meta property
 
-Use the `meta` property to store additional parameters. This is a `stdClass` with key-value parameters.
+The `meta` property is used to store additional parameters. It is an `stdClass` class with key-value parameters.
 
-To get item by key, use `$settings->meta(‘key’)`.
-To add or update items, use `$settings->meta(‘key’, ‘value’)`.
-To delete an item by key, use `$settings->meta(‘key’, null)`.
+To get/set values, use the `meta` property or the `meta()` method with an `stdClass` as parameter.
 
-To get the entire object, use `$settings->meta`.
-The `$settings->meta($meta_object)` method sets the entire object, where `$meta_object` valid JSON or php stdClass.
+To set and get individual parameters, also use the `property/method`, where name is the name of the desired parameter. To delete a parameter, call the method with the parameter name and an empty value.
 
-IMPORTANT!
-The methods `getMeta()`, `setMeta()` and `deleteMeta()` are deprecated and will be removed in next versions.
+For example:
 
-### Predefined and Extra props
+```php
+// store value into meta
+$settings->myParameter('My parameter value');
 
-> [!WARNING]
-> These properties and methods will be deprecated and removed in future versions.
+// get value from meta
+$param = $settings->myParameter;
 
-The class has predefined properties that are used for general invoice settings and display.
-Working with parameters is done through getters and setters. For more details see properties and methods of the class.
-
-Use the property name to get the value and call the property name as a method with the value to set.
-You can use a call chain to set values.
-
-|Property|Set value method|Get value method|Description|
-|---|---|---|---|
-|`title`|`setTitle()`|`getTitle()`|Invoice title|
-|`merchant`|`setMerchant()`|`getMerchant()`|Merchant name|
-|`merchantUrl`|`setMerchantUrl()`|`getMerchantUrl()`|Merchant store URL|
-|`timeout`|`setTimeout()`|`getTimeout()`|Invoice lifetime|
-|`factor`|`setFactor()`|`getFactor()`|Amount adjustment factor|
-|`backLink`|`setBackLink()`|`setBackLink()`|Invoice backlink|
-|`logo`|`setLogo()`|`getLogo()`|Show the logo on the invoice|
-|`qrOnly`|`setQrOnly()`|`getQrOnly()`|Show qrCode template|
-|`debug`|`setDebug()`|`getDebug()`|Debug mode|
-|`extra`|`setExtraObj()`|`getExtra()`|Extra properties stdCLass|
-
-In case you need to store additional parameters, use `setExtra(‘key’, ‘value’)` and `getExtra(‘key’)`.
+// remove value from meta
+$settings->myParameter();
+```

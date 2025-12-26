@@ -1,32 +1,23 @@
 <?php
 
-/**
- * This file is part of the Apirone SDK.
- *
- * (c) Alex Zaytseff <alex.zaytseff@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 require_once('../vendor/autoload.php');
-require_once('db.php');
+require_once('db_adapter.php');
 require_once('log.php');
 
 use Apirone\SDK\Invoice;
-use Apirone\SDK\Model\Settings;
 
 /**
- * Your system Order status handler
+ * callbackChecker
  */
-$order_handler = static function ($invoice) {
-    $order_id = $invoice->order;
-
-    // Process order by order_id
+$callbackChecker = static function (Invoice $invoice) {
+    // your input validation/processing logic
 };
 
-// Setup DB and Settings into invoice object
-Invoice::db($db_handler, $table_prefix);
-Invoice::settings(Settings::fromFile('/var/www/storage/settings.json'));
+/**
+ * paymentProcessing
+ */
+$paymentProcessing = static function (Invoice $invoice) {
+    // Your payment processing logic
+};
 
-Invoice::callbackHandler($order_handler);
+Invoice::callbackHandler($paymentProcessing, $callbackChecker);
