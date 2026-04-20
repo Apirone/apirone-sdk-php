@@ -15,6 +15,7 @@ namespace Apirone\SDK\Service;
 
 use Apirone\API\Endpoints\Service;
 use Apirone\API\Http\Request;
+use Exception;
 use stdClass;
 
 class Utils

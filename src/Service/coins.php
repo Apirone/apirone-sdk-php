@@ -1,6 +1,6 @@
 <?php
-$coins = '
-{
+
+$coins ='{
     "btc": {
         "name": "Bitcoin",
         "unitsFactor": 1.0e-8
@@ -56,7 +56,7 @@ $coins = '
     "usdc@bnb": {
         "name": "USD Coin (BEP20)",
         "unitsFactor": 1.0e-18
-    }
+    },
     "ton": {
         "name": "Toncoin",
         "unitsFactor": 1.0e-9
@@ -64,5 +64,5 @@ $coins = '
     "usdt@ton": {
         "name": "Tether USD (Ton network)",
         "unitsFactor": 1.0e-6
-    },
+    }
 }';
