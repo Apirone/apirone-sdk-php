@@ -108,6 +108,7 @@ class Utils
     public static function getExplorerHref($abbr, $type, $hash = '')
     {
         $coin = static::getCoin($abbr);
+        $from="?utm_source=apirone";
 
         switch ($coin->abbr) {
             case (substr_count($coin->abbr, 'trx') > 0 ):
@@ -124,24 +125,25 @@ class Utils
                 $type = ($type == 'transaction') ? 'tx' : $type;
                 $path = implode('/', [$type, $hash]);
                 break;
+            case (substr_count($coin->abbr, 'ton') > 0 ):
+                $explorer = $coin->testnet ? 'testnet.tonscan.org' : 'tonscan.org';
+                $type = ($type == 'transaction') ? 'tx' : $type;
+                $path = implode('/', [$type, $hash]);
+                break;
             case 'btc':
                 $explorer = 'explorer.apirone.com';
                 $type = ($type == 'transaction') ? 'tx' : $type;
                 $path = implode('/', [$type, $hash]);
                 break;
             default:
-                $explorer = 'blockchair.com';
-                $currencyName = strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $coin->name));
                 $from = '?from=apirone';
-                if ($coin->abbr == 'tbtc') {
-                    $currencyName = 'bitcoin/testnet';
-                    $from = '';
-                }
-                $path = implode('/', [$currencyName, $type, $hash . $from]);
+                $currency = ($coin->abbr == 'tbtc') ? 'bitcoin/testnet' : strtolower(str_replace([' ', '(', ')'], ['-', '/', ''], $coin->name));
+                $explorer = 'blockchair.com';
+                $path = implode('/', [$currency, $type, $hash]);
                 break;
         }
 
-        $href = sprintf('https://%s/%s', ...[$explorer, $path]);
+        $href = sprintf('https://%s/%s%s', ...[$explorer, $path, $from]);
 
         return $href;
     }
@@ -182,6 +184,7 @@ class Utils
         if ($parts->token) {
             preg_match('#\((.*?)\)#', $name, $match);
             $suffix = count($match) > 0 ? $match[1] : '';
+            $suffix = ($parts->network == 'ton') ? 'ton' : $suffix;
 
             $format = Utils::isTestnet($abbr) ? '%s (%s - testnet)' : '%s (%s)';
 

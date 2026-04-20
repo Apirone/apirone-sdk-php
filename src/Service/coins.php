@@ -57,4 +57,12 @@ $coins = '
         "name": "USD Coin (BEP20)",
         "unitsFactor": 1.0e-18
     }
+    "ton": {
+        "name": "Toncoin",
+        "unitsFactor": 1.0e-9
+    },
+    "usdt@ton": {
+        "name": "Tether USD (Ton network)",
+        "unitsFactor": 1.0e-6
+    },
 }';
