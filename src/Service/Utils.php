@@ -37,13 +37,13 @@ class Utils
         $coins = [];
 
         foreach ($info->currencies as $item) {
-            $coin = new stdClass;
+            $parts = Utils::getNetworkAndToken($item->abbr);
 
+            $coin = new stdClass;
             $coin->abbr = $item->abbr;
             $coin->name = $item->name;
             $coin->alias = Utils::getAlias($item->abbr,$item->name);
             $coin->unitsFactor = $item->{'units-factor'};
-            $parts = Utils::getNetworkAndToken($item->abbr);
             $coin->network = $parts->network;
             $coin->token = $parts->token;
             $coin->testnet = Utils::isTestnet($item->abbr);
@@ -62,26 +62,13 @@ class Utils
      */
     public static function getCoin(string $abbr)
     {
-        // Loading coins mapping prod api on first launch
         if (static::$coins == null) {
-            require_once(__DIR__ . '/coins.php');
-            static::$coins = (array) json_decode($coins);
+            static::$coins = Utils::getCoins();
         }
-
         if (!array_key_exists($abbr, static::$coins)) {
             Utils::loadCoins();
         }
         if (array_key_exists($abbr, static::$coins)) {
-            if (!property_exists(static::$coins[$abbr], 'alias')) {
-                $parts = Utils::getNetworkAndToken($abbr);
-
-                static::$coins[$abbr]->abbr = $abbr;
-                static::$coins[$abbr]->alias = Utils::getAlias($abbr, static::$coins[$abbr]->name);
-                static::$coins[$abbr]->network = $parts->network;
-                static::$coins[$abbr]->token = $parts->token;
-                static::$coins[$abbr]->testnet = Utils::isTestnet($abbr);
-            }
-
             return static::$coins[$abbr];
         }
 
@@ -97,6 +84,50 @@ class Utils
         $coin->testnet = true;
 
         return static::$coins[$abbr] = $coin;
+    }
+
+    /**
+     * Return array of coins from production.
+     * Hardcoded to prevent unnecessary requests to API and DB.
+     *
+     * @return array
+     */
+    private static function getCoins()
+    {
+        $data = [
+            "btc" => ["name" => "Bitcoin", "unitsFactor" => 1.0e-8],
+            "tbtc" => ["name" => "Bitcoin (testnet)", "unitsFactor" => 1.0e-8],
+            "ltc" => ["name" => "Litecoin", "unitsFactor" => 1.0e-8],
+            "bch" => ["name" => "Bitcoin Cash", "unitsFactor" => 1.0e-8],
+            "doge" => ["name" => "Dogecoin", "unitsFactor" => 1.0e-8],
+            "trx" => ["name" => "TRON", "unitsFactor" => 1.0e-6],
+            "usdt@trx" => ["name" => "Tether USD (TRC20)", "unitsFactor" => 1.0e-6],
+            "usdc@trx" => ["name" => "USD Coin (TRC20)", "unitsFactor" => 1.0e-6],
+            "eth" => ["name" => "Ethereum", "unitsFactor" => 1.0e-18],
+            "usdt@eth" => ["name" => "Tether USD (ERC20)", "unitsFactor" => 1.0e-6],
+            "usdc@eth" => ["name" => "USD Coin (ERC20)", "unitsFactor" => 1.0e-6],
+            "bnb" => ["name" => "BNB Smart Chain", "unitsFactor" => 1.0e-18],
+            "usdt@bnb" => ["name" => "Tether USD (BEP20)", "unitsFactor" => 1.0e-18],
+            "usdc@bnb" => ["name" => "USD Coin (BEP20)", "unitsFactor" => 1.0e-18],
+            "ton" => ["name" => "Toncoin", "unitsFactor" => 1.0e-9],
+            "usdt@ton" => ["name" => "Tether USD (Ton network)", "unitsFactor" => 1.0e-6],
+        ];
+
+        $coins = [];
+        foreach ($data as $abbr => $item) {
+            $parts = Utils::getNetworkAndToken($abbr);
+            $coins[$abbr] = new stdClass;
+
+            $coins[$abbr]->abbr = $abbr;
+            $coins[$abbr]->name = $item['name'];
+            $coins[$abbr]->alias = Utils::getAlias($abbr, $coins[$abbr]->name);
+            $coins[$abbr]->unitsFactor = $item['unitsFactor'];
+            $coins[$abbr]->network = $parts->network;
+            $coins[$abbr]->token = $parts->token;
+            $coins[$abbr]->testnet = Utils::isTestnet($abbr);
+        }
+
+        return $coins;
     }
 
     /**
