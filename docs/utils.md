@@ -5,7 +5,8 @@ The class contains auxiliary functions such as explorer link generation, quantit
 |Method|Description|
 |---|---|
 |```Utils::loadCoins()```|Loads currencies from the API and returns them as an array of coins.|
-|```Utils::getCoin()```|Get currency parameters by abbreviation|
+|```Utils::getCoin()```|Get currency parameters by abbreviation.|
+|```Utils::getCoins()```|Return array of coins from production.|
 |```Utils::getExplorerHref()```|Returns the explorer href based on the currency abbr and hash type|
 |```Utils::getTransactionLink()```|Return transaction link to explorer|
 |```Utils::getAddressLink()```|Return address link to explorer|
