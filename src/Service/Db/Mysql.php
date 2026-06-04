@@ -80,7 +80,7 @@ class Mysql implements AdapterInterface
      */
     public static function getOrderInvoices(int $order)
     {
-        return sprintf('SELECT * FROM `%s` WHERE `order` = %s order by time DESC', Db::tableName(), $order);
+        return sprintf('SELECT * FROM `%s` WHERE `order` = %s order by id DESC', Db::tableName(), $order);
     }
 
     /**

@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.0.4](https://github.com/Apirone/apirone-sdk-php/releases/tag/2.0.3) (2026-06-04)
+
+- fix(db): Fix order invoices ordering. Changelog updated.
+
+## [2.0.3](https://github.com/Apirone/apirone-sdk-php/releases/tag/2.0.3) (2026-05-22)
+
+- chore(invoice): Invoice APP files updated (#64)
+
+## [2.0.2](https://github.com/Apirone/apirone-sdk-php/releases/tag/2.0.2) (2026-04-30)
+
+- Added toncoin to coins.php & Utils class
+- getAlias updated
+- Removed coins.php Added Utils::getCoins() method
+- feat(invoice): Added icons to invoice app
+- chore: .gitattrubutes & filestamp updated
+
+## [2.0.1](https://github.com/Apirone/apirone-sdk-php/releases/tag/2.0.1) (2025-12-27)
+
+- Invoice app version up (#62)
+
+## [2.0.0](https://github.com/Apirone/apirone-sdk-php/releases/tag/2.0.0) (2025-12-26)
+
+Sdk 2.0 (#61)
+Multiple breaking changes. See docs for details at https://apirone.github.io/apirone-sdk-php/
+
 ## [1.2.9](https://github.com/Apirone/apirone-sdk-php/releases/tag/1.2.9) (2025-09-05)
 
 - Improved Currency::alias() and Currency::ithTestnet() methods
