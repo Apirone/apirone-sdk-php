@@ -217,7 +217,7 @@ class Utils
         if ($parts->token) {
             preg_match('#\((.*?)\)#', $name, $match);
             $suffix = count($match) > 0 ? $match[1] : '';
-            $suffix = ($parts->network == 'ton') ? 'ton' : $suffix;
+            $suffix = str_contains($parts->network, 'ton') ? 'TON' : $suffix;
 
             $format = Utils::isTestnet($abbr) ? '%s (%s - testnet)' : '%s (%s)';
 
@@ -225,6 +225,17 @@ class Utils
         }
 
         return $name;
+    }
+
+    /**
+     * Return currency blockchain name
+     *
+     * @param string $alias
+     * @return mixed
+     */
+    public static function getChain(string $alias)
+    {
+        return str_replace('GRAM', 'TON', $alias);
     }
 
     /**
