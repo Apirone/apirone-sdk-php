@@ -14,7 +14,7 @@ fi
 
 rm -rf ./node_modules
 
-yarn && yarn build
+yarn && yarn build-embed
 cd $ROOT
 
 rm -rf ./src/assets && mkdir ./src/assets

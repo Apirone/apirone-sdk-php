@@ -284,7 +284,7 @@ class Settings extends AbstractModel
         $networks = [];
         foreach ($this->currencies as $currency) {
             if (!$currency->isToken()) {
-                $networks[$currency->abbr] = Network::init($currency);
+                $networks[$currency->network] = Network::init($currency);
             }
         }
         foreach ($this->currencies as $currency) {

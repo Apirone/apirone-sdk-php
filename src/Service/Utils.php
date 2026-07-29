@@ -109,8 +109,8 @@ class Utils
             "bnb" => ["name" => "BNB Smart Chain", "unitsFactor" => 1.0e-18],
             "usdt@bnb" => ["name" => "Tether USD (BEP20)", "unitsFactor" => 1.0e-18],
             "usdc@bnb" => ["name" => "USD Coin (BEP20)", "unitsFactor" => 1.0e-18],
-            "ton" => ["name" => "Toncoin", "unitsFactor" => 1.0e-9],
-            "usdt@ton" => ["name" => "Tether USD (Ton network)", "unitsFactor" => 1.0e-6],
+            "gram" => ["name" => "GRAM", "unitsFactor" => 1.0e-9],
+            "usdt@ton" => ["name" => "USDT (Ton)", "unitsFactor" => 1.0e-6],
         ];
 
         $coins = [];
@@ -157,6 +157,7 @@ class Utils
                 $type = ($type == 'transaction') ? 'tx' : $type;
                 $path = implode('/', [$type, $hash]);
                 break;
+            case (substr_count($coin->abbr, 'gram') > 0 ):
             case (substr_count($coin->abbr, 'ton') > 0 ):
                 $explorer = $coin->testnet ? 'testnet.tonscan.org' : 'tonscan.org';
                 $type = ($type == 'transaction') ? 'tx' : $type;
@@ -216,7 +217,7 @@ class Utils
         if ($parts->token) {
             preg_match('#\((.*?)\)#', $name, $match);
             $suffix = count($match) > 0 ? $match[1] : '';
-            $suffix = ($parts->network == 'ton') ? 'ton' : $suffix;
+            $suffix = str_contains($parts->network, 'ton') ? 'TON' : $suffix;
 
             $format = Utils::isTestnet($abbr) ? '%s (%s - testnet)' : '%s (%s)';
 
@@ -227,6 +228,17 @@ class Utils
     }
 
     /**
+     * Return currency blockchain name
+     *
+     * @param string $alias
+     * @return mixed
+     */
+    public static function getChain(string $alias)
+    {
+        return str_replace('GRAM', 'TON', $alias);
+    }
+
+    /**
      * Determine currency network & token by abbr
      *
      * @param string $abbr
@@ -234,6 +246,7 @@ class Utils
      */
     public static function getNetworkAndToken(string $abbr)
     {
+        $abbr = str_replace('gram', 'ton', $abbr);
         $parts = explode('@', $abbr, 2);
         $class = new stdClass;
         $class->network = count($parts) == 1 ? $parts[0] : $parts[1];
