@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.1.2](https://github.com/Apirone/apirone-sdk-php/releases/tag/2.1.2) (2026-08-05)
+
+-  Backward compatibility with older versions of PHP
+
+## [2.1.1](https://github.com/Apirone/apirone-sdk-php/releases/tag/2.1.1) (2026-08-05)
+
+-  Fix saveNetworks()
+
+## [2.1.0](https://github.com/Apirone/apirone-sdk-php/releases/tag/2.1.0) (2026-07-29)
+
+- Added TON / GRAM support
+- invoice app updated to 1.0.3
+
+
 ## [2.0.4](https://github.com/Apirone/apirone-sdk-php/releases/tag/2.0.3) (2026-06-04)
 
 - fix(db): Fix order invoices ordering. Changelog updated.
