@@ -217,7 +217,7 @@ class Utils
         if ($parts->token) {
             preg_match('#\((.*?)\)#', $name, $match);
             $suffix = count($match) > 0 ? $match[1] : '';
-            $suffix = str_contains($parts->network, 'ton') ? 'TON' : $suffix;
+            $suffix = strpos($parts->network, 'ton') ? 'TON' : $suffix;
 
             $format = Utils::isTestnet($abbr) ? '%s (%s - testnet)' : '%s (%s)';
 
