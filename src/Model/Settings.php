@@ -247,7 +247,7 @@ class Settings extends AbstractModel
         foreach ($this->networks as $network) {
             $network->save($this->account, $this->transferKey);
             if ($network->error) {
-                $errors[$network->abbr] = $network->error;
+                $errors[$network->network] = $network->error;
             }
         }
 
