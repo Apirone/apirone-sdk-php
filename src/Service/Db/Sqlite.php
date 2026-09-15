@@ -57,7 +57,7 @@ class Sqlite implements AdapterInterface
     /**
      * Return select invoice query by invoice id
      *
-     * @param null|string $invoice
+     * @param string $invoice
      * @param string $prefix
      * @return string
      */

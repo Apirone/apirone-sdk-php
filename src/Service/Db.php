@@ -204,6 +204,8 @@ class Db
 
     public static function getInvoice(string $invoice)
     {
+        $invoice = preg_match("/^\w+$/", $invoice) ? $invoice : '';
+
         return Db::execute(DB::adapterClass()::getInvoice($invoice));
     }
 
