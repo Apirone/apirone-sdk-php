@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.2.0](https://github.com/Apirone/apirone-sdk-php/releases/tag/2.2.0) (2026-09-15)
+
+-  Only alphanumeric and underscores for invoice_id is allowed
+
 ## [2.1.2](https://github.com/Apirone/apirone-sdk-php/releases/tag/2.1.2) (2026-08-05)
 
 -  Backward compatibility with older versions of PHP
