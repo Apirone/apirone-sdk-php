@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.2.1](https://github.com/Apirone/apirone-sdk-php/releases/tag/2.2.1) (2026-11-24)
+
+-  Solana support added.
+
 ## [2.2.0](https://github.com/Apirone/apirone-sdk-php/releases/tag/2.2.0) (2026-09-15)
 
 -  Only alphanumeric and underscores for invoice_id is allowed

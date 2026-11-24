@@ -111,6 +111,9 @@ class Utils
             "usdc@bnb" => ["name" => "USD Coin (BEP20)", "unitsFactor" => 1.0e-18],
             "gram" => ["name" => "GRAM", "unitsFactor" => 1.0e-9],
             "usdt@ton" => ["name" => "USDT (Ton)", "unitsFactor" => 1.0e-6],
+            "sol" => ["name" => "Solana", "unitsFactor" => 1.0e-9],
+            "usdc@sol" => ["name" => "USDC (SOL)", "unitsFactor" => 1.0e-6],
+            "usdt@sol" => ["name" => "USDT (SOL)", "unitsFactor" => 1.0e-6],
         ];
 
         $coins = [];
@@ -160,6 +163,12 @@ class Utils
             case (substr_count($coin->abbr, 'gram') > 0 ):
             case (substr_count($coin->abbr, 'ton') > 0 ):
                 $explorer = $coin->testnet ? 'testnet.tonscan.org' : 'tonscan.org';
+                $type = ($type == 'transaction') ? 'tx' : $type;
+                $path = implode('/', [$type, $hash]);
+                break;
+            case (substr_count($coin->abbr, 'sol') > 0 ):
+                $from .= $coin->testnet ? '&cluster=devnet' : ''; // testnet set via query parameter
+                $explorer = 'explorer.solana.com';
                 $type = ($type == 'transaction') ? 'tx' : $type;
                 $path = implode('/', [$type, $hash]);
                 break;
